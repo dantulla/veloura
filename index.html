@@ -9,7 +9,6 @@
 /* ═══════════════════════════════════════════
    CONFIGURATION — CHANGE YOUR TAG HERE ONLY
    ═══════════════════════════════════════════ */
-/* See JS CONFIG block at bottom of file */
 
 :root {
   --gold: #c9a96e;
@@ -49,8 +48,6 @@ nav.scrolled{padding:18px 60px;background:rgba(8,8,8,.88);backdrop-filter:blur(2
 .nav-links a:hover::after{width:100%}
 .nav-cta{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:10px 24px;text-decoration:none;font-weight:500;transition:all .3s;border-radius:1px}
 .nav-cta:hover{background:var(--gold-light);transform:translateY(-1px)}
-.admin-hint{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,169,110,.25);margin-left:12px;transition:color .3s}
-.admin-hint:hover{color:var(--gold)}
 
 /* ── HERO ── */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -96,8 +93,9 @@ section{padding:120px 60px}
 /* ── PRODUCTS ── */
 #products{position:relative}
 #products .section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px}
-.view-all-link{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:10px;transition:gap .3s}
-.view-all-link:hover{gap:16px}
+.category-section { margin-bottom: 70px; }
+.category-header { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-style: italic; color: var(--gold-light); margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid rgba(201,169,110,0.15); display: flex; align-items: center; justify-content: space-between; }
+.category-count { font-family: 'DM Sans', sans-serif; font-size: 10px; font-style: normal; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
 .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;min-height:200px}
 .empty-state{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;border:1px dashed rgba(201,169,110,.2);gap:16px;cursor:pointer;transition:all .3s;border-radius:4px}
 .empty-state:hover{border-color:var(--gold);background:rgba(201,169,110,.04)}
@@ -280,7 +278,7 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
 .manage-grid{display:flex;flex-direction:column;gap:2px}
 .manage-row{display:grid;grid-template-columns:60px 1fr auto auto;align-items:center;gap:16px;padding:16px 20px;background:rgba(255,255,255,.02);border:1px solid rgba(201,169,110,.08);transition:all .3s}
 .manage-row:hover{border-color:rgba(201,169,110,.2);background:rgba(201,169,110,.04)}
-.manage-img{width:52px;height:52px;object-fit:cover;border-radius:2px;background:linear-gradient(135deg,#1c1510,#241a12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.manage-img{width:52px;height:52px;object-fit:cover;border-radius:2px;background:linear-gradient(135deg,#1c1510,#241a12);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden}
 .manage-info{min-width:0}
 .manage-brand{font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
 .manage-name{font-size:.85rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -339,7 +337,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- ══ ADMIN OVERLAY ══ -->
 <div id="admin-overlay">
   <div class="admin-wrap">
     <div class="admin-header">
@@ -347,7 +344,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
       <button class="admin-close" id="admin-close-btn">✕</button>
     </div>
 
-    <!-- PASSWORD GATE -->
     <div id="admin-gate">
       <div class="gate-title">Enter Admin Access</div>
       <p class="gate-sub">This panel is for Veloura editors only.</p>
@@ -359,7 +355,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
       <p class="gate-hint">Default password: <strong style="color:var(--gold)">veloura2025</strong> — change in Settings</p>
     </div>
 
-    <!-- ADMIN PANEL -->
     <div id="admin-panel">
       <div class="admin-tabs">
         <button class="admin-tab active" data-tab="add">+ Add Product</button>
@@ -367,7 +362,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
         <button class="admin-tab" data-tab="settings">Settings</button>
       </div>
 
-      <!-- TAB: ADD PRODUCT -->
       <div class="tab-content active" id="tab-add">
         <div class="form-section-title">Add a New Product</div>
         <p class="form-section-sub">Paste any Amazon product URL. The ASIN is extracted automatically and your affiliate tag is appended to every link.</p>
@@ -394,6 +388,12 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
             <input type="text" class="form-input" id="f-name" placeholder="e.g. Facial Treatment Essence Anti-Aging">
           </div>
         </div>
+        <div class="form-grid single">
+          <div class="form-field">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-input" id="f-image" placeholder="https://example.com/your-image.jpg">
+          </div>
+        </div>
         <div class="form-grid">
           <div class="form-field">
             <label class="form-label">Badge Label</label>
@@ -402,12 +402,14 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
           <div class="form-field">
             <label class="form-label">Category</label>
             <select class="form-select" id="f-category">
-              <option value="Skincare">Skincare</option>
-              <option value="Fragrance">Fragrance</option>
-              <option value="Anti-Aging">Anti-Aging</option>
-              <option value="Lip & Face">Lip &amp; Face</option>
-              <option value="Luxury Dupe">Luxury Dupe</option>
-              <option value="Body">Body</option>
+              <option value="Everyday Skin Care Tips">Everyday Skin Care Tips</option>
+              <option value="Top Makeup Picks">Top Makeup Picks</option>
+              <option value="Perfume & Fragrance Picks">Perfume & Fragrance Picks</option>
+              <option value="Nail & Hand Care Must-Haves">Nail & Hand Care Must-Haves</option>
+              <option value="Healthy Hair Care Routines">Healthy Hair Care Routines</option>
+              <option value="Growth Tips">Growth Tips</option>
+              <option value="Best Hair Tools on Amazon">Best Hair Tools on Amazon</option>
+              <option value="Best Amazon Finds">Best Amazon Finds</option>
             </select>
           </div>
         </div>
@@ -422,7 +424,7 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
             </select>
           </div>
           <div class="form-field">
-            <label class="form-label">Product Icon (emoji)</label>
+            <label class="form-label">Product Icon (fallback emoji)</label>
             <input type="text" class="form-input" id="f-emoji" placeholder="e.g. ✨ 💋 🌸 🫧">
           </div>
         </div>
@@ -440,14 +442,12 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
         </div>
       </div>
 
-      <!-- TAB: MANAGE -->
       <div class="tab-content" id="tab-manage">
         <div class="manage-count" id="manage-count"></div>
         <div class="manage-grid" id="manage-grid"></div>
         <div class="manage-empty" id="manage-empty" style="display:none">No products added yet. Use the Add Product tab to get started.</div>
       </div>
 
-      <!-- TAB: SETTINGS -->
       <div class="tab-content" id="tab-settings">
         <div class="settings-section">
           <div class="settings-title">Amazon Associates</div>
@@ -488,7 +488,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
   </div>
 </div>
 
-<!-- ══ MAIN SITE ══ -->
 <nav id="nav">
   <a class="nav-logo" id="nav-logo-trigger">VELO<span>U</span>RA</a>
   <ul class="nav-links">
@@ -499,7 +498,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
   </ul>
   <div style="display:flex;align-items:center">
     <a href="#newsletter" class="nav-cta">Get the Edit</a>
-    <span class="admin-hint" id="admin-nav-btn" title="Admin Panel">✦</span>
   </div>
 </nav>
 
@@ -544,7 +542,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
   </div>
 </div>
 
-<!-- PRODUCTS -->
 <section id="products">
   <div class="section-header">
     <div>
@@ -552,12 +549,10 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
       <h2 class="section-title reveal reveal-delay-1">Products Worth<br><em>the Obsession</em></h2>
     </div>
   </div>
-  <div class="products-grid reveal" id="products-grid">
-    <!-- Populated by JS -->
-  </div>
+  <div id="products-container" class="reveal">
+    </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about">
   <div>
     <span class="section-eyebrow reveal">Who We Are</span>
@@ -586,7 +581,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
   </div>
 </section>
 
-<!-- PILLARS -->
 <section id="pillars">
   <div class="pillars-header">
     <span class="section-eyebrow reveal">The Veloura Method</span>
@@ -612,7 +606,6 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
   </div>
 </section>
 
-<!-- NEWSLETTER -->
 <section id="newsletter">
   <div class="newsletter-inner">
     <span class="section-eyebrow" style="margin-bottom:16px;display:block">The Veloura Inner Circle</span>
@@ -686,6 +679,34 @@ footer{background:#050505;padding:80px 60px 40px;border-top:1px solid rgba(201,1
 const DEFAULT_TAG   = 'rpamazon0db-20'; // ← Your Amazon Associates tag
 const DEFAULT_PASS  = 'veloura2025';    // ← Default admin password
 
+/* ── PRE-POPULATED SAMPLE DATA (WITH NEW CATEGORIES) ── */
+const sampleProducts = [
+  {
+    asin: "B00021C1LI", brand: "SK-II", name: "Facial Treatment Essence", price: "$185", badge: "Editor's Pick",
+    category: "Everyday Skin Care Tips", stars: 5,
+    imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
+    addedAt: new Date().toISOString()
+  },
+  {
+    asin: "B000052YOR", brand: "Maison Francis Kurkdjian", name: "Baccarat Rouge 540", price: "$325", badge: "Trending",
+    category: "Perfume & Fragrance Picks", stars: 4.5,
+    imageUrl: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80",
+    addedAt: new Date().toISOString()
+  },
+  {
+    asin: "B01BPIGXQG", brand: "La Mer", name: "Crème de la Mer Moisturizer", price: "$380", badge: "Iconic",
+    category: "Everyday Skin Care Tips", stars: 4.5,
+    imageUrl: "https://images.unsplash.com/photo-1570194065650-d6fa1f2fb8e5?auto=format&fit=crop&w=600&q=80",
+    addedAt: new Date().toISOString()
+  },
+  {
+    asin: "B07PBZ619X", brand: "Dyson", name: "Airwrap Multi-Styler", price: "$599", badge: "Must Have",
+    category: "Best Hair Tools on Amazon", stars: 4,
+    imageUrl: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80",
+    addedAt: new Date().toISOString()
+  }
+];
+
 /* ── STORAGE HELPERS ── */
 const STORE = {
   get: (k, def=null) => { try { const v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; } catch{ return def; }},
@@ -694,7 +715,14 @@ const STORE = {
 
 /* ── STATE ── */
 let settings = STORE.get('vl_settings', { tag: DEFAULT_TAG, password: DEFAULT_PASS });
-let products  = STORE.get('vl_products', []);
+let products = STORE.get('vl_products', null);
+
+// If local storage is empty, inject our sample products!
+if(!products || products.length === 0) {
+  products = sampleProducts;
+  STORE.set('vl_products', products);
+}
+
 let extractedASIN = '';
 
 /* ── CURSOR ── */
@@ -736,7 +764,7 @@ document.getElementById('nl-btn').addEventListener('click', function(){
 });
 
 /* ═══════════════════════════════════════
-   PRODUCT GRID RENDERER
+   PRODUCT GRID RENDERER (CATEGORIZED)
 ═══════════════════════════════════════ */
 function buildAffiliateLink(asin) {
   const tag = settings.tag || DEFAULT_TAG;
@@ -751,48 +779,76 @@ function renderStars(n) {
 }
 
 function renderProducts() {
-  const grid = document.getElementById('products-grid');
-  grid.innerHTML = '';
+  const container = document.getElementById('products-container');
+  container.innerHTML = '';
 
   if(products.length === 0) {
-    grid.innerHTML = `
+    container.innerHTML = `
       <div class="empty-state" id="empty-state-btn">
         <span class="es-icon">✦</span>
         <div class="es-title">Your Edit is Empty</div>
-        <p class="es-sub">Open the admin panel, paste an Amazon URL, and your first product will appear right here — with your affiliate tag already attached.</p>
+        <p class="es-sub">Press Ctrl+Shift+A (or click the logo 5 times) to open the admin panel, paste an Amazon URL, and your first product will appear right here.</p>
         <span class="es-cta">Open Admin Panel</span>
       </div>`;
     document.getElementById('empty-state-btn').addEventListener('click', openAdmin);
     return;
   }
 
-  products.forEach((p, idx) => {
-    const link = buildAffiliateLink(p.asin);
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    card.innerHTML = `
-      <div class="product-img-wrap">
-        <span class="product-emoji-fallback">${p.emoji || '✨'}</span>
-        ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
-        <div class="product-overlay">
-          <div class="product-overlay-inner">
-            <a href="${link}" target="_blank" rel="noopener" class="product-overlay-text">Shop on Amazon →</a>
-            <button class="product-remove-btn" data-idx="${idx}">Remove</button>
+  // Get unique categories that actually have products in them
+  const categories = [...new Set(products.map(p => p.category))];
+
+  categories.forEach(cat => {
+    // Filter products for this specific category
+    const catProducts = products.filter(p => p.category === cat);
+    
+    // Create section for this category
+    const catSection = document.createElement('div');
+    catSection.className = 'category-section';
+    
+    // Create header
+    catSection.innerHTML = `
+      <div class="category-header">
+        <span>${cat}</span>
+        <span class="category-count">${catProducts.length} Items</span>
+      </div>
+      <div class="products-grid"></div>
+    `;
+    
+    const grid = catSection.querySelector('.products-grid');
+
+    // Add products to this category's grid
+    catProducts.forEach((p) => {
+      const globalIdx = products.indexOf(p); // Important to get the right index for deletion
+      const link = buildAffiliateLink(p.asin);
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-img-wrap">
+          ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}">` : `<span class="product-emoji-fallback">${p.emoji || '✨'}</span>`}
+          ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
+          <div class="product-overlay">
+            <div class="product-overlay-inner">
+              <a href="${link}" target="_blank" rel="noopener" class="product-overlay-text">Shop on Amazon →</a>
+              <button class="product-remove-btn" data-idx="${globalIdx}">Remove</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="product-info">
-        <span class="product-brand-tag">${p.brand}</span>
-        <div class="product-name">${p.name}</div>
-        <div class="product-meta">
-          <span class="product-price">${p.price}</span>
-          <span class="product-stars">${renderStars(p.stars)}</span>
-        </div>
-        <div class="product-asin">ASIN: ${p.asin} · ${p.category}</div>
-      </div>`;
-    grid.appendChild(card);
+        <div class="product-info">
+          <span class="product-brand-tag">${p.brand}</span>
+          <div class="product-name">${p.name}</div>
+          <div class="product-meta">
+            <span class="product-price">${p.price}</span>
+            <span class="product-stars">${renderStars(p.stars)}</span>
+          </div>
+          <div class="product-asin">ASIN: ${p.asin}</div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    container.appendChild(catSection);
   });
 
+  // Attach delete events
   document.querySelectorAll('.product-remove-btn').forEach(btn => {
     btn.addEventListener('click', e => {
       e.stopPropagation();
@@ -806,7 +862,7 @@ function renderProducts() {
 }
 
 /* ═══════════════════════════════════════
-   ADMIN PANEL
+   ADMIN PANEL SECRETS
 ═══════════════════════════════════════ */
 function openAdmin() {
   document.getElementById('admin-overlay').classList.add('open');
@@ -823,9 +879,8 @@ function closeAdmin() {
 }
 
 document.getElementById('admin-close-btn').addEventListener('click', closeAdmin);
-document.getElementById('admin-nav-btn').addEventListener('click', openAdmin);
 
-// Logo click 5x to open admin (secret)
+// Secret Access #1: Logo click 5x
 let logoClicks = 0, logoTimer;
 document.getElementById('nav-logo-trigger').addEventListener('click', e => {
   e.preventDefault();
@@ -833,6 +888,14 @@ document.getElementById('nav-logo-trigger').addEventListener('click', e => {
   clearTimeout(logoTimer);
   logoTimer = setTimeout(() => logoClicks = 0, 2000);
   if(logoClicks >= 5) { logoClicks = 0; openAdmin(); }
+});
+
+// Secret Access #2: Keyboard Shortcut (Ctrl+Shift+A or Cmd+Shift+A)
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+    e.preventDefault();
+    openAdmin();
+  }
 });
 
 /* ── GATE ── */
@@ -915,6 +978,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
   const brand = document.getElementById('f-brand').value.trim();
   const name  = document.getElementById('f-name').value.trim();
   const price = document.getElementById('f-price').value.trim();
+  const image = document.getElementById('f-image').value.trim();
 
   if(!brand||!name||!price) {
     alert('Please fill in Brand, Product Name, and Price.');
@@ -930,6 +994,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
     brand:    brand,
     name:     name,
     price:    price,
+    imageUrl: image,
     badge:    document.getElementById('f-badge').value.trim(),
     category: document.getElementById('f-category').value,
     stars:    parseFloat(document.getElementById('f-stars').value),
@@ -937,7 +1002,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
     addedAt:  new Date().toISOString()
   };
 
-  products.unshift(product);
+  products.push(product); // Add to bottom so categories group cleanly
   STORE.set('vl_products', products);
 
   document.getElementById('form-success').style.display='block';
@@ -954,10 +1019,10 @@ function resetAddForm() {
   document.getElementById('f-brand').value='';
   document.getElementById('f-name').value='';
   document.getElementById('f-price').value='';
+  document.getElementById('f-image').value='';
   document.getElementById('f-badge').value='';
   document.getElementById('f-emoji').value='';
   document.getElementById('f-stars').value='5';
-  document.getElementById('f-category').value='Skincare';
   document.getElementById('extract-result').textContent='';
   document.getElementById('extract-result').className='extract-result';
   document.getElementById('affiliate-preview').innerHTML='<strong>Affiliate Link Preview</strong>Paste an Amazon URL above to generate your tagged affiliate link.';
@@ -983,11 +1048,11 @@ function renderManage() {
     const row = document.createElement('div');
     row.className = 'manage-row';
     row.innerHTML = `
-      <div class="manage-img">${p.emoji||'✨'}</div>
+      <div class="manage-img">${p.imageUrl ? `<img src="${p.imageUrl}" style="width:100%; height:100%; object-fit:cover;">` : (p.emoji||'✨')}</div>
       <div class="manage-info">
         <div class="manage-brand">${p.brand}</div>
         <div class="manage-name">${p.name}</div>
-        <div class="manage-price">${p.price} · ASIN: ${p.asin}</div>
+        <div class="manage-price">${p.price} · ${p.category}</div>
       </div>
       ${p.badge ? `<div class="manage-badge">${p.badge}</div>` : '<div></div>'}
       <button class="manage-del" data-idx="${idx}">Remove</button>`;
