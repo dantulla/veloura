@@ -709,6 +709,20 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 
     <!-- SETTINGS TAB -->
     <div class="admin-content" id="tab-settings">
+      <div class="form-section" style="border-color:rgba(201,169,110,.3);background:rgba(201,169,110,.04)">
+        <div class="form-section-title" style="color:var(--gold)">🔥 Firebase Setup (one-time)</div>
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.9;margin-bottom:16px">
+          To sync products across all devices, you need to connect a free Firebase project.
+          Follow these steps:
+        </p>
+        <ol style="font-size:.8rem;color:var(--muted);line-height:2.2;padding-left:20px">
+          <li>Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold)">console.firebase.google.com</a> → Create a project (free)</li>
+          <li>Click <strong style="color:var(--cream)">Firestore Database</strong> → Create database → Start in <strong style="color:var(--cream)">test mode</strong></li>
+          <li>Go to <strong style="color:var(--cream)">Project Settings</strong> → Your apps → Web app icon → Register app</li>
+          <li>Copy the <strong style="color:var(--cream)">firebaseConfig</strong> values into the <code style="background:rgba(0,0,0,.4);padding:2px 6px;color:var(--cream);font-size:.75rem">FIREBASE_CONFIG</code> block at the top of <code style="background:rgba(0,0,0,.4);padding:2px 6px;color:var(--cream);font-size:.75rem">index.html</code></li>
+          <li>Save and re-open the site — products will now sync across all devices instantly ✓</li>
+        </ol>
+      </div>
       <div class="form-section">
         <div class="form-section-title">Amazon Affiliate Settings</div>
         <div class="form-group">
@@ -814,9 +828,24 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </div>
 
-<script>
+<script type="module">
+/* ══════════════════════════════════════════════════════════════════
+   STEP 1 — PASTE YOUR FIREBASE CONFIG HERE
+   Go to: https://console.firebase.google.com
+   → Your project → Project Settings → Your apps → Config
+   ══════════════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyAe00l-0nQNtGyOUgSk6xvbe0CLNvpVuG0",
+  authDomain:        "veloura-8a198.firebaseapp.com",
+  projectId:         "veloura-8a198",
+  storageBucket:     "veloura-8a198.firebasestorage.app",
+  messagingSenderId: "817383391626",
+  appId:             "1:817383391626:web:94f8459eb3aa18fbd8c873",
+  measurementId:     "G-GJ0DHCMK2D"
+};
+
 /* ══════════════════════════════════════════════════════
-   CONFIGURATION — SET YOUR AMAZON TAG & PASSWORD HERE
+   STEP 2 — SET YOUR AMAZON TAG & PASSWORD HERE
    ══════════════════════════════════════════════════════ */
 const DEFAULT_TAG      = 'veloura20-20';  // Your Amazon Associate Tag
 const DEFAULT_PASSWORD = 'veloura2024';   // Admin password (change this!)
@@ -825,15 +854,80 @@ const DEFAULT_PASSWORD = 'veloura2024';   // Admin password (change this!)
    DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING
    ═══════════════════════════════════════════════════════ */
 
-const STORE = {
+import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc,
+         collection, onSnapshot, addDoc,
+         deleteDoc, updateDoc }                   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const fbApp = initializeApp(FIREBASE_CONFIG);
+const db    = getFirestore(fbApp);
+
+/* ── Firestore helpers ── */
+const PRODUCTS_COL  = 'vl_products';
+const SETTINGS_DOC  = 'vl_settings/main';
+
+async function fbSaveSettings(s) {
+  await setDoc(doc(db, 'vl_settings', 'main'), s);
+}
+async function fbLoadSettings() {
+  const snap = await getDoc(doc(db, 'vl_settings', 'main'));
+  return snap.exists() ? snap.data() : null;
+}
+async function fbAddProduct(p) {
+  const ref = await addDoc(collection(db, PRODUCTS_COL), p);
+  return ref.id;
+}
+async function fbUpdateProduct(id, p) {
+  await updateDoc(doc(db, PRODUCTS_COL, id), p);
+}
+async function fbDeleteProduct(id) {
+  await deleteDoc(doc(db, PRODUCTS_COL, id));
+}
+
+/* ── localStorage fallback (used only for settings cache) ── */
+const LOCAL = {
   get: k => JSON.parse(localStorage.getItem(k) || 'null'),
   set: (k,v) => localStorage.setItem(k, JSON.stringify(v))
 };
 
-let settings = STORE.get('vl_settings') || { tag: DEFAULT_TAG, password: DEFAULT_PASSWORD, tagline: '' };
-let products = STORE.get('vl_products') || [];
+let settings     = LOCAL.get('vl_settings') || { tag: DEFAULT_TAG, password: DEFAULT_PASSWORD, tagline: '' };
+let products     = [];   // populated by Firestore real-time listener
 let extractedASIN = '';
 let currentCategory = 'All';
+
+/* ── Show loading state on the products grid ── */
+function showGridLoading() {
+  const grid = document.getElementById('products-grid');
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(245,240,232,0.3);font-size:.85rem;letter-spacing:.1em">Loading products…</div>`;
+}
+
+/* ── Bootstrap: load settings from Firebase, then start real-time listener ── */
+async function bootstrap() {
+  showGridLoading();
+  try {
+    const remoteSettings = await fbLoadSettings();
+    if (remoteSettings) {
+      settings = remoteSettings;
+      LOCAL.set('vl_settings', settings);
+    }
+  } catch(e) { /* offline — use local cache */ }
+
+  /* Real-time listener: fires immediately with current data, then on every change */
+  onSnapshot(collection(db, PRODUCTS_COL), snapshot => {
+    products = [];
+    snapshot.forEach(d => products.push({ _id: d.id, ...d.data() }));
+    // Sort newest first (by addedAt)
+    products.sort((a,b) => (b.addedAt||'').localeCompare(a.addedAt||''));
+    renderProducts();
+  }, err => {
+    console.error('Firestore error:', err);
+    /* Fallback to localStorage if Firebase isn't configured yet */
+    products = LOCAL.get('vl_products') || [];
+    renderProducts();
+  });
+}
+
+bootstrap();
 
 /* ── CURSOR ── */
 const cursor = document.getElementById('cursor');
@@ -1077,7 +1171,7 @@ document.getElementById('f-image').addEventListener('input', () => {
 });
 
 /* ── ADD PRODUCT ── */
-document.getElementById('add-product-btn').addEventListener('click', () => {
+document.getElementById('add-product-btn').addEventListener('click', async () => {
   const brand = document.getElementById('f-brand').value.trim();
   const name  = document.getElementById('f-name').value.trim();
   const price = document.getElementById('f-price').value.trim();
@@ -1106,16 +1200,23 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
     addedAt:     new Date().toISOString()
   };
 
-  products.unshift(product);
-  STORE.set('vl_products', products);
+  const btn = document.getElementById('add-product-btn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
 
-  document.getElementById('form-success').style.display='block';
-  document.getElementById('add-product-btn').disabled=true;
-  setTimeout(() => {
-    document.getElementById('form-success').style.display='none';
-    resetAddForm();
-  }, 3000);
-});
+  try {
+    await fbAddProduct(product);
+    document.getElementById('form-success').style.display='block';
+    setTimeout(() => {
+      document.getElementById('form-success').style.display='none';
+      resetAddForm();
+      btn.textContent = 'Add to Collection';
+    }, 3000);
+  } catch(e) {
+    alert('Error saving product: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Add to Collection';
+  }
 
 function resetAddForm() {
   extractedASIN = '';
@@ -1178,11 +1279,14 @@ function renderManage() {
   });
 
   document.querySelectorAll('.manage-del').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       if(confirm('Remove this product from your collection?')) {
-        products.splice(parseInt(btn.dataset.idx),1);
-        STORE.set('vl_products', products);
-        renderManage();
+        const p = products[parseInt(btn.dataset.idx)];
+        btn.textContent = '…';
+        try {
+          await fbDeleteProduct(p._id);
+          // Firestore listener will auto-refresh renderManage via renderProducts
+        } catch(e) { alert('Error removing: ' + e.message); btn.textContent = 'Remove'; }
       }
     });
   });
@@ -1231,15 +1335,14 @@ document.getElementById('e-image').addEventListener('input', () => {
   else    { wrap.style.display = 'none'; }
 });
 
-document.getElementById('save-edit-btn').addEventListener('click', () => {
+document.getElementById('save-edit-btn').addEventListener('click', async () => {
   const idx = parseInt(document.getElementById('edit-idx').value);
   const p   = products[idx];
   const asinRaw = document.getElementById('e-asin').value.trim();
   const asinMatch = asinRaw.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
   const resolvedASIN = asinMatch ? (asinMatch[1]||asinMatch[2]) : asinRaw;
 
-  products[idx] = {
-    ...p,
+  const updated = {
     brand:       document.getElementById('e-brand').value.trim(),
     name:        document.getElementById('e-name').value.trim(),
     price:       document.getElementById('e-price').value.trim(),
@@ -1253,14 +1356,21 @@ document.getElementById('save-edit-btn').addEventListener('click', () => {
     asin:        resolvedASIN || p.asin,
   };
 
-  STORE.set('vl_products', products);
-  document.getElementById('edit-success').style.display = 'block';
-  setTimeout(() => {
-    document.getElementById('edit-success').style.display = 'none';
-    document.getElementById('edit-modal').classList.remove('show');
-    renderManage();
-    renderProducts();
-  }, 1800);
+  const saveBtn = document.getElementById('save-edit-btn');
+  saveBtn.textContent = 'Saving…'; saveBtn.disabled = true;
+  try {
+    await fbUpdateProduct(p._id, updated);
+    document.getElementById('edit-success').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('edit-success').style.display = 'none';
+      document.getElementById('edit-modal').classList.remove('show');
+      renderManage();
+    }, 1800);
+  } catch(e) {
+    alert('Error saving: ' + e.message);
+  } finally {
+    saveBtn.textContent = 'Save Changes'; saveBtn.disabled = false;
+  }
 });
 
 /* ── SETTINGS ── */
@@ -1270,7 +1380,7 @@ function loadSettings() {
   document.getElementById('s-tagline').value  = settings.tagline || '';
 }
 
-document.getElementById('save-settings-btn').addEventListener('click', () => {
+document.getElementById('save-settings-btn').addEventListener('click', async () => {
   const newTag  = document.getElementById('s-tag').value.trim();
   const newPass = document.getElementById('s-password').value.trim();
   const newTag2 = document.getElementById('s-tagline').value.trim();
@@ -1279,14 +1389,15 @@ document.getElementById('save-settings-btn').addEventListener('click', () => {
   if(newPass) settings.password = newPass;
   if(newTag2) settings.tagline  = newTag2;
 
-  STORE.set('vl_settings', settings);
+  LOCAL.set('vl_settings', settings);
+  try { await fbSaveSettings(settings); } catch(e) { /* offline — saved locally */ }
+
   const saved = document.getElementById('settings-saved');
   saved.classList.add('show');
   setTimeout(()=>saved.classList.remove('show'), 2200);
 });
 
-/* ── INIT ── */
-renderProducts();
+/* ── INIT — handled by bootstrap() above ── */
 </script>
 </body>
 </html>
