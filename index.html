@@ -837,11 +837,15 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 </div>
 
 <script type="module">
-/* ══════════════════════════════════════════════════════════════════
-   STEP 1 — PASTE YOUR FIREBASE CONFIG HERE
-   Go to: https://console.firebase.google.com
-   → Your project → Project Settings → Your apps → Config
-   ══════════════════════════════════════════════════════════════════ */
+/* ── IMPORTS MUST BE FIRST IN A MODULE SCRIPT ── */
+import { initializeApp }                     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc,
+         collection, onSnapshot, addDoc,
+         deleteDoc, updateDoc }              from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+/* ══════════════════════════════════════════════════════
+   CONFIGURATION
+   ══════════════════════════════════════════════════════ */
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyAe00l-0nQNtGyOUgSk6xvbe0CLNvpVuG0",
   authDomain:        "veloura-8a198.firebaseapp.com",
@@ -851,576 +855,404 @@ const FIREBASE_CONFIG = {
   appId:             "1:817383391626:web:94f8459eb3aa18fbd8c873",
   measurementId:     "G-GJ0DHCMK2D"
 };
+const DEFAULT_TAG      = 'veloura20-20';
+const DEFAULT_PASSWORD = 'veloura2024';
 
-/* ══════════════════════════════════════════════════════
-   STEP 2 — SET YOUR AMAZON TAG & PASSWORD HERE
-   ══════════════════════════════════════════════════════ */
-const DEFAULT_TAG      = 'veloura20-20';  // Your Amazon Associate Tag
-const DEFAULT_PASSWORD = 'veloura2024';   // Admin password (change this!)
-
-/* ═══════════════════════════════════════════════════════
-   DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU'RE DOING
-   ═══════════════════════════════════════════════════════ */
-
-import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getFirestore, doc, getDoc, setDoc,
-         collection, onSnapshot, addDoc,
-         deleteDoc, updateDoc }                   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
+/* ── FIREBASE INIT ── */
 const fbApp = initializeApp(FIREBASE_CONFIG);
 const db    = getFirestore(fbApp);
+const PRODUCTS_COL = 'vl_products';
 
-/* ── Firestore helpers ── */
-const PRODUCTS_COL  = 'vl_products';
-const SETTINGS_DOC  = 'vl_settings/main';
+async function fbSaveSettings(s)     { await setDoc(doc(db,'vl_settings','main'), s); }
+async function fbLoadSettings()      { const s = await getDoc(doc(db,'vl_settings','main')); return s.exists()?s.data():null; }
+async function fbAddProduct(p)       { return (await addDoc(collection(db,PRODUCTS_COL),p)).id; }
+async function fbUpdateProduct(id,p) { await updateDoc(doc(db,PRODUCTS_COL,id),p); }
+async function fbDeleteProduct(id)   { await deleteDoc(doc(db,PRODUCTS_COL,id)); }
 
-async function fbSaveSettings(s) {
-  await setDoc(doc(db, 'vl_settings', 'main'), s);
-}
-async function fbLoadSettings() {
-  const snap = await getDoc(doc(db, 'vl_settings', 'main'));
-  return snap.exists() ? snap.data() : null;
-}
-async function fbAddProduct(p) {
-  const ref = await addDoc(collection(db, PRODUCTS_COL), p);
-  return ref.id;
-}
-async function fbUpdateProduct(id, p) {
-  await updateDoc(doc(db, PRODUCTS_COL, id), p);
-}
-async function fbDeleteProduct(id) {
-  await deleteDoc(doc(db, PRODUCTS_COL, id));
-}
-
-/* ── localStorage fallback (used only for settings cache) ── */
+/* ── LOCAL STORAGE FALLBACK ── */
 const LOCAL = {
-  get: k => JSON.parse(localStorage.getItem(k) || 'null'),
-  set: (k,v) => localStorage.setItem(k, JSON.stringify(v))
+  get: k  => JSON.parse(localStorage.getItem(k)||'null'),
+  set: (k,v) => localStorage.setItem(k,JSON.stringify(v))
 };
 
-let settings     = LOCAL.get('vl_settings') || { tag: DEFAULT_TAG, password: DEFAULT_PASSWORD, tagline: '' };
-let products     = [];   // populated by Firestore real-time listener
+/* ── STATE ── */
+let settings      = LOCAL.get('vl_settings') || { tag:DEFAULT_TAG, password:DEFAULT_PASSWORD, tagline:'' };
+let products      = [];
 let extractedASIN = '';
 let currentCategory = 'All';
-let adminIsOpen = false;
+let adminIsOpen   = false;
 
-/* ── Show loading state on the products grid ── */
-function showGridLoading() {
-  // Only remove product cards, never wipe placeholders
-  const grid = document.getElementById('products-grid');
-  Array.from(grid.querySelectorAll('.product-card')).forEach(el => el.remove());
-}
+/* ══════════════════════════════════════════════════════
+   ALL DOM CODE RUNS AFTER PAGE IS FULLY LOADED
+   ══════════════════════════════════════════════════════ */
+window.addEventListener('load', async () => {
 
-/* ── Bootstrap: load settings from Firebase, then start real-time listener ── */
-async function bootstrap() {
-  showGridLoading();
+  /* ── FIREBASE BOOTSTRAP ── */
   try {
-    const remoteSettings = await fbLoadSettings();
-    if (remoteSettings) {
-      settings = remoteSettings;
-      LOCAL.set('vl_settings', settings);
-    }
-  } catch(e) { /* offline — use local cache */ }
+    const remote = await fbLoadSettings();
+    if(remote){ settings = remote; LOCAL.set('vl_settings', settings); }
+  } catch(e){}
 
-  /* Real-time listener: fires immediately with current data, then on every change */
-  onSnapshot(collection(db, PRODUCTS_COL), snapshot => {
+  onSnapshot(collection(db, PRODUCTS_COL), snap => {
     products = [];
-    snapshot.forEach(d => products.push({ _id: d.id, ...d.data() }));
-    // Sort newest first (by addedAt)
+    snap.forEach(d => products.push({ _id:d.id, ...d.data() }));
     products.sort((a,b) => (b.addedAt||'').localeCompare(a.addedAt||''));
     renderProducts();
+    if(adminIsOpen) renderManage();
   }, err => {
-    console.error('Firestore error:', err);
-    /* Fallback to localStorage if Firebase isn't configured yet */
     products = LOCAL.get('vl_products') || [];
     renderProducts();
   });
-}
 
-bootstrap();
-
-document.addEventListener('DOMContentLoaded', () => {
-
-/* ── CURSOR ── */
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mouseX = 0, mouseY = 0;
-let curX = 0, curY = 0;
-let ringX = 0, ringY = 0;
-
-document.addEventListener('mousemove', e => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
-
-function updateCursor() {
-  curX += (mouseX - curX) * 0.2;
-  curY += (mouseY - curY) * 0.2;
-  ringX += (mouseX - ringX) * 0.15;
-  ringY += (mouseY - ringY) * 0.15;
-  if(cursor) { cursor.style.left = curX + 'px'; cursor.style.top = curY + 'px'; }
-  if(ring)   { ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px'; }
-  requestAnimationFrame(updateCursor);
-}
-updateCursor();
-
-document.querySelectorAll('a, button, .product-card, .category-btn, .admin-hint, .follow-btn, .social-link').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-});
-
-document.querySelectorAll('.hero-social-link, .social-link, .footer-social-icon').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-});
-
-/* ── PARTICLES ── */
-const particlesContainer = document.getElementById('particles');
-for(let i=0;i<40;i++) {
-  const p = document.createElement('div');
-  p.className = 'particle';
-  p.style.left = Math.random()*100+'%';
-  p.style.animationDuration = (8+Math.random()*12)+'s';
-  p.style.animationDelay = Math.random()*8+'s';
-  particlesContainer.appendChild(p);
-}
-
-/* ── NAV SCROLL ── */
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('scrolled', window.scrollY>80);
-});
-
-/* ── CATEGORY FILTER ── */
-document.querySelectorAll('.category-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentCategory = btn.dataset.category;
-    renderProducts();
-    document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-
-/* ── RENDER PRODUCTS ── */
-function renderProducts() {
-  const grid       = document.getElementById('products-grid');
-  const empty      = document.getElementById('empty-state');
-  const comingSoon = document.getElementById('coming-soon-state');
-
-  const filtered = currentCategory === 'All'
-    ? products
-    : products.filter(p => p.category === currentCategory);
-
-  // Remove only product cards — never touch the placeholder divs
-  Array.from(grid.querySelectorAll('.product-card')).forEach(el => el.remove());
-  empty.style.display      = 'none';
-  comingSoon.style.display = 'none';
-
-  if(filtered.length === 0) {
-    if(adminIsOpen) {
-      empty.style.display = 'flex';
-    } else {
-      comingSoon.style.display = 'flex';
-    }
-    return;
+  /* ── CURSOR ── */
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  let mouseX=0, mouseY=0, curX=0, curY=0, ringX=0, ringY=0;
+  document.addEventListener('mousemove', e => { mouseX=e.clientX; mouseY=e.clientY; });
+  function updateCursor() {
+    curX  += (mouseX-curX)  * 0.2;
+    curY  += (mouseY-curY)  * 0.2;
+    ringX += (mouseX-ringX) * 0.15;
+    ringY += (mouseY-ringY) * 0.15;
+    if(cursor){ cursor.style.left=curX+'px'; cursor.style.top=curY+'px'; }
+    if(ring)  { ring.style.left=ringX+'px';  ring.style.top=ringY+'px'; }
+    requestAnimationFrame(updateCursor);
   }
-  
-  filtered.forEach((p,idx) => {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    const stars = '★'.repeat(Math.floor(p.stars)) + (p.stars % 1 ? '½' : '');
-    const reviewCount = p.reviewCount || '0';
-    const reviewText = p.reviewText || '';
-    
-    card.innerHTML = `
-      <div class="product-img-wrap">
-        ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
-        ${p.imageUrl 
-          ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-             <div class="product-emoji-fallback" style="display:none">${p.emoji||'✨'}</div>`
-          : `<div class="product-emoji-fallback">${p.emoji||'✨'}</div>`
-        }
-        <div class="product-overlay">
-          <div class="product-overlay-inner">
-            <a href="https://www.amazon.com/dp/${p.asin}?tag=${settings.tag}" target="_blank" class="product-overlay-text">View on Amazon</a>
+  updateCursor();
+
+  document.querySelectorAll('a,button,.product-card,.category-btn,.follow-btn,.social-link,.nav-logo').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+  });
+
+  /* ── PARTICLES ── */
+  const pc = document.getElementById('particles');
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(8+Math.random()*12)+'s';
+    p.style.animationDelay=Math.random()*8+'s';
+    pc.appendChild(p);
+  }
+
+  /* ── NAV SCROLL ── */
+  window.addEventListener('scroll',()=>{
+    document.getElementById('nav').classList.toggle('scrolled',window.scrollY>80);
+  });
+
+  /* ── CATEGORY FILTER ── */
+  document.querySelectorAll('.category-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.category;
+      renderProducts();
+      document.getElementById('products').scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  /* ── RENDER PRODUCTS ── */
+  function renderProducts() {
+    const grid       = document.getElementById('products-grid');
+    const empty      = document.getElementById('empty-state');
+    const comingSoon = document.getElementById('coming-soon-state');
+    const filtered   = currentCategory==='All' ? products : products.filter(p=>p.category===currentCategory);
+
+    Array.from(grid.querySelectorAll('.product-card')).forEach(el=>el.remove());
+    empty.style.display      = 'none';
+    comingSoon.style.display = 'none';
+
+    if(filtered.length===0){
+      if(adminIsOpen) empty.style.display='flex';
+      else            comingSoon.style.display='flex';
+      return;
+    }
+
+    filtered.forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      const stars = '★'.repeat(Math.floor(p.stars))+(p.stars%1?'½':'');
+      card.innerHTML = `
+        <div class="product-img-wrap">
+          ${p.badge?`<div class="product-badge">${p.badge}</div>`:''}
+          ${p.imageUrl
+            ?`<img src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+              <div class="product-emoji-fallback" style="display:none">${p.emoji||'✨'}</div>`
+            :`<div class="product-emoji-fallback">${p.emoji||'✨'}</div>`}
+          <div class="product-overlay">
+            <div class="product-overlay-inner">
+              <a href="https://www.amazon.com/dp/${p.asin}?tag=${settings.tag}" target="_blank" class="product-overlay-text">View on Amazon</a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="product-info">
-        <span class="product-brand-tag">${p.brand}</span>
-        <div class="product-name">${p.name}</div>
-        <div class="product-rating">
-          <span class="product-stars">${stars}</span>
-          <span class="product-review-count">(${reviewCount.toLocaleString()} reviews)</span>
-        </div>
-        ${reviewText ? `<div class="product-review-preview">"${reviewText}"</div>` : '<div class="product-review-preview" style="opacity:0.3">No review preview available</div>'}
-        <div class="product-price-row">
-          <div class="product-price">${p.price}</div>
-          <div class="product-cta-badge">Prime</div>
-        </div>
-      </div>
-    `;
-    
-    // Add hover effect for cursor
-    card.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-    card.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-    
-    grid.appendChild(card);
-  });
-  
-  // Update category counts
-  document.querySelectorAll('.category-btn').forEach(btn => {
-    const cat = btn.dataset.category;
-    const count = cat === 'All' ? products.length : products.filter(p => p.category === cat).length;
-    const countSpan = btn.querySelector('.category-count');
-    if(countSpan) countSpan.textContent = `(${count})`;
-    else if(count > 0) btn.querySelector('span').innerHTML += `<span class="category-count">(${count})</span>`;
-  });
-}
+        <div class="product-info">
+          <span class="product-brand-tag">${p.brand}</span>
+          <div class="product-name">${p.name}</div>
+          <div class="product-rating">
+            <span class="product-stars">${stars}</span>
+            <span class="product-review-count">(${(p.reviewCount||'0').toLocaleString()} reviews)</span>
+          </div>
+          ${p.reviewText?`<div class="product-review-preview">"${p.reviewText}"</div>`:'<div class="product-review-preview" style="opacity:.3">No review preview</div>'}
+          <div class="product-price-row">
+            <div class="product-price">${p.price}</div>
+            <div class="product-cta-badge">Prime</div>
+          </div>
+        </div>`;
+      card.addEventListener('mouseenter',()=>document.body.classList.add('hovering'));
+      card.addEventListener('mouseleave',()=>document.body.classList.remove('hovering'));
+      grid.appendChild(card);
+    });
 
-/* ── PASSWORD GATE ── */
-function showPasswordGate() {
-  document.getElementById('password-gate').classList.add('show');
-  document.getElementById('password-input').value = '';
-  document.getElementById('password-error').style.display = 'none';
-  setTimeout(() => document.getElementById('password-input').focus(), 100);
-}
-
-function hidePasswordGate() {
-  document.getElementById('password-gate').classList.remove('show');
-}
-
-function showAdminPanel() {
-  adminIsOpen = true;
-  document.getElementById('admin-panel').style.display = 'block';
-  document.body.style.overflow = 'hidden';
-  loadSettings();
-  renderManage();
-}
-
-function hideAdminPanel() {
-  adminIsOpen = false;
-  document.getElementById('admin-panel').style.display = 'none';
-  document.body.style.overflow = 'auto';
-  renderProducts();
-}
-
-/* ── ADMIN TRIGGER — click logo 4 times ── */
-let logoClickCount = 0;
-let logoClickTimer = null;
-document.getElementById('admin-trigger').addEventListener('click', () => {
-  logoClickCount++;
-  clearTimeout(logoClickTimer);
-  if(logoClickCount >= 4) {
-    logoClickCount = 0;
-    showPasswordGate();
-  } else {
-    logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1500);
-  }
-});
-document.getElementById('empty-admin-trigger').addEventListener('click', showPasswordGate);
-document.getElementById('admin-close').addEventListener('click', hideAdminPanel);
-document.getElementById('password-cancel').addEventListener('click', hidePasswordGate);
-
-document.getElementById('password-submit').addEventListener('click', () => {
-  const input = document.getElementById('password-input').value;
-  if(input === settings.password) {
-    hidePasswordGate();
-    showAdminPanel();
-  } else {
-    document.getElementById('password-error').style.display = 'block';
-    document.getElementById('password-input').value = '';
-    document.getElementById('password-input').focus();
-  }
-});
-
-document.getElementById('password-input').addEventListener('keydown', e => {
-  if(e.key === 'Enter') document.getElementById('password-submit').click();
-});
-
-/* ── ADMIN TABS ── */
-document.querySelectorAll('.admin-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
-  });
-});
-
-/* ── EXTRACT ASIN ── */
-document.getElementById('extract-btn').addEventListener('click', () => {
-  const url = document.getElementById('amazon-url-input').value.trim();
-  const result = document.getElementById('extract-result');
-  const preview = document.getElementById('affiliate-preview');
-  
-  if(!url) {
-    result.textContent = 'Please enter an Amazon URL';
-    result.className = 'extract-result error';
-    return;
-  }
-  
-  const match = url.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
-  if(!match) {
-    result.textContent = 'Invalid Amazon URL. Make sure it contains /dp/ or /gp/product/';
-    result.className = 'extract-result error';
-    extractedASIN = '';
-    return;
-  }
-  
-  extractedASIN = match[1] || match[2];
-  result.textContent = `✓ ASIN extracted: ${extractedASIN}`;
-  result.className = 'extract-result success';
-  
-  const affiliateLink = `https://www.amazon.com/dp/${extractedASIN}?tag=${settings.tag}`;
-  preview.innerHTML = `<strong>Affiliate Link Preview</strong>Your tagged link: <code>${affiliateLink}</code>`;
-  
-  document.getElementById('add-product-btn').disabled = false;
-});
-
-document.getElementById('amazon-url-input').addEventListener('keydown', e => {
-  if(e.key==='Enter') document.getElementById('extract-btn').click();
-});
-
-document.getElementById('f-image').addEventListener('input', () => {
-  const val = document.getElementById('f-image').value.trim();
-  const wrap = document.getElementById('add-img-preview-wrap');
-  const img  = document.getElementById('add-img-preview');
-  if(val) { img.src = val; wrap.style.display = 'block'; }
-  else    { wrap.style.display = 'none'; }
-});
-
-/* ── ADD PRODUCT ── */
-document.getElementById('add-product-btn').addEventListener('click', async () => {
-  const brand = document.getElementById('f-brand').value.trim();
-  const name  = document.getElementById('f-name').value.trim();
-  const price = document.getElementById('f-price').value.trim();
-
-  if(!brand||!name||!price) {
-    alert('Please fill in Brand, Product Name, and Price.');
-    return;
-  }
-  if(!extractedASIN) {
-    alert('Please extract an ASIN from the Amazon URL first.');
-    return;
+    document.querySelectorAll('.category-btn').forEach(btn=>{
+      const cat   = btn.dataset.category;
+      const count = cat==='All'?products.length:products.filter(p=>p.category===cat).length;
+      const span  = btn.querySelector('.category-count');
+      if(span) span.textContent=`(${count})`;
+    });
   }
 
-  const product = {
-    asin:        extractedASIN,
-    brand:       brand,
-    name:        name,
-    price:       price,
-    badge:       document.getElementById('f-badge').value.trim(),
-    category:    document.getElementById('f-category').value,
-    stars:       parseFloat(document.getElementById('f-stars').value),
-    reviewCount: document.getElementById('f-review-count').value.trim(),
-    reviewText:  document.getElementById('f-review-text').value.trim(),
-    emoji:       document.getElementById('f-emoji').value.trim() || '✨',
-    imageUrl:    document.getElementById('f-image').value.trim(),
-    addedAt:     new Date().toISOString()
-  };
+  /* ── PASSWORD GATE ── */
+  function showPasswordGate(){
+    document.getElementById('password-gate').classList.add('show');
+    document.getElementById('password-input').value='';
+    document.getElementById('password-error').style.display='none';
+    setTimeout(()=>document.getElementById('password-input').focus(),100);
+  }
+  function hidePasswordGate(){ document.getElementById('password-gate').classList.remove('show'); }
 
-  const btn = document.getElementById('add-product-btn');
-  btn.disabled = true;
-  btn.textContent = 'Saving…';
-
-  try {
-    await fbAddProduct(product);
-    document.getElementById('form-success').style.display='block';
-    setTimeout(() => {
-      document.getElementById('form-success').style.display='none';
-      resetAddForm();
-      btn.textContent = 'Add to Collection';
-    }, 3000);
-  } catch(e) {
-    alert('Error saving product: ' + e.message);
-    btn.disabled = false;
-    btn.textContent = 'Add to Collection';
+  function showAdminPanel(){
+    adminIsOpen=true;
+    document.getElementById('admin-panel').style.display='block';
+    document.body.style.overflow='hidden';
+    loadSettings();
+    renderManage();
+  }
+  function hideAdminPanel(){
+    adminIsOpen=false;
+    document.getElementById('admin-panel').style.display='none';
+    document.body.style.overflow='auto';
+    renderProducts();
   }
 
-function resetAddForm() {
-  extractedASIN = '';
-  document.getElementById('amazon-url-input').value='';
-  document.getElementById('f-brand').value='';
-  document.getElementById('f-name').value='';
-  document.getElementById('f-price').value='';
-  document.getElementById('f-badge').value='';
-  document.getElementById('f-emoji').value='✨';
-  document.getElementById('f-image').value='';
-  document.getElementById('add-img-preview-wrap').style.display='none';
-  document.getElementById('f-stars').value='5';
-  document.getElementById('f-review-count').value='8,234';
-  document.getElementById('f-review-text').value='"This lip oil is absolutely stunning! The shine is incredible and it feels so hydrating."';
-  document.getElementById('f-category').value='Top Makeup Picks';
-  document.getElementById('extract-result').textContent='';
-  document.getElementById('extract-result').className='extract-result';
-  document.getElementById('affiliate-preview').innerHTML='<strong>Affiliate Link Preview</strong>Paste an Amazon URL above to generate your tagged affiliate link.';
-  document.getElementById('add-product-btn').disabled=true;
-}
-
-/* ── MANAGE ── */
-function renderManage() {
-  const grid  = document.getElementById('manage-grid');
-  const empty = document.getElementById('manage-empty');
-  const count = document.getElementById('manage-count');
-
-  grid.innerHTML = '';
-  if(products.length===0) {
-    empty.style.display='block';
-    count.innerHTML='';
-    return;
-  }
-  empty.style.display='none';
-  count.innerHTML=`<strong>${products.length}</strong> product${products.length!==1?'s':''} in your collection`;
-
-  products.forEach((p,idx) => {
-    const row = document.createElement('div');
-    row.className = 'manage-row';
-    const thumb = p.imageUrl 
-      ? `<img class="manage-img-thumb" src="${p.imageUrl}" alt="${p.name}" onerror="this.outerHTML='<div class=\'manage-img\'>${p.emoji||'✨'}</div>'">`
-      : `<div class="manage-img">${p.emoji||'✨'}</div>`;
-    row.innerHTML = `
-      ${thumb}
-      <div class="manage-info">
-        <div class="manage-brand">${p.brand}</div>
-        <div class="manage-name">${p.name}</div>
-        <div class="manage-price">${p.price} · ${p.category}</div>
-      </div>
-      ${p.badge ? `<div class="manage-badge">${p.badge}</div>` : '<div></div>'}
-      <button class="manage-edit" data-idx="${idx}">Edit</button>
-      <button class="manage-del" data-idx="${idx}">Remove</button>`;
-    grid.appendChild(row);
+  /* ── ADMIN TRIGGER: click VELOURA logo 4 times ── */
+  let logoClicks=0, logoTimer=null;
+  document.getElementById('admin-trigger').addEventListener('click',()=>{
+    logoClicks++;
+    clearTimeout(logoTimer);
+    if(logoClicks>=4){ logoClicks=0; showPasswordGate(); }
+    else logoTimer=setTimeout(()=>{ logoClicks=0; },1500);
   });
 
-  document.querySelectorAll('.manage-edit').forEach(btn => {
-    btn.addEventListener('click', () => {
-      openEditModal(parseInt(btn.dataset.idx));
+  document.getElementById('empty-admin-trigger').addEventListener('click', showPasswordGate);
+  document.getElementById('admin-close').addEventListener('click', hideAdminPanel);
+  document.getElementById('password-cancel').addEventListener('click', hidePasswordGate);
+
+  document.getElementById('password-submit').addEventListener('click',()=>{
+    const input = document.getElementById('password-input').value;
+    if(input===settings.password){ hidePasswordGate(); showAdminPanel(); }
+    else{
+      document.getElementById('password-error').style.display='block';
+      document.getElementById('password-input').value='';
+      document.getElementById('password-input').focus();
+    }
+  });
+  document.getElementById('password-input').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('password-submit').click(); });
+
+  /* ── ADMIN TABS ── */
+  document.querySelectorAll('.admin-tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.admin-content').forEach(c=>c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
     });
   });
 
-  document.querySelectorAll('.manage-del').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      if(confirm('Remove this product from your collection?')) {
-        const p = products[parseInt(btn.dataset.idx)];
-        btn.textContent = '…';
-        try {
-          await fbDeleteProduct(p._id);
-          // Firestore listener will auto-refresh renderManage via renderProducts
-        } catch(e) { alert('Error removing: ' + e.message); btn.textContent = 'Remove'; }
+  /* ── EXTRACT ASIN ── */
+  document.getElementById('extract-btn').addEventListener('click',()=>{
+    const url    = document.getElementById('amazon-url-input').value.trim();
+    const result = document.getElementById('extract-result');
+    const preview= document.getElementById('affiliate-preview');
+    if(!url){ result.textContent='Please enter an Amazon URL'; result.className='extract-result error'; return; }
+    const match = url.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
+    if(!match){ result.textContent='Invalid Amazon URL.'; result.className='extract-result error'; extractedASIN=''; return; }
+    extractedASIN = match[1]||match[2];
+    result.textContent=`✓ ASIN extracted: ${extractedASIN}`;
+    result.className='extract-result success';
+    preview.innerHTML=`<strong>Affiliate Link Preview</strong>Your tagged link: <code>https://www.amazon.com/dp/${extractedASIN}?tag=${settings.tag}</code>`;
+    document.getElementById('add-product-btn').disabled=false;
+  });
+  document.getElementById('amazon-url-input').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('extract-btn').click(); });
+
+  document.getElementById('f-image').addEventListener('input',()=>{
+    const val=document.getElementById('f-image').value.trim();
+    const wrap=document.getElementById('add-img-preview-wrap');
+    const img=document.getElementById('add-img-preview');
+    if(val){img.src=val;wrap.style.display='block';}else{wrap.style.display='none';}
+  });
+
+  /* ── ADD PRODUCT ── */
+  document.getElementById('add-product-btn').addEventListener('click', async ()=>{
+    const brand=document.getElementById('f-brand').value.trim();
+    const name =document.getElementById('f-name').value.trim();
+    const price=document.getElementById('f-price').value.trim();
+    if(!brand||!name||!price){ alert('Please fill in Brand, Product Name, and Price.'); return; }
+    if(!extractedASIN){ alert('Please extract an ASIN from the Amazon URL first.'); return; }
+    const product={
+      asin:extractedASIN, brand, name, price,
+      badge:       document.getElementById('f-badge').value.trim(),
+      category:    document.getElementById('f-category').value,
+      stars:       parseFloat(document.getElementById('f-stars').value),
+      reviewCount: document.getElementById('f-review-count').value.trim(),
+      reviewText:  document.getElementById('f-review-text').value.trim(),
+      emoji:       document.getElementById('f-emoji').value.trim()||'✨',
+      imageUrl:    document.getElementById('f-image').value.trim(),
+      addedAt:     new Date().toISOString()
+    };
+    const btn=document.getElementById('add-product-btn');
+    btn.disabled=true; btn.textContent='Saving…';
+    try{
+      await fbAddProduct(product);
+      document.getElementById('form-success').style.display='block';
+      setTimeout(()=>{ document.getElementById('form-success').style.display='none'; resetAddForm(); btn.textContent='Add to Collection'; },3000);
+    }catch(e){ alert('Error: '+e.message); btn.disabled=false; btn.textContent='Add to Collection'; }
+  });
+
+  function resetAddForm(){
+    extractedASIN='';
+    ['amazon-url-input','f-brand','f-name','f-price','f-badge'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-emoji').value='✨';
+    document.getElementById('f-image').value='';
+    document.getElementById('add-img-preview-wrap').style.display='none';
+    document.getElementById('f-stars').value='5';
+    document.getElementById('f-review-count').value='8,234';
+    document.getElementById('f-review-text').value='"This lip oil is absolutely stunning!"';
+    document.getElementById('f-category').value='Top Makeup Picks';
+    document.getElementById('extract-result').textContent='';
+    document.getElementById('extract-result').className='extract-result';
+    document.getElementById('affiliate-preview').innerHTML='<strong>Affiliate Link Preview</strong>Paste an Amazon URL above to generate your tagged affiliate link.';
+    document.getElementById('add-product-btn').disabled=true;
+  }
+
+  /* ── MANAGE ── */
+  function renderManage(){
+    const grid =document.getElementById('manage-grid');
+    const empty=document.getElementById('manage-empty');
+    const count=document.getElementById('manage-count');
+    grid.innerHTML='';
+    if(products.length===0){ empty.style.display='block'; count.innerHTML=''; return; }
+    empty.style.display='none';
+    count.innerHTML=`<strong>${products.length}</strong> product${products.length!==1?'s':''} in your collection`;
+    products.forEach((p,idx)=>{
+      const row=document.createElement('div');
+      row.className='manage-row';
+      const thumb=p.imageUrl?`<img class="manage-img-thumb" src="${p.imageUrl}" alt="${p.name}">`:`<div class="manage-img">${p.emoji||'✨'}</div>`;
+      row.innerHTML=`${thumb}
+        <div class="manage-info">
+          <div class="manage-brand">${p.brand}</div>
+          <div class="manage-name">${p.name}</div>
+          <div class="manage-price">${p.price} · ${p.category}</div>
+        </div>
+        ${p.badge?`<div class="manage-badge">${p.badge}</div>`:'<div></div>'}
+        <button class="manage-edit" data-idx="${idx}">Edit</button>
+        <button class="manage-del" data-idx="${idx}">Remove</button>`;
+      grid.appendChild(row);
+    });
+    document.querySelectorAll('.manage-edit').forEach(btn=>btn.addEventListener('click',()=>openEditModal(parseInt(btn.dataset.idx))));
+    document.querySelectorAll('.manage-del').forEach(btn=>btn.addEventListener('click', async ()=>{
+      if(confirm('Remove this product?')){
+        const p=products[parseInt(btn.dataset.idx)]; btn.textContent='…';
+        try{ await fbDeleteProduct(p._id); }catch(e){ alert('Error: '+e.message); btn.textContent='Remove'; }
       }
-    });
+    }));
+  }
+
+  /* ── EDIT MODAL ── */
+  function openEditModal(idx){
+    const p=products[idx];
+    document.getElementById('edit-idx').value=idx;
+    document.getElementById('e-brand').value      =p.brand||'';
+    document.getElementById('e-name').value       =p.name||'';
+    document.getElementById('e-price').value      =p.price||'';
+    document.getElementById('e-badge').value      =p.badge||'';
+    document.getElementById('e-emoji').value      =p.emoji||'✨';
+    document.getElementById('e-review-count').value=p.reviewCount||'';
+    document.getElementById('e-review-text').value=p.reviewText||'';
+    document.getElementById('e-asin').value       =p.asin||'';
+    document.getElementById('e-image').value      =p.imageUrl||'';
+    document.getElementById('e-stars').value      =p.stars||'5';
+    document.getElementById('e-category').value   =p.category||'';
+    const wrap=document.getElementById('edit-img-preview-wrap');
+    const img =document.getElementById('edit-img-preview');
+    if(p.imageUrl){img.src=p.imageUrl;wrap.style.display='block';}else{wrap.style.display='none';}
+    document.getElementById('edit-success').style.display='none';
+    document.getElementById('edit-modal').classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+
+  document.getElementById('edit-modal-close').addEventListener('click',()=>{
+    document.getElementById('edit-modal').classList.remove('show');
+    document.body.style.overflow='hidden';
   });
-}
 
-/* ── EDIT MODAL ── */
-function openEditModal(idx) {
-  const p = products[idx];
-  document.getElementById('edit-idx').value = idx;
-  document.getElementById('e-brand').value       = p.brand || '';
-  document.getElementById('e-name').value        = p.name || '';
-  document.getElementById('e-price').value       = p.price || '';
-  document.getElementById('e-badge').value       = p.badge || '';
-  document.getElementById('e-emoji').value       = p.emoji || '✨';
-  document.getElementById('e-review-count').value= p.reviewCount || '';
-  document.getElementById('e-review-text').value = p.reviewText || '';
-  document.getElementById('e-asin').value        = p.asin || '';
-  document.getElementById('e-image').value       = p.imageUrl || '';
-  document.getElementById('e-stars').value       = p.stars || '5';
-  document.getElementById('e-category').value    = p.category || '';
+  document.getElementById('e-image').addEventListener('input',()=>{
+    const val=document.getElementById('e-image').value.trim();
+    const wrap=document.getElementById('edit-img-preview-wrap');
+    const img=document.getElementById('edit-img-preview');
+    if(val){img.src=val;wrap.style.display='block';}else{wrap.style.display='none';}
+  });
 
-  const prevWrap = document.getElementById('edit-img-preview-wrap');
-  const prevImg  = document.getElementById('edit-img-preview');
-  if(p.imageUrl) {
-    prevImg.src = p.imageUrl;
-    prevWrap.style.display = 'block';
-  } else {
-    prevWrap.style.display = 'none';
+  document.getElementById('save-edit-btn').addEventListener('click', async ()=>{
+    const idx=parseInt(document.getElementById('edit-idx').value);
+    const p=products[idx];
+    const asinRaw=document.getElementById('e-asin').value.trim();
+    const asinMatch=asinRaw.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
+    const updated={
+      brand:       document.getElementById('e-brand').value.trim(),
+      name:        document.getElementById('e-name').value.trim(),
+      price:       document.getElementById('e-price').value.trim(),
+      badge:       document.getElementById('e-badge').value.trim(),
+      category:    document.getElementById('e-category').value,
+      stars:       parseFloat(document.getElementById('e-stars').value),
+      reviewCount: document.getElementById('e-review-count').value.trim(),
+      reviewText:  document.getElementById('e-review-text').value.trim(),
+      emoji:       document.getElementById('e-emoji').value.trim()||'✨',
+      imageUrl:    document.getElementById('e-image').value.trim(),
+      asin:        asinMatch?(asinMatch[1]||asinMatch[2]):asinRaw||p.asin,
+    };
+    const saveBtn=document.getElementById('save-edit-btn');
+    saveBtn.textContent='Saving…'; saveBtn.disabled=true;
+    try{
+      await fbUpdateProduct(p._id, updated);
+      document.getElementById('edit-success').style.display='block';
+      setTimeout(()=>{ document.getElementById('edit-success').style.display='none'; document.getElementById('edit-modal').classList.remove('show'); renderManage(); },1800);
+    }catch(e){ alert('Error: '+e.message); }
+    finally{ saveBtn.textContent='Save Changes'; saveBtn.disabled=false; }
+  });
+
+  /* ── SETTINGS ── */
+  function loadSettings(){
+    document.getElementById('s-tag').value     =settings.tag||DEFAULT_TAG;
+    document.getElementById('s-password').value='';
+    document.getElementById('s-tagline').value =settings.tagline||'';
   }
 
-  document.getElementById('edit-success').style.display = 'none';
-  document.getElementById('edit-modal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-}
+  document.getElementById('save-settings-btn').addEventListener('click', async ()=>{
+    const t=document.getElementById('s-tag').value.trim();
+    const pw=document.getElementById('s-password').value.trim();
+    const tl=document.getElementById('s-tagline').value.trim();
+    if(t)  settings.tag     =t;
+    if(pw) settings.password=pw;
+    if(tl) settings.tagline =tl;
+    LOCAL.set('vl_settings',settings);
+    try{ await fbSaveSettings(settings); }catch(e){}
+    const saved=document.getElementById('settings-saved');
+    saved.classList.add('show');
+    setTimeout(()=>saved.classList.remove('show'),2200);
+  });
 
-document.getElementById('edit-modal-close').addEventListener('click', () => {
-  document.getElementById('edit-modal').classList.remove('show');
-  document.body.style.overflow = 'hidden'; // admin panel still open
-});
-
-document.getElementById('e-image').addEventListener('input', () => {
-  const val = document.getElementById('e-image').value.trim();
-  const wrap = document.getElementById('edit-img-preview-wrap');
-  const img  = document.getElementById('edit-img-preview');
-  if(val) { img.src = val; wrap.style.display = 'block'; }
-  else    { wrap.style.display = 'none'; }
-});
-
-document.getElementById('save-edit-btn').addEventListener('click', async () => {
-  const idx = parseInt(document.getElementById('edit-idx').value);
-  const p   = products[idx];
-  const asinRaw = document.getElementById('e-asin').value.trim();
-  const asinMatch = asinRaw.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
-  const resolvedASIN = asinMatch ? (asinMatch[1]||asinMatch[2]) : asinRaw;
-
-  const updated = {
-    brand:       document.getElementById('e-brand').value.trim(),
-    name:        document.getElementById('e-name').value.trim(),
-    price:       document.getElementById('e-price').value.trim(),
-    badge:       document.getElementById('e-badge').value.trim(),
-    category:    document.getElementById('e-category').value,
-    stars:       parseFloat(document.getElementById('e-stars').value),
-    reviewCount: document.getElementById('e-review-count').value.trim(),
-    reviewText:  document.getElementById('e-review-text').value.trim(),
-    emoji:       document.getElementById('e-emoji').value.trim() || '✨',
-    imageUrl:    document.getElementById('e-image').value.trim(),
-    asin:        resolvedASIN || p.asin,
-  };
-
-  const saveBtn = document.getElementById('save-edit-btn');
-  saveBtn.textContent = 'Saving…'; saveBtn.disabled = true;
-  try {
-    await fbUpdateProduct(p._id, updated);
-    document.getElementById('edit-success').style.display = 'block';
-    setTimeout(() => {
-      document.getElementById('edit-success').style.display = 'none';
-      document.getElementById('edit-modal').classList.remove('show');
-      renderManage();
-    }, 1800);
-  } catch(e) {
-    alert('Error saving: ' + e.message);
-  } finally {
-    saveBtn.textContent = 'Save Changes'; saveBtn.disabled = false;
-  }
-});
-
-/* ── SETTINGS ── */
-function loadSettings() {
-  document.getElementById('s-tag').value      = settings.tag || DEFAULT_TAG;
-  document.getElementById('s-password').value = '';
-  document.getElementById('s-tagline').value  = settings.tagline || '';
-}
-
-document.getElementById('save-settings-btn').addEventListener('click', async () => {
-  const newTag  = document.getElementById('s-tag').value.trim();
-  const newPass = document.getElementById('s-password').value.trim();
-  const newTag2 = document.getElementById('s-tagline').value.trim();
-
-  if(newTag)  settings.tag      = newTag;
-  if(newPass) settings.password = newPass;
-  if(newTag2) settings.tagline  = newTag2;
-
-  LOCAL.set('vl_settings', settings);
-  try { await fbSaveSettings(settings); } catch(e) { /* offline — saved locally */ }
-
-  const saved = document.getElementById('settings-saved');
-  saved.classList.add('show');
-  setTimeout(()=>saved.classList.remove('show'), 2200);
-});
-
-/* ── INIT — handled by bootstrap() above ── */
-
-}); // end DOMContentLoaded
+}); // end window.load
 </script>
 </body>
 </html>
