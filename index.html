@@ -141,6 +141,10 @@ section{padding:120px 60px}
 .empty-state .es-sub{font-size:.82rem;color:var(--muted);text-align:center;max-width:320px;line-height:1.7}
 .empty-state .es-cta{font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:10px 24px;margin-top:8px;transition:all .3s}
 .empty-state .es-cta:hover{background:var(--gold);color:var(--black)}
+.coming-soon-state{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;gap:16px}
+.coming-soon-state .cs-icon{font-size:2.5rem;filter:saturate(.4);animation:orb-float 4s ease-in-out infinite}
+.coming-soon-state .cs-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--cream);letter-spacing:.05em}
+.coming-soon-state .cs-sub{font-size:.82rem;color:var(--muted);text-align:center;max-width:320px;line-height:1.7}
 
 .product-card{background:var(--surface);position:relative;overflow:hidden;cursor:pointer;border:1px solid rgba(201,169,110,.07);transition:all .4s;border-radius:2px}
 .product-card:hover{border-color:rgba(201,169,110,.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
@@ -473,11 +477,16 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     </div>
   </div>
   <div class="products-grid" id="products-grid">
-    <div class="empty-state" id="empty-state">
+    <div class="empty-state" id="empty-state" style="display:none">
       <div class="es-icon">✨</div>
       <div class="es-title">Your Collection Awaits</div>
       <div class="es-sub">Add your first curated beauty pick to start building your exclusive collection</div>
       <button class="es-cta" id="empty-admin-trigger">Add Products</button>
+    </div>
+    <div class="coming-soon-state" id="coming-soon-state" style="display:none">
+      <div class="cs-icon">✨</div>
+      <div class="cs-title">New Picks Coming Soon</div>
+      <div class="cs-sub">We're curating something beautiful for you. Check back soon.</div>
     </div>
   </div>
 </section>
@@ -894,11 +903,13 @@ let settings     = LOCAL.get('vl_settings') || { tag: DEFAULT_TAG, password: DEF
 let products     = [];   // populated by Firestore real-time listener
 let extractedASIN = '';
 let currentCategory = 'All';
+let adminIsOpen = false;
 
 /* ── Show loading state on the products grid ── */
 function showGridLoading() {
+  // Only remove product cards, never wipe placeholders
   const grid = document.getElementById('products-grid');
-  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:rgba(245,240,232,0.3);font-size:.85rem;letter-spacing:.1em">Loading products…</div>`;
+  Array.from(grid.querySelectorAll('.product-card')).forEach(el => el.remove());
 }
 
 /* ── Bootstrap: load settings from Firebase, then start real-time listener ── */
@@ -929,6 +940,8 @@ async function bootstrap() {
 
 bootstrap();
 
+document.addEventListener('DOMContentLoaded', () => {
+
 /* ── CURSOR ── */
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
@@ -946,10 +959,8 @@ function updateCursor() {
   curY += (mouseY - curY) * 0.2;
   ringX += (mouseX - ringX) * 0.15;
   ringY += (mouseY - ringY) * 0.15;
-  cursor.style.left = curX + 'px';
-  cursor.style.top = curY + 'px';
-  ring.style.left = ringX + 'px';
-  ring.style.top = ringY + 'px';
+  if(cursor) { cursor.style.left = curX + 'px'; cursor.style.top = curY + 'px'; }
+  if(ring)   { ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px'; }
   requestAnimationFrame(updateCursor);
 }
 updateCursor();
@@ -959,7 +970,6 @@ document.querySelectorAll('a, button, .product-card, .category-btn, .admin-hint,
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
 });
 
-// Add hover effect to all social links
 document.querySelectorAll('.hero-social-link, .social-link, .footer-social-icon').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
@@ -982,41 +992,39 @@ window.addEventListener('scroll', () => {
 });
 
 /* ── CATEGORY FILTER ── */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.category-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentCategory = btn.dataset.category;
-      renderProducts();
-      
-      // Scroll to products section
-      document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+document.querySelectorAll('.category-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory = btn.dataset.category;
+    renderProducts();
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
 
 /* ── RENDER PRODUCTS ── */
 function renderProducts() {
-  const grid = document.getElementById('products-grid');
-  const empty = document.getElementById('empty-state');
-  
-  const filtered = currentCategory === 'All' 
-    ? products 
+  const grid       = document.getElementById('products-grid');
+  const empty      = document.getElementById('empty-state');
+  const comingSoon = document.getElementById('coming-soon-state');
+
+  const filtered = currentCategory === 'All'
+    ? products
     : products.filter(p => p.category === currentCategory);
-  
-  grid.innerHTML = '';
-  
+
+  // Remove only product cards — never touch the placeholder divs
+  Array.from(grid.querySelectorAll('.product-card')).forEach(el => el.remove());
+  empty.style.display      = 'none';
+  comingSoon.style.display = 'none';
+
   if(filtered.length === 0) {
-    empty.style.display = 'flex';
-    grid.appendChild(empty);
-    // Add hover effect for empty state
-    empty.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-    empty.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    if(adminIsOpen) {
+      empty.style.display = 'flex';
+    } else {
+      comingSoon.style.display = 'flex';
+    }
     return;
   }
-  
-  empty.style.display = 'none';
   
   filtered.forEach((p,idx) => {
     const card = document.createElement('div');
@@ -1085,6 +1093,7 @@ function hidePasswordGate() {
 }
 
 function showAdminPanel() {
+  adminIsOpen = true;
   document.getElementById('admin-panel').style.display = 'block';
   document.body.style.overflow = 'hidden';
   loadSettings();
@@ -1092,6 +1101,7 @@ function showAdminPanel() {
 }
 
 function hideAdminPanel() {
+  adminIsOpen = false;
   document.getElementById('admin-panel').style.display = 'none';
   document.body.style.overflow = 'auto';
   renderProducts();
@@ -1398,6 +1408,8 @@ document.getElementById('save-settings-btn').addEventListener('click', async () 
 });
 
 /* ── INIT — handled by bootstrap() above ── */
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
