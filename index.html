@@ -221,17 +221,30 @@ section{padding:120px 60px}
 
 .manage-grid{display:flex;flex-direction:column;gap:12px}
 .manage-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:.9rem}
-.manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:60px 1fr auto auto;gap:20px;align-items:center;border-radius:4px;transition:all .3s}
+.manage-del{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--red);border:1px solid rgba(201,110,110,.3);background:none;padding:8px 16px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
+.manage-del:hover{background:rgba(201,110,110,.1);border-color:var(--red)}
+.manage-edit{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);border:1px solid rgba(201,169,110,.3);background:none;padding:8px 16px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
+.manage-edit:hover{background:rgba(201,169,110,.1);border-color:var(--gold)}
 .manage-row:hover{border-color:rgba(201,169,110,.3)}
-.manage-img{font-size:2rem;text-align:center}
+.manage-img{font-size:2rem;text-align:center;line-height:52px}
 .manage-info{display:flex;flex-direction:column;gap:6px}
 .manage-brand{font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold)}
 .manage-name{font-size:.95rem;color:var(--cream)}
 .manage-price{font-size:.75rem;color:var(--muted)}
 .manage-badge{font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:6px 12px;font-weight:600;border-radius:2px}
-.manage-del{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:var(--red);border:1px solid rgba(201,110,110,.3);background:none;padding:8px 16px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
-.manage-del:hover{background:rgba(201,110,110,.1);border-color:var(--red)}
+.manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:60px 1fr auto auto auto;gap:16px;align-items:center;border-radius:4px;transition:all .3s}
+.manage-img-thumb{width:52px;height:52px;border-radius:3px;object-fit:cover;border:1px solid rgba(201,169,110,.15)}
 .manage-count{font-size:.85rem;color:var(--muted);margin-bottom:20px;text-align:center;letter-spacing:.05em}
+#edit-modal{display:none;position:fixed;inset:0;background:rgba(8,8,8,.97);z-index:20001;overflow-y:auto;padding:60px 40px;backdrop-filter:blur(10px)}
+#edit-modal.show{display:block}
+.edit-modal-inner{max-width:800px;margin:0 auto}
+.edit-modal-title{font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream);margin-bottom:8px}
+.edit-modal-sub{font-size:.82rem;color:var(--muted);margin-bottom:40px;letter-spacing:.05em}
+.edit-modal-close{position:fixed;top:30px;right:40px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(201,169,110,.3);padding:10px 24px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;z-index:20002}
+.edit-modal-close:hover{border-color:var(--gold);color:var(--gold)}
+.edit-success{display:none;background:rgba(110,201,138,.12);border:1px solid rgba(110,201,138,.4);color:var(--green);padding:16px 24px;margin-top:20px;font-size:.85rem;letter-spacing:.05em;border-radius:4px;text-align:center}
+.img-preview-wrap{margin-top:12px;display:none}
+.img-preview-wrap img{max-width:120px;max-height:120px;border-radius:4px;border:1px solid rgba(201,169,110,.2);object-fit:cover}
 
 .form-success{display:none;background:rgba(110,201,138,.12);border:1px solid rgba(110,201,138,.4);color:var(--green);padding:16px 24px;margin-top:20px;font-size:.85rem;letter-spacing:.05em;border-radius:4px;text-align:center}
 .settings-saved{position:fixed;top:100px;right:40px;background:var(--gold);color:var(--black);padding:16px 28px;font-size:9px;letter-spacing:.35em;text-transform:uppercase;font-weight:500;border-radius:2px;opacity:0;transform:translateY(-20px);transition:all .4s;z-index:10002;box-shadow:0 8px 24px rgba(0,0,0,.3)}
@@ -667,8 +680,15 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
             <input type="text" id="f-badge" class="form-input" placeholder="BESTSELLER">
           </div>
           <div class="form-group">
-            <label class="form-label">Emoji</label>
+            <label class="form-label">Emoji (fallback icon)</label>
             <input type="text" id="f-emoji" class="form-input" placeholder="💄" value="✨">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Product Image URL (optional — replaces emoji)</label>
+            <input type="text" id="f-image" class="form-input" placeholder="https://m.media-amazon.com/images/I/... or any image URL">
+            <div class="img-preview-wrap" id="add-img-preview-wrap">
+              <img id="add-img-preview" src="" alt="Preview">
+            </div>
           </div>
         </div>
         <div class="form-group" style="margin-top:20px">
@@ -713,6 +733,85 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     </div>
   </div>
   <div class="settings-saved" id="settings-saved">Settings Saved</div>
+</div>
+
+<!-- ══════════ EDIT MODAL ══════════ -->
+<div id="edit-modal">
+  <button class="edit-modal-close" id="edit-modal-close">Close</button>
+  <div class="edit-modal-inner">
+    <div class="edit-modal-title">Edit Product</div>
+    <div class="edit-modal-sub">Update details for this product — changes save immediately</div>
+    <input type="hidden" id="edit-idx">
+    <div class="form-section">
+      <div class="form-section-title">Product Details</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Brand</label>
+          <input type="text" id="e-brand" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Product Name</label>
+          <input type="text" id="e-name" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Price</label>
+          <input type="text" id="e-price" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="e-category" class="form-select">
+            <option>Healthy Hair Care Routines</option>
+            <option>Growth Tips</option>
+            <option>Top Makeup Picks</option>
+            <option>Everyday Skin Care Tips</option>
+            <option>Perfume &amp; Fragrance Picks</option>
+            <option>Nail &amp; Hand Care Must-Haves</option>
+            <option>DIY graduation cap decoration kit</option>
+            <option>Best Hair Tools on Amazon</option>
+            <option>Best Amazon Finds</option>
+            <option>Daily Must-Haves</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Star Rating</label>
+          <select id="e-stars" class="form-select">
+            <option>5</option>
+            <option>4.5</option>
+            <option>4</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Review Count</label>
+          <input type="text" id="e-review-count" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge (optional)</label>
+          <input type="text" id="e-badge" class="form-input" placeholder="BESTSELLER">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Emoji (fallback icon)</label>
+          <input type="text" id="e-emoji" class="form-input" placeholder="✨">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Product Image URL (optional)</label>
+          <input type="text" id="e-image" class="form-input" placeholder="https://m.media-amazon.com/images/I/...">
+          <div class="img-preview-wrap" id="edit-img-preview-wrap">
+            <img id="edit-img-preview" src="" alt="Preview">
+          </div>
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Amazon URL / ASIN</label>
+          <input type="text" id="e-asin" class="form-input" placeholder="ASIN or full Amazon URL">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:20px">
+        <label class="form-label">Customer Review Preview (Optional)</label>
+        <textarea id="e-review-text" class="form-textarea"></textarea>
+      </div>
+      <button id="save-edit-btn" class="form-button" style="margin-top:20px">Save Changes</button>
+      <div id="edit-success" class="edit-success">✓ Product updated successfully!</div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -836,7 +935,11 @@ function renderProducts() {
     card.innerHTML = `
       <div class="product-img-wrap">
         ${p.badge ? `<div class="product-badge">${p.badge}</div>` : ''}
-        <div class="product-emoji-fallback">${p.emoji||'✨'}</div>
+        ${p.imageUrl 
+          ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+             <div class="product-emoji-fallback" style="display:none">${p.emoji||'✨'}</div>`
+          : `<div class="product-emoji-fallback">${p.emoji||'✨'}</div>`
+        }
         <div class="product-overlay">
           <div class="product-overlay-inner">
             <a href="https://www.amazon.com/dp/${p.asin}?tag=${settings.tag}" target="_blank" class="product-overlay-text">View on Amazon</a>
@@ -965,6 +1068,14 @@ document.getElementById('amazon-url-input').addEventListener('keydown', e => {
   if(e.key==='Enter') document.getElementById('extract-btn').click();
 });
 
+document.getElementById('f-image').addEventListener('input', () => {
+  const val = document.getElementById('f-image').value.trim();
+  const wrap = document.getElementById('add-img-preview-wrap');
+  const img  = document.getElementById('add-img-preview');
+  if(val) { img.src = val; wrap.style.display = 'block'; }
+  else    { wrap.style.display = 'none'; }
+});
+
 /* ── ADD PRODUCT ── */
 document.getElementById('add-product-btn').addEventListener('click', () => {
   const brand = document.getElementById('f-brand').value.trim();
@@ -991,6 +1102,7 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
     reviewCount: document.getElementById('f-review-count').value.trim(),
     reviewText:  document.getElementById('f-review-text').value.trim(),
     emoji:       document.getElementById('f-emoji').value.trim() || '✨',
+    imageUrl:    document.getElementById('f-image').value.trim(),
     addedAt:     new Date().toISOString()
   };
 
@@ -1013,6 +1125,8 @@ function resetAddForm() {
   document.getElementById('f-price').value='';
   document.getElementById('f-badge').value='';
   document.getElementById('f-emoji').value='✨';
+  document.getElementById('f-image').value='';
+  document.getElementById('add-img-preview-wrap').style.display='none';
   document.getElementById('f-stars').value='5';
   document.getElementById('f-review-count').value='8,234';
   document.getElementById('f-review-text').value='"This lip oil is absolutely stunning! The shine is incredible and it feels so hydrating."';
@@ -1041,16 +1155,26 @@ function renderManage() {
   products.forEach((p,idx) => {
     const row = document.createElement('div');
     row.className = 'manage-row';
+    const thumb = p.imageUrl 
+      ? `<img class="manage-img-thumb" src="${p.imageUrl}" alt="${p.name}" onerror="this.outerHTML='<div class=\'manage-img\'>${p.emoji||'✨'}</div>'">`
+      : `<div class="manage-img">${p.emoji||'✨'}</div>`;
     row.innerHTML = `
-      <div class="manage-img">${p.emoji||'✨'}</div>
+      ${thumb}
       <div class="manage-info">
         <div class="manage-brand">${p.brand}</div>
         <div class="manage-name">${p.name}</div>
         <div class="manage-price">${p.price} · ${p.category}</div>
       </div>
       ${p.badge ? `<div class="manage-badge">${p.badge}</div>` : '<div></div>'}
+      <button class="manage-edit" data-idx="${idx}">Edit</button>
       <button class="manage-del" data-idx="${idx}">Remove</button>`;
     grid.appendChild(row);
+  });
+
+  document.querySelectorAll('.manage-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      openEditModal(parseInt(btn.dataset.idx));
+    });
   });
 
   document.querySelectorAll('.manage-del').forEach(btn => {
@@ -1063,6 +1187,81 @@ function renderManage() {
     });
   });
 }
+
+/* ── EDIT MODAL ── */
+function openEditModal(idx) {
+  const p = products[idx];
+  document.getElementById('edit-idx').value = idx;
+  document.getElementById('e-brand').value       = p.brand || '';
+  document.getElementById('e-name').value        = p.name || '';
+  document.getElementById('e-price').value       = p.price || '';
+  document.getElementById('e-badge').value       = p.badge || '';
+  document.getElementById('e-emoji').value       = p.emoji || '✨';
+  document.getElementById('e-review-count').value= p.reviewCount || '';
+  document.getElementById('e-review-text').value = p.reviewText || '';
+  document.getElementById('e-asin').value        = p.asin || '';
+  document.getElementById('e-image').value       = p.imageUrl || '';
+  document.getElementById('e-stars').value       = p.stars || '5';
+  document.getElementById('e-category').value    = p.category || '';
+
+  const prevWrap = document.getElementById('edit-img-preview-wrap');
+  const prevImg  = document.getElementById('edit-img-preview');
+  if(p.imageUrl) {
+    prevImg.src = p.imageUrl;
+    prevWrap.style.display = 'block';
+  } else {
+    prevWrap.style.display = 'none';
+  }
+
+  document.getElementById('edit-success').style.display = 'none';
+  document.getElementById('edit-modal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('edit-modal-close').addEventListener('click', () => {
+  document.getElementById('edit-modal').classList.remove('show');
+  document.body.style.overflow = 'hidden'; // admin panel still open
+});
+
+document.getElementById('e-image').addEventListener('input', () => {
+  const val = document.getElementById('e-image').value.trim();
+  const wrap = document.getElementById('edit-img-preview-wrap');
+  const img  = document.getElementById('edit-img-preview');
+  if(val) { img.src = val; wrap.style.display = 'block'; }
+  else    { wrap.style.display = 'none'; }
+});
+
+document.getElementById('save-edit-btn').addEventListener('click', () => {
+  const idx = parseInt(document.getElementById('edit-idx').value);
+  const p   = products[idx];
+  const asinRaw = document.getElementById('e-asin').value.trim();
+  const asinMatch = asinRaw.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
+  const resolvedASIN = asinMatch ? (asinMatch[1]||asinMatch[2]) : asinRaw;
+
+  products[idx] = {
+    ...p,
+    brand:       document.getElementById('e-brand').value.trim(),
+    name:        document.getElementById('e-name').value.trim(),
+    price:       document.getElementById('e-price').value.trim(),
+    badge:       document.getElementById('e-badge').value.trim(),
+    category:    document.getElementById('e-category').value,
+    stars:       parseFloat(document.getElementById('e-stars').value),
+    reviewCount: document.getElementById('e-review-count').value.trim(),
+    reviewText:  document.getElementById('e-review-text').value.trim(),
+    emoji:       document.getElementById('e-emoji').value.trim() || '✨',
+    imageUrl:    document.getElementById('e-image').value.trim(),
+    asin:        resolvedASIN || p.asin,
+  };
+
+  STORE.set('vl_products', products);
+  document.getElementById('edit-success').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('edit-success').style.display = 'none';
+    document.getElementById('edit-modal').classList.remove('show');
+    renderManage();
+    renderProducts();
+  }, 1800);
+});
 
 /* ── SETTINGS ── */
 function loadSettings() {
