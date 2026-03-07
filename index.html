@@ -675,12 +675,17 @@ window.addEventListener('scroll', () => {
 });
 
 /* ── CATEGORY FILTER ── */
-document.querySelectorAll('.category-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentCategory = btn.dataset.category;
-    renderProducts();
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.category;
+      renderProducts();
+      
+      // Scroll to products section
+      document.getElementById('products').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   });
 });
 
@@ -698,6 +703,9 @@ function renderProducts() {
   if(filtered.length === 0) {
     empty.style.display = 'flex';
     grid.appendChild(empty);
+    // Add hover effect for empty state
+    empty.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    empty.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
     return;
   }
   
@@ -735,6 +743,11 @@ function renderProducts() {
         </div>
       </div>
     `;
+    
+    // Add hover effect for cursor
+    card.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    card.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+    
     grid.appendChild(card);
   });
   
