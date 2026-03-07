@@ -335,7 +335,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 
 <!-- ══════════ NAV ══════════ -->
 <nav id="nav">
-  <a class="nav-logo">VELO<span>U</span>RA</a>
+  <a class="nav-logo" id="admin-trigger">VELO<span>U</span>RA</a>
   <ul class="nav-links">
     <li><a href="#products">Collections</a></li>
     <li><a href="#social-proof">Reviews</a></li>
@@ -343,7 +343,6 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </ul>
   <div style="display:flex;align-items:center;gap:12px">
     <a href="#products" class="nav-cta">Shop Now</a>
-    <span class="admin-hint" id="admin-trigger">⚙</span>
   </div>
 </nav>
 
@@ -1107,7 +1106,19 @@ function hideAdminPanel() {
   renderProducts();
 }
 
-document.getElementById('admin-trigger').addEventListener('click', showPasswordGate);
+/* ── ADMIN TRIGGER — click logo 4 times ── */
+let logoClickCount = 0;
+let logoClickTimer = null;
+document.getElementById('admin-trigger').addEventListener('click', () => {
+  logoClickCount++;
+  clearTimeout(logoClickTimer);
+  if(logoClickCount >= 4) {
+    logoClickCount = 0;
+    showPasswordGate();
+  } else {
+    logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1500);
+  }
+});
 document.getElementById('empty-admin-trigger').addEventListener('click', showPasswordGate);
 document.getElementById('admin-close').addEventListener('click', hideAdminPanel);
 document.getElementById('password-cancel').addEventListener('click', hidePasswordGate);
