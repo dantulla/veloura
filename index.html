@@ -388,6 +388,24 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .smb-text strong{color:var(--cream);display:block;font-size:.82rem;margin-bottom:1px}
 .smb-cta{background:var(--gold);color:var(--black);font-size:9px;letter-spacing:.3em;text-transform:uppercase;padding:12px 22px;font-weight:600;text-decoration:none;border-radius:2px}
 @media(max-width:768px){.sticky-mob-bar{display:flex}body{padding-bottom:74px}}
+@media(max-width:900px){#about .about-grid{grid-template-columns:1fr!important}}
+
+/* ── LEGAL MODALS ── */
+.legal-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(8,8,8,.92);z-index:30000;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(12px)}
+.legal-modal-backdrop.show{display:flex}
+.legal-modal{background:var(--surface);border:1px solid rgba(201,169,110,.2);max-width:760px;width:100%;border-radius:4px;position:relative;animation:fade-up .4s ease}
+.legal-modal-top{padding:40px 48px 0;border-bottom:1px solid rgba(201,169,110,.1)}
+.legal-modal-eyebrow{font-size:8px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+.legal-modal-title{font-family:'Playfair Display',serif;font-size:1.9rem;color:var(--cream);margin-bottom:28px}
+.legal-modal-body{padding:36px 48px 48px;font-size:.85rem;color:var(--muted);line-height:1.95;max-height:70vh;overflow-y:auto}
+.legal-modal-body h3{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream);margin:28px 0 10px;letter-spacing:.03em}
+.legal-modal-body h3:first-child{margin-top:0}
+.legal-modal-body p{margin-bottom:14px}
+.legal-modal-body a{color:var(--gold);text-decoration:none}
+.legal-modal-body a:hover{text-decoration:underline}
+.legal-modal-close-btn{position:absolute;top:20px;right:24px;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(201,169,110,.25);padding:8px 18px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
+.legal-modal-close-btn:hover{border-color:var(--gold);color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -582,6 +600,66 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </section>
 
+<!-- ══════════ JOIN OUR COMMUNITY ══════════ -->
+<section id="contact" style="background:linear-gradient(135deg,#0d0b09 0%,#111010 50%,#0a0908 100%);padding:100px 60px;text-align:center;border-top:1px solid rgba(201,169,110,.1);border-bottom:1px solid rgba(201,169,110,.1)">
+  <div style="max-width:680px;margin:0 auto">
+    <span style="font-size:9px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:20px">Join The Inner Circle</span>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:400;color:var(--cream);margin-bottom:20px;line-height:1.15">Never Miss a <em style="font-style:italic;color:var(--gold)">Luxury Find</em></h2>
+    <div style="width:48px;height:1px;background:var(--gold);margin:0 auto 28px"></div>
+    <p style="font-size:.95rem;color:var(--muted);line-height:1.85;margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto">Follow <strong style="color:var(--cream)">@VelouraBeautyFragrance</strong> across all platforms for first access to new curated picks, exclusive beauty drops, and the products your routine is missing.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:40px">
+      <a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 28px;background:var(--surface);border:1px solid rgba(201,169,110,.2);color:var(--cream);font-size:10px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;transition:all .3s;border-radius:2px;font-weight:500">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>
+        Pinterest
+      </a>
+      <a href="https://www.tiktok.com/@VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 28px;background:var(--surface);border:1px solid rgba(201,169,110,.2);color:var(--cream);font-size:10px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;transition:all .3s;border-radius:2px;font-weight:500">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/></svg>
+        TikTok
+      </a>
+      <a href="https://www.instagram.com/VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:10px;padding:14px 28px;background:var(--surface);border:1px solid rgba(201,169,110,.2);color:var(--cream);font-size:10px;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;transition:all .3s;border-radius:2px;font-weight:500">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+    </div>
+    <p style="font-size:.78rem;color:rgba(245,240,232,.25);letter-spacing:.08em">Over 10,000 beauty lovers already follow the curation.</p>
+  </div>
+</section>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section id="about" style="background:var(--charcoal);padding:100px 60px;border-top:1px solid rgba(201,169,110,.08)">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center">
+    <div>
+      <span style="font-size:9px;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:20px">About Veloura</span>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,2.8rem);font-weight:400;color:var(--cream);line-height:1.15;margin-bottom:24px">The Standard for <em style="font-style:italic;color:var(--gold)">Beauty Curation</em></h2>
+      <div style="width:48px;height:1px;background:var(--gold);margin-bottom:28px"></div>
+      <p style="font-size:.92rem;color:var(--muted);line-height:1.9;margin-bottom:20px">Veloura was built on a simple conviction: luxury beauty should be accessible, verifiable, and worth every dollar. We cut through the noise of a saturated market to surface only the products that genuinely deliver — backed by verified reviews, expert testing, and real results.</p>
+      <p style="font-size:.92rem;color:var(--muted);line-height:1.9;margin-bottom:36px">Every product in our collection is hand-selected. No brands pay to be featured. No sponsored placements. Just an obsessive commitment to quality — from fragrance to skincare to the tools that actually transform your routine.</p>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <a href="#products" style="font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:14px 32px;text-decoration:none;font-weight:500;transition:all .3s;border:1px solid var(--gold);border-radius:1px">Shop the Edit</a>
+        <a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" style="font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--cream);padding:14px 32px;text-decoration:none;transition:all .3s;border:1px solid rgba(245,240,232,.2);border-radius:1px">Follow Us</a>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="background:var(--surface);border:1px solid rgba(201,169,110,.12);padding:32px 24px;border-radius:4px;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);line-height:1;margin-bottom:10px">500+</div>
+        <div style="font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;line-height:1.5">Products Reviewed</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(201,169,110,.12);padding:32px 24px;border-radius:4px;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);line-height:1;margin-bottom:10px">10K+</div>
+        <div style="font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;line-height:1.5">Community Members</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(201,169,110,.12);padding:32px 24px;border-radius:4px;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);line-height:1;margin-bottom:10px">4.9★</div>
+        <div style="font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;line-height:1.5">Avg. Product Rating</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid rgba(201,169,110,.12);padding:32px 24px;border-radius:4px;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:2.8rem;color:var(--gold);line-height:1;margin-bottom:10px">100%</div>
+        <div style="font-size:.75rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;line-height:1.5">Unsponsored Picks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ FOOTER ══════════ -->
 <footer>
   <div class="footer-grid">
@@ -626,9 +704,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="footer-column">
       <h4>Legal</h4>
       <ul class="footer-links">
-        <li><a href="#privacy">Privacy Policy</a></li>
-        <li><a href="#terms">Terms of Service</a></li>
-        <li><a href="#disclosure">Affiliate Disclosure</a></li>
+        <li><a href="#" onclick="openModal('modal-privacy');return false">Privacy Policy</a></li>
+        <li><a href="#" onclick="openModal('modal-terms');return false">Terms of Service</a></li>
+        <li><a href="#" onclick="openModal('modal-disclosure');return false">Affiliate Disclosure</a></li>
       </ul>
     </div>
     <div class="footer-column">
@@ -654,9 +732,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   <div class="footer-bottom">
     <div class="footer-copy">© 2024 Veloura. All rights reserved.</div>
     <div class="footer-legal">
-      <a href="#privacy">Privacy</a>
-      <a href="#terms">Terms</a>
-      <a href="#disclosure">Disclosure</a>
+      <a href="#" onclick="openModal('modal-privacy');return false">Privacy</a>
+      <a href="#" onclick="openModal('modal-terms');return false">Terms</a>
+      <a href="#" onclick="openModal('modal-disclosure');return false">Disclosure</a>
     </div>
   </div>
 </footer>
@@ -665,6 +743,94 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 <div class="sticky-mob-bar">
   <div class="smb-text"><strong>Veloura Picks</strong>Luxury beauty on Amazon</div>
   <a href="#products" class="smb-cta">Shop Now</a>
+</div>
+
+
+<!-- ══════════ PRIVACY POLICY MODAL ══════════ -->
+<div class="legal-modal-backdrop" id="modal-privacy">
+  <div class="legal-modal">
+    <button class="legal-modal-close-btn" onclick="closeModal('modal-privacy')">Close</button>
+    <div class="legal-modal-top">
+      <span class="legal-modal-eyebrow">Legal</span>
+      <div class="legal-modal-title">Privacy Policy</div>
+    </div>
+    <div class="legal-modal-body">
+      <p><em>Last updated: January 2025</em></p>
+      <h3>1. Information We Collect</h3>
+      <p>Veloura ("we", "us", "our") operates as a content and affiliate marketing platform. When you visit our website, we may collect non-personally identifiable information including browser type, referring pages, and pages visited. We do not collect your name, email, or payment information directly.</p>
+      <h3>2. Cookies and Tracking</h3>
+      <p>We use Firebase Analytics to track anonymous page views and product interaction data. This data helps us understand which products resonate with our community and improve our curation. No personally identifiable information is stored in our analytics system. Third-party services such as Amazon may use cookies when you click through to their platform.</p>
+      <h3>3. Affiliate Links</h3>
+      <p>This site contains affiliate links. When you click an Amazon link and make a purchase, we may earn a commission at no additional cost to you. Amazon handles all purchase, payment, and personal data processing. We are not responsible for Amazon's privacy practices.</p>
+      <h3>4. Third-Party Services</h3>
+      <p>We use Firebase (Google) for data storage and analytics. Their privacy policy can be viewed at <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a>. Links from our site to Amazon are governed by Amazon's privacy policy at <a href="https://www.amazon.com/privacy" target="_blank">amazon.com/privacy</a>.</p>
+      <h3>5. Data Security</h3>
+      <p>We implement reasonable technical measures to protect any data we collect. However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security.</p>
+      <h3>6. Children's Privacy</h3>
+      <p>This website is not directed at children under the age of 13. We do not knowingly collect personal information from children.</p>
+      <h3>7. Changes to This Policy</h3>
+      <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated date. Continued use of the site after changes constitutes acceptance.</p>
+      <h3>8. Contact</h3>
+      <p>For privacy-related questions, contact us through our social media channels at @VelouraBeautyFragrance.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TERMS OF SERVICE MODAL ══════════ -->
+<div class="legal-modal-backdrop" id="modal-terms">
+  <div class="legal-modal">
+    <button class="legal-modal-close-btn" onclick="closeModal('modal-terms')">Close</button>
+    <div class="legal-modal-top">
+      <span class="legal-modal-eyebrow">Legal</span>
+      <div class="legal-modal-title">Terms of Service</div>
+    </div>
+    <div class="legal-modal-body">
+      <p><em>Last updated: January 2025</em></p>
+      <h3>1. Acceptance of Terms</h3>
+      <p>By accessing and using Veloura ("the Site"), you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use this site.</p>
+      <h3>2. Nature of the Site</h3>
+      <p>Veloura is an affiliate marketing and product curation website. We curate and recommend beauty, skincare, fragrance, and related products available for purchase through Amazon. We earn commissions on qualifying purchases made through our links.</p>
+      <h3>3. Product Information</h3>
+      <p>While we strive to provide accurate product information, product details, pricing, and availability are subject to change by the retailer at any time. We make no warranties regarding the accuracy, completeness, or timeliness of product information displayed on this site.</p>
+      <h3>4. Affiliate Disclaimer</h3>
+      <p>This site participates in the Amazon Associates Program and other affiliate programs. Links to products may be affiliate links. We receive compensation when purchases are made through these links. This does not affect the price you pay.</p>
+      <h3>5. No Professional Advice</h3>
+      <p>Content on this site is for informational and entertainment purposes only. Nothing on this site constitutes medical, dermatological, or professional beauty advice. Always consult a qualified professional before making changes to your skincare or health regimen.</p>
+      <h3>6. Intellectual Property</h3>
+      <p>All original content on this site, including text, images, and branding, is the property of Veloura and may not be reproduced without permission. Product images are the property of their respective brands and are used for informational purposes.</p>
+      <h3>7. Limitation of Liability</h3>
+      <p>Veloura is not liable for any damages arising from use of this site, reliance on product information, or purchases made through affiliate links. Your use of the site and any purchases made are at your own risk.</p>
+      <h3>8. Changes to Terms</h3>
+      <p>We reserve the right to modify these terms at any time. Your continued use of the site after any changes constitutes acceptance of the revised terms.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ AFFILIATE DISCLOSURE MODAL ══════════ -->
+<div class="legal-modal-backdrop" id="modal-disclosure">
+  <div class="legal-modal">
+    <button class="legal-modal-close-btn" onclick="closeModal('modal-disclosure')">Close</button>
+    <div class="legal-modal-top">
+      <span class="legal-modal-eyebrow">Transparency</span>
+      <div class="legal-modal-title">Affiliate Disclosure</div>
+    </div>
+    <div class="legal-modal-body">
+      <p><em>In compliance with FTC guidelines — last updated January 2025</em></p>
+      <h3>Our Commitment to Transparency</h3>
+      <p>Veloura believes in complete transparency with our community. This disclosure explains how we earn revenue and how that affects our editorial independence.</p>
+      <h3>Amazon Associates Program</h3>
+      <p>Veloura is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com. Our Amazon Associate tag is <strong style="color:var(--cream)">veloura20-20</strong>.</p>
+      <p>When you click on any product link on this site and make a purchase on Amazon, we may receive a small commission — typically between 1% and 10% of the purchase price, depending on the product category. This comes at no additional cost to you. You pay the same price whether or not you use our link.</p>
+      <h3>Editorial Independence</h3>
+      <p>Our affiliate relationships do not influence which products we feature. We do not accept payment from brands to be included in our collection. Every product we showcase is selected because we genuinely believe it delivers exceptional value and quality for our community.</p>
+      <h3>Product Selection</h3>
+      <p>Products are selected based on verified customer reviews, community reputation, ingredient quality, and performance. We prioritize products in the Amazon Luxury Beauty and Premium categories because they reflect the elevated standard Veloura represents.</p>
+      <h3>No Sponsored Content</h3>
+      <p>Unlike many beauty platforms, Veloura does not accept sponsored posts, paid product placements, or brand partnerships that influence our editorial content. If this ever changes, we will disclose it clearly.</p>
+      <h3>Questions?</h3>
+      <p>If you have any questions about our affiliate relationships or how we select products, reach out to us at @VelouraBeautyFragrance on Pinterest, Instagram, or TikTok.</p>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════ PASSWORD GATE ══════════ -->
@@ -1704,6 +1870,30 @@ window.addEventListener('load', async () => {
     const saved=document.getElementById('settings-saved');
     saved.classList.add('show');
     setTimeout(()=>saved.classList.remove('show'), 2200);
+  });
+
+
+  /* ── LEGAL MODALS ── */
+  window.openModal = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    el.addEventListener('click', function handler(e) {
+      if (e.target === el) { closeModal(id); el.removeEventListener('click', handler); }
+    });
+  };
+  window.closeModal = function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('show');
+    document.body.style.overflow = 'auto';
+  };
+  /* close modals on Escape */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      ['modal-privacy','modal-terms','modal-disclosure'].forEach(id => closeModal(id));
+    }
   });
 
 }); // end window.load
