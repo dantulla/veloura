@@ -748,9 +748,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="footer-column">
       <h4>Legal</h4>
       <ul class="footer-links">
-        <li><a href="#" onclick="openModal('modal-privacy');return false">Privacy Policy</a></li>
-        <li><a href="#" onclick="openModal('modal-terms');return false">Terms of Service</a></li>
-        <li><a href="#" onclick="openModal('modal-disclosure');return false">Affiliate Disclosure</a></li>
+        <li><a href="#" class="legal-link" data-modal="modal-privacy">Privacy Policy</a></li>
+        <li><a href="#" class="legal-link" data-modal="modal-terms">Terms of Service</a></li>
+        <li><a href="#" class="legal-link" data-modal="modal-disclosure">Affiliate Disclosure</a></li>
       </ul>
     </div>
     <div class="footer-column">
@@ -776,9 +776,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   <div class="footer-bottom">
     <div class="footer-copy">© 2024 Veloura. All rights reserved.</div>
     <div class="footer-legal">
-      <a href="#" onclick="openModal('modal-privacy');return false">Privacy</a>
-      <a href="#" onclick="openModal('modal-terms');return false">Terms</a>
-      <a href="#" onclick="openModal('modal-disclosure');return false">Disclosure</a>
+      <a href="#" class="legal-link" data-modal="modal-privacy">Privacy</a>
+      <a href="#" class="legal-link" data-modal="modal-terms">Terms</a>
+      <a href="#" class="legal-link" data-modal="modal-disclosure">Disclosure</a>
     </div>
   </div>
 </footer>
@@ -1395,16 +1395,27 @@ window.addEventListener('load', async () => {
   window.addEventListener('hashchange', handleDeepLink);
 
   /* ── Firebase real-time products ── */
+  let productsLoaded = false;
   onSnapshot(collection(db, PRODUCTS_COL), snap => {
+    productsLoaded = true;
     products = [];
     snap.forEach(d => products.push({ _id: d.id, ...d.data() }));
     products.sort((a,b) => (b.addedAt||'').localeCompare(a.addedAt||''));
+    LOCAL.set('vl_products', products);
     renderProducts();
     if (adminIsOpen) renderManage();
   }, () => {
+    productsLoaded = true;
     products = LOCAL.get('vl_products') || [];
     renderProducts();
   });
+  /* Fallback: if Firebase doesn't respond in 6s, render from cache */
+  setTimeout(() => {
+    if (!productsLoaded) {
+      products = LOCAL.get('vl_products') || [];
+      renderProducts();
+    }
+  }, 6000);
 
     /* cursor runs as standalone script */
 
@@ -1989,28 +2000,7 @@ window.addEventListener('load', async () => {
   });
 
 
-  /* ── LEGAL MODALS ── */
-  window.openModal = function(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    el.addEventListener('click', function handler(e) {
-      if (e.target === el) { closeModal(id); el.removeEventListener('click', handler); }
-    });
-  };
-  window.closeModal = function(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.classList.remove('show');
-    document.body.style.overflow = 'auto';
-  };
-  /* close modals on Escape */
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      ['modal-privacy','modal-terms','modal-disclosure'].forEach(id => closeModal(id));
-    }
-  });
+  /* modal functions moved to standalone script */
 
 
   /* ════════════════════════════════════════
@@ -2272,6 +2262,78 @@ window.addEventListener('load', async () => {
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+</script>
+<script>
+/* ── VELOURA STANDALONE FUNCTIONS ── runs instantly, no Firebase needed ── */
+(function(){
+
+  /* MODAL OPEN / CLOSE */
+  function openModal(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.classList.add('show');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.classList.remove('show');
+    document.body.style.overflow='auto';
+  }
+  window.openModal  = openModal;
+  window.closeModal = closeModal;
+
+  /* Wire legal links + backdrop click + Escape on DOMContentLoaded */
+  document.addEventListener('DOMContentLoaded', function(){
+
+    /* Legal links */
+    document.querySelectorAll('.legal-link[data-modal]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        openModal(a.dataset.modal);
+      });
+    });
+
+    /* Modal close buttons */
+    document.querySelectorAll('.legal-modal-close-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var backdrop = btn.closest('.legal-modal-backdrop');
+        if(backdrop) closeModal(backdrop.id);
+      });
+    });
+
+    /* Click outside modal to close */
+    document.querySelectorAll('.legal-modal-backdrop').forEach(function(backdrop){
+      backdrop.addEventListener('click', function(e){
+        if(e.target === backdrop) closeModal(backdrop.id);
+      });
+    });
+
+    /* Escape key */
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape'){
+        ['modal-privacy','modal-terms','modal-disclosure'].forEach(closeModal);
+        closeModal('article-modal');
+      }
+    });
+
+    /* Smooth scroll for ALL in-page anchor links */
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var hash = a.getAttribute('href');
+        if(!hash || hash==='#') return;
+        var target = document.querySelector(hash);
+        if(!target) return;
+        e.preventDefault();
+        var navH = document.getElementById('nav') ? document.getElementById('nav').offsetHeight : 80;
+        var top = target.getBoundingClientRect().top + window.scrollY - navH - 20;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+
+  });
+
 })();
 </script>
 </body>
