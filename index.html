@@ -589,7 +589,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     </div>
   </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2024 Veloura. All rights reserved.</div>
+    <div class="footer-copy">© <span id="year"></span> Veloura. All rights reserved.</div>
     <div class="footer-legal">
       <a href="#privacy">Privacy</a>
       <a href="#terms">Terms</a>
@@ -1250,6 +1250,7 @@ window.addEventListener('load', async () => {
     const saved=document.getElementById('settings-saved');
     saved.classList.add('show');
     setTimeout(()=>saved.classList.remove('show'),2200);
+    document.getElementById('year').textContent = new Date().getFullYear();
   });
 
 }); // end window.load
