@@ -406,6 +406,57 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .legal-modal-close-btn{position:absolute;top:20px;right:24px;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(201,169,110,.25);padding:8px 18px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
 .legal-modal-close-btn:hover{border-color:var(--gold);color:var(--gold)}
 
+
+/* ── ARTICLES SECTION ── */
+#articles{padding:100px 60px;background:var(--black)}
+.articles-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px}
+.articles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px}
+.article-card{background:var(--surface);border:1px solid rgba(201,169,110,.08);border-radius:3px;overflow:hidden;cursor:pointer;transition:all .4s;display:flex;flex-direction:column}
+.article-card:hover{border-color:rgba(201,169,110,.35);transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.45)}
+.article-card-img{height:210px;overflow:hidden;background:linear-gradient(135deg,#1a1410 0%,#1f1812 100%);position:relative;flex-shrink:0}
+.article-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.8,.25,1)}
+.article-card:hover .article-card-img img{transform:scale(1.06)}
+.article-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,rgba(201,169,110,.06) 0%,transparent 70%)}
+.article-category-pill{position:absolute;top:14px;left:14px;font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:5px 12px;font-weight:600;border-radius:2px}
+.article-card-body{padding:24px 26px 28px;flex:1;display:flex;flex-direction:column}
+.article-card-cat{font-size:8px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.article-card-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--cream);line-height:1.35;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.article-card-excerpt{font-size:.8rem;color:var(--muted);line-height:1.75;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+.article-card-meta{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:16px;border-top:1px solid rgba(201,169,110,.08)}
+.article-card-read{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:6px}
+.article-card-date{font-size:.7rem;color:var(--muted)}
+.articles-empty{grid-column:1/-1;text-align:center;padding:80px 40px;border:1px dashed rgba(201,169,110,.15);border-radius:3px;color:var(--muted);font-size:.9rem;line-height:1.8}
+/* ── ARTICLE READER MODAL ── */
+.article-modal-backdrop{display:none;position:fixed;inset:0;background:rgba(8,8,8,.96);z-index:25000;overflow-y:auto;padding:0;backdrop-filter:blur(16px)}
+.article-modal-backdrop.show{display:block}
+.article-modal-inner{max-width:780px;margin:0 auto;padding:60px 40px 100px}
+.article-modal-close{position:fixed;top:24px;right:32px;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:rgba(8,8,8,.8);border:1px solid rgba(201,169,110,.25);padding:9px 20px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px;z-index:25001;backdrop-filter:blur(8px)}
+.article-modal-close:hover{border-color:var(--gold);color:var(--gold)}
+.article-modal-hero{width:100%;height:340px;object-fit:cover;border-radius:3px;margin-bottom:40px;display:block}
+.article-modal-cat{font-size:8px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block}
+.article-modal-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:400;color:var(--cream);line-height:1.15;margin-bottom:20px}
+.article-modal-meta{font-size:.75rem;color:var(--muted);margin-bottom:36px;display:flex;align-items:center;gap:16px}
+.article-modal-divider{width:48px;height:1px;background:var(--gold);margin-bottom:36px}
+.article-modal-body{font-size:.92rem;color:rgba(245,240,232,.7);line-height:1.95}
+.article-modal-body h2{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--cream);margin:36px 0 14px;letter-spacing:.02em}
+.article-modal-body h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin:28px 0 10px}
+.article-modal-body p{margin-bottom:18px}
+.article-modal-body ul,.article-modal-body ol{padding-left:22px;margin-bottom:18px}
+.article-modal-body li{margin-bottom:8px;line-height:1.8}
+.article-modal-body strong{color:var(--cream);font-weight:600}
+.article-modal-body em{color:var(--gold-light);font-style:italic}
+.article-modal-body blockquote{border-left:3px solid var(--gold);padding:12px 20px;margin:24px 0;background:rgba(201,169,110,.05);border-radius:0 3px 3px 0;font-style:italic;color:var(--cream)}
+/* ── ADMIN ARTICLES TAB ── */
+.article-form-preview{background:var(--charcoal);border:1px solid rgba(201,169,110,.12);border-radius:3px;padding:20px;margin-top:16px;min-height:120px;font-size:.85rem;color:var(--muted);line-height:1.8}
+.article-manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:60px 1fr auto auto auto;gap:14px;align-items:center;border-radius:4px;transition:all .3s;margin-bottom:10px}
+.article-manage-row:hover{border-color:rgba(201,169,110,.3)}
+.article-manage-img{width:52px;height:52px;border-radius:3px;object-fit:cover;border:1px solid rgba(201,169,110,.15);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+.article-manage-title{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--cream);margin-bottom:4px}
+.article-manage-meta{font-size:.72rem;color:var(--muted)}
+.article-manage-cat{font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:4px 10px;border-radius:2px;font-weight:600;white-space:nowrap}
+.articles-count{font-size:.85rem;color:var(--muted);margin-bottom:20px;text-align:center;letter-spacing:.05em}
+@media(max-width:768px){#articles{padding:60px 24px}.articles-grid{grid-template-columns:1fr}.article-modal-inner{padding:40px 20px 80px}.article-modal-hero{height:220px}}
+
 </style>
 </head>
 <body>
@@ -420,6 +471,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   <ul class="nav-links">
     <li><a href="#products">Collections</a></li>
     <li><a href="#social-proof">Reviews</a></li>
+    <li><a href="#articles">Journal</a></li>
     <li><a href="#about">About</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:12px">
@@ -571,6 +623,26 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </section>
 
+
+<!-- ══════════ ARTICLES ══════════ -->
+<section id="articles">
+  <div class="articles-header">
+    <div>
+      <span class="section-eyebrow">The Veloura Journal</span>
+      <h2 class="section-title">Beauty, <em>Wellness</em> & Style</h2>
+      <div class="gold-line"></div>
+      <p class="section-sub">Expert guides, honest routines, and the insider knowledge your beauty shelf deserves.</p>
+    </div>
+  </div>
+  <div class="articles-grid" id="articles-grid">
+    <div class="articles-empty" id="articles-empty">
+      <div style="font-size:2rem;margin-bottom:16px">✍️</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--cream);margin-bottom:8px">The Journal is Coming</div>
+      Expert guides and beauty intel dropping soon. Follow @VelouraBeautyFragrance to be first to know.
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ JOIN OUR COMMUNITY ══════════ -->
 <section id="contact" style="background:linear-gradient(135deg,#0d0b09 0%,#111010 50%,#0a0908 100%);padding:100px 60px;text-align:center;border-top:1px solid rgba(201,169,110,.1);border-bottom:1px solid rgba(201,169,110,.1)">
   <div style="max-width:680px;margin:0 auto">
@@ -669,6 +741,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <ul class="footer-links">
         <li><a href="#about">About Us</a></li>
         <li><a href="#social-proof">Reviews</a></li>
+    <li><a href="#articles">Journal</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
@@ -804,6 +877,23 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </div>
 
+
+<!-- ══════════ ARTICLE READER MODAL ══════════ -->
+<div class="article-modal-backdrop" id="article-modal">
+  <button class="article-modal-close" id="article-modal-close">✕ Close</button>
+  <div class="article-modal-inner">
+    <img id="amodal-hero" class="article-modal-hero" src="" alt="" style="display:none">
+    <span class="article-modal-cat" id="amodal-cat"></span>
+    <h1 class="article-modal-title" id="amodal-title"></h1>
+    <div class="article-modal-meta">
+      <span id="amodal-date"></span>
+      <span id="amodal-readtime"></span>
+    </div>
+    <div class="article-modal-divider"></div>
+    <div class="article-modal-body" id="amodal-body"></div>
+  </div>
+</div>
+
 <!-- ══════════ PASSWORD GATE ══════════ -->
 <div id="password-gate">
   <div class="password-box">
@@ -828,6 +918,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="admin-tabs">
       <button class="admin-tab active" data-tab="add">Add Product</button>
       <button class="admin-tab" data-tab="manage">Manage Products</button>
+      <button class="admin-tab" data-tab="articles">Articles</button>
       <button class="admin-tab" data-tab="analytics">Analytics</button>
       <button class="admin-tab" data-tab="settings">Settings</button>
     </div>
@@ -954,6 +1045,74 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <div id="manage-count" class="manage-count"></div>
       <div class="manage-grid" id="manage-grid"></div>
       <div id="manage-empty" class="manage-empty">No products yet. Add your first product in the "Add Product" tab.</div>
+    </div>
+
+
+    <!-- ARTICLES ADMIN TAB -->
+    <div class="admin-content" id="tab-articles">
+      <!-- ADD ARTICLE FORM -->
+      <div class="form-section">
+        <div class="form-section-title">New Article</div>
+        <div class="form-grid">
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Article Title</label>
+            <input type="text" id="art-title" class="form-input" placeholder="How to Actually Glow From the Inside Out">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="art-category" class="form-select">
+              <option>Skincare</option>
+              <option>Fragrance</option>
+              <option>Hair Care</option>
+              <option>Makeup</option>
+              <option>Wellness</option>
+              <option>Style & Fashion</option>
+              <option>Beauty Routines</option>
+              <option>Lifestyle</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category Emoji</label>
+            <input type="text" id="art-emoji" class="form-input" placeholder="✨" value="✨">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Cover Image URL (optional)</label>
+            <input type="text" id="art-image" class="form-input" placeholder="https://images.unsplash.com/...">
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">Short Excerpt (shown on card)</label>
+            <input type="text" id="art-excerpt" class="form-input" placeholder="The 5 things your nighttime routine is missing...">
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:20px">
+          <label class="form-label">Article Body — supports **bold**, *italic*, ## Heading, > blockquote, - bullet list</label>
+          <textarea id="art-body" class="form-textarea" style="min-height:260px;font-family:monospace;font-size:.8rem" placeholder="## Why Your Skin Isn't Glowing
+
+You're cleansing twice a day, moisturising religiously, and drinking your water. So why does your skin still look flat?
+
+The answer usually comes down to three things nobody talks about...
+
+## 1. You're Over-Cleansing
+**Stripping your skin barrier** is the #1 hidden cause of dull skin. Most cleansers — even 'gentle' ones — are pH 7-9. Your skin's natural pH is 4.5-5.5.
+
+> Switch to a pH-balanced cleanser and watch your skin transform in 2 weeks.
+
+## 2. Layering Order Matters
+- Toner first, always
+- Actives before moisturiser
+- SPF is the last step, non-negotiable"></textarea>
+        </div>
+        <button id="publish-article-btn" class="form-button" style="margin-top:20px">Publish Article</button>
+        <div id="article-success" class="form-success">✓ Article published successfully!</div>
+      </div>
+
+      <!-- MANAGE ARTICLES -->
+      <div class="form-section">
+        <div class="form-section-title">Published Articles</div>
+        <div class="articles-count" id="articles-admin-count"></div>
+        <div id="articles-manage-list"></div>
+        <div id="articles-manage-empty" class="manage-empty">No articles yet. Write your first article above.</div>
+      </div>
     </div>
 
     <!-- ANALYTICS TAB -->
@@ -1865,6 +2024,234 @@ window.addEventListener('load', async () => {
     if (e.key === 'Escape') {
       ['modal-privacy','modal-terms','modal-disclosure'].forEach(id => closeModal(id));
     }
+  });
+
+
+  /* ════════════════════════════════════════
+     ARTICLES SYSTEM
+  ════════════════════════════════════════ */
+  const ARTICLES_COL = 'vl_articles';
+  let articles = [];
+
+  /* ── Simple markdown renderer ── */
+  function renderMarkdown(md) {
+    if (!md) return '';
+    let html = md
+      // headings
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+      // blockquote
+      .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+      // bold + italic
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // bullet lists — group consecutive - lines into <ul>
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>
+?)+/g, m => '<ul>' + m + '</ul>')
+      // numbered lists
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      // paragraphs — double newline
+      .replace(/
+
++/g, '
+</p><p>
+')
+      .replace(/
+/g, '<br>');
+    // wrap in paragraph
+    html = '<p>' + html + '</p>';
+    // clean up around block elements
+    ['<h2>','<h3>','<ul>','<blockquote>'].forEach(tag => {
+      const close = tag.replace('<','</');
+      html = html.replace(new RegExp('<p>\s*' + tag.replace(/[<>]/g,'\$&'), 'g'), tag);
+      html = html.replace(new RegExp(close + '\s*</p>', 'g'), close);
+    });
+    return html;
+  }
+
+  function calcReadTime(body) {
+    const words = (body || '').trim().split(/\s+/).length;
+    const mins = Math.max(1, Math.round(words / 220));
+    return mins + ' min read';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en', { year:'numeric', month:'long', day:'numeric' });
+  }
+
+  /* ── Load articles from Firebase ── */
+  onSnapshot(collection(db, ARTICLES_COL), snap => {
+    articles = [];
+    snap.forEach(d => articles.push({ _id: d.id, ...d.data() }));
+    articles.sort((a,b) => (b.publishedAt||'').localeCompare(a.publishedAt||''));
+    renderArticles();
+    if (adminIsOpen) renderArticlesAdmin();
+  }, () => {});
+
+  /* ── Render article cards on public site ── */
+  function renderArticles() {
+    const grid  = document.getElementById('articles-grid');
+    const empty = document.getElementById('articles-empty');
+    if (!grid) return;
+    // remove old cards
+    Array.from(grid.querySelectorAll('.article-card')).forEach(el => el.remove());
+    if (articles.length === 0) { if(empty) empty.style.display='block'; return; }
+    if(empty) empty.style.display = 'none';
+
+    articles.forEach(a => {
+      const card = document.createElement('div');
+      card.className = 'article-card';
+      card.innerHTML = `
+        <div class="article-card-img">
+          ${a.imageUrl
+            ? `<img src="${a.imageUrl}" alt="${a.title||''}" loading="lazy" onerror="this.style.display='none'">`
+            : `<div class="article-card-img-placeholder">${a.emoji||'✨'}</div>`}
+          <div class="article-category-pill">${a.category||'Beauty'}</div>
+        </div>
+        <div class="article-card-body">
+          <div class="article-card-title">${a.title||''}</div>
+          <div class="article-card-excerpt">${a.excerpt||''}</div>
+          <div class="article-card-meta">
+            <span class="article-card-read">
+              Read Article
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+            <span class="article-card-date">${calcReadTime(a.body)}</span>
+          </div>
+        </div>`;
+      card.addEventListener('click', () => openArticleModal(a));
+      card.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+      card.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── Open article reader modal ── */
+  function openArticleModal(a) {
+    const hero = document.getElementById('amodal-hero');
+    if (a.imageUrl) { hero.src = a.imageUrl; hero.style.display = 'block'; hero.onerror = () => hero.style.display = 'none'; }
+    else { hero.style.display = 'none'; }
+    document.getElementById('amodal-cat').textContent   = a.category || 'Beauty';
+    document.getElementById('amodal-title').textContent = a.title || '';
+    document.getElementById('amodal-date').textContent  = formatDate(a.publishedAt);
+    document.getElementById('amodal-readtime').textContent = calcReadTime(a.body);
+    document.getElementById('amodal-body').innerHTML    = renderMarkdown(a.body || '');
+    const backdrop = document.getElementById('article-modal');
+    backdrop.classList.add('show');
+    backdrop.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('article-modal-close').addEventListener('click', () => {
+    document.getElementById('article-modal').classList.remove('show');
+    document.body.style.overflow = 'auto';
+  });
+  document.getElementById('article-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('article-modal')) {
+      document.getElementById('article-modal').classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+  });
+
+  /* ── Render admin articles list ── */
+  function renderArticlesAdmin() {
+    const list  = document.getElementById('articles-manage-list');
+    const empty = document.getElementById('articles-manage-empty');
+    const count = document.getElementById('articles-admin-count');
+    if (!list) return;
+    list.innerHTML = '';
+    if (articles.length === 0) { if(empty) empty.style.display='block'; if(count) count.innerHTML=''; return; }
+    if(empty) empty.style.display = 'none';
+    if(count) count.innerHTML = '<strong>' + articles.length + '</strong> article' + (articles.length!==1?'s':'') + ' published';
+
+    articles.forEach((a, idx) => {
+      const row = document.createElement('div');
+      row.className = 'article-manage-row';
+      const thumb = a.imageUrl
+        ? `<img class="article-manage-img" src="${a.imageUrl}" alt="">`
+        : `<div class="article-manage-img">${a.emoji||'✨'}</div>`;
+      row.innerHTML = `${thumb}
+        <div>
+          <div class="article-manage-title">${a.title||''}</div>
+          <div class="article-manage-meta">${formatDate(a.publishedAt)} · ${calcReadTime(a.body)}</div>
+        </div>
+        <div class="article-manage-cat">${a.category||'Beauty'}</div>
+        <button class="manage-edit" data-aidx="${idx}">Edit</button>
+        <button class="manage-del" data-aidx="${idx}">Remove</button>`;
+      list.appendChild(row);
+    });
+
+    list.querySelectorAll('.manage-del[data-aidx]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Remove this article?')) return;
+        const a = articles[parseInt(btn.dataset.aidx)];
+        btn.textContent = '…';
+        try { await deleteDoc(doc(db, ARTICLES_COL, a._id)); }
+        catch(e) { alert('Error: ' + e.message); btn.textContent = 'Remove'; }
+      });
+    });
+
+    list.querySelectorAll('.manage-edit[data-aidx]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = articles[parseInt(btn.dataset.aidx)];
+        document.getElementById('art-title').value    = a.title || '';
+        document.getElementById('art-category').value = a.category || 'Skincare';
+        document.getElementById('art-emoji').value    = a.emoji || '✨';
+        document.getElementById('art-image').value    = a.imageUrl || '';
+        document.getElementById('art-excerpt').value  = a.excerpt || '';
+        document.getElementById('art-body').value     = a.body || '';
+        // change publish btn to update
+        const pb = document.getElementById('publish-article-btn');
+        pb.textContent = 'Update Article';
+        pb.dataset.editId = a._id;
+        pb.scrollIntoView({ behavior:'smooth', block:'center' });
+      });
+    });
+  }
+
+  /* ── Publish / Update article ── */
+  document.getElementById('publish-article-btn').addEventListener('click', async () => {
+    const title   = document.getElementById('art-title').value.trim();
+    const body    = document.getElementById('art-body').value.trim();
+    const excerpt = document.getElementById('art-excerpt').value.trim();
+    if (!title || !body) { alert('Title and body are required.'); return; }
+    const articleData = {
+      title,
+      body,
+      excerpt:     excerpt || body.replace(/[#*>\-]/g,'').trim().slice(0,160) + '…',
+      category:    document.getElementById('art-category').value,
+      emoji:       document.getElementById('art-emoji').value.trim() || '✨',
+      imageUrl:    document.getElementById('art-image').value.trim(),
+      publishedAt: new Date().toISOString()
+    };
+    const btn = document.getElementById('publish-article-btn');
+    const editId = btn.dataset.editId;
+    btn.disabled = true; btn.textContent = 'Saving…';
+    try {
+      if (editId) {
+        await updateDoc(doc(db, ARTICLES_COL, editId), articleData);
+        delete btn.dataset.editId;
+      } else {
+        await addDoc(collection(db, ARTICLES_COL), articleData);
+      }
+      document.getElementById('article-success').style.display = 'block';
+      setTimeout(() => document.getElementById('article-success').style.display='none', 3000);
+      // reset form
+      ['art-title','art-excerpt','art-image','art-body'].forEach(id => document.getElementById(id).value='');
+      document.getElementById('art-emoji').value = '✨';
+      btn.textContent = 'Publish Article';
+    } catch(e) { alert('Error: ' + e.message); }
+    finally { btn.disabled = false; }
+  });
+
+  /* Load articles admin on tab click */
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.dataset.tab === 'articles') renderArticlesAdmin();
+    });
   });
 
 }); // end window.load
