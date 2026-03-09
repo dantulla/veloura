@@ -1406,28 +1406,7 @@ window.addEventListener('load', async () => {
     renderProducts();
   });
 
-  /* ── CURSOR ── */
-  const cursor = document.getElementById('cursor');
-  const ring   = document.getElementById('cursor-ring');
-  let mx=0,my=0,cx=0,cy=0,rx=0,ry=0;
-  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-  (function tick(){
-    cx+=(mx-cx)*.2; cy+=(my-cy)*.2; rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
-    if(cursor){ cursor.style.left=cx+'px'; cursor.style.top=cy+'px'; }
-    if(ring)  { ring.style.left=rx+'px';  ring.style.top=ry+'px'; }
-    requestAnimationFrame(tick);
-  })();
-  /* ── Cursor hover — delegated so it works on dynamically added cards/buttons ── */
-  document.addEventListener('mouseover', e => {
-    if (e.target.closest('a,button,.product-card,.article-card,.category-btn,.social-link,.nav-logo,.copy-btn,.ptab,.period-tab,.admin-tab,.form-button,.manage-edit,.manage-del,.manage-share,.kpi-card')) {
-      document.body.classList.add('hovering');
-    }
-  });
-  document.addEventListener('mouseout', e => {
-    if (e.target.closest('a,button,.product-card,.article-card,.category-btn,.social-link,.nav-logo,.copy-btn,.ptab,.period-tab,.admin-tab,.form-button,.manage-edit,.manage-del,.manage-share,.kpi-card')) {
-      document.body.classList.remove('hovering');
-    }
-  });
+    /* cursor runs as standalone script */
 
   /* ── PARTICLES ── */
   const pc = document.getElementById('particles');
@@ -2264,5 +2243,36 @@ window.addEventListener('load', async () => {
 }); // end window.load
 </script>
 
+
+<script>
+/* ── VELOURA CURSOR — plain script, zero dependencies, runs instantly ── */
+(function(){
+  var cur  = document.getElementById('cursor');
+  var ring = document.getElementById('cursor-ring');
+  if(!cur || !ring){ return; }
+  var mx=0,my=0,cx=0,cy=0,rx=0,ry=0,started=false;
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX; my=e.clientY;
+    if(!started){ cx=mx; cy=my; rx=mx; ry=my; started=true; }
+  });
+  var HOVER = 'a,button,input,select,textarea,label,.product-card,.article-card,.category-btn,.nav-logo,.nav-cta,.kpi-card,.copy-btn,.ptab,.period-tab,.admin-tab,.admin-close,.form-button,.manage-edit,.manage-del,.manage-share,.legal-modal-close-btn,.article-modal-close,.password-submit,.es-cta,.smb-cta,.article-card-img,.testimonial-card,.share-link-row';
+  document.addEventListener('mouseover',function(e){
+    if(e.target.closest(HOVER)) document.body.classList.add('hovering');
+  });
+  document.addEventListener('mouseout',function(e){
+    if(e.target.closest(HOVER)) document.body.classList.remove('hovering');
+  });
+  function tick(){
+    cx+=(mx-cx)*.18; cy+=(my-cy)*.18;
+    rx+=(mx-rx)*.1;  ry+=(my-ry)*.1;
+    cur.style.left  = cx+'px';
+    cur.style.top   = cy+'px';
+    ring.style.left = rx+'px';
+    ring.style.top  = ry+'px';
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
 </body>
 </html>
