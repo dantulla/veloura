@@ -1,0 +1,41 @@
+name: Veloura Daily Product Poster
+
+on:
+  # Runs every day at 8:00 AM UTC (10:00 AM Nairobi EAT)
+  schedule:
+    - cron: '0 8 * * *'
+
+  # Allows you to trigger manually from GitHub Actions tab
+  workflow_dispatch:
+
+jobs:
+  post-daily-products:
+    name: Post Today's 15 Products to Firebase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm install firebase-admin
+
+      - name: Run daily product poster
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: node scripts/post-daily.js
+
+      - name: Post success notification
+        if: success()
+        run: echo "✅ Today's 15 products posted successfully to Veloura Firebase."
+
+      - name: Post failure notification
+        if: failure()
+        run: echo "❌ Daily product post failed. Check the logs above."
