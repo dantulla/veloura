@@ -1,0 +1,13 @@
+{
+  "name": "veloura-automation",
+  "version": "1.0.0",
+  "description": "Veloura daily product automation scripts",
+  "main": "post-daily.js",
+  "scripts": {
+    "post": "node post-daily.js",
+    "test": "node -e \"const s=require('./products-schedule'); console.log('Days loaded:', s.length); s.forEach((d,i)=>console.log('Day '+(i+1)+': '+d.length+' products'));\" "
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}
