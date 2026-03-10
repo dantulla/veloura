@@ -1329,14 +1329,14 @@ window.addEventListener('load', async () => {
           </div>
           ${p.reviewText?`<div class="product-review-preview">"${p.reviewText}"</div>`:'<div class="product-review-preview" style="opacity:.3">No review preview</div>'}
           <div class="product-price-row">
-            <div class="product-price">${p.price||''}</div>
+            <div class="product-price" style="font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:'DM Sans',sans-serif;font-weight:500;opacity:.85">Check price on Amazon</div>
             <div class="product-cta-badge">Prime</div>
           </div>
         </div>
         <a href="${amazonUrl}" target="_blank" rel="noopener sponsored" class="product-shop-btn"
            data-pid="${p._id}" data-pname="${safeName}" data-asin="${p.asin||''}">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Shop on Amazon
+          Check Price on Amazon →
         </a>
         <div class="product-prime-strip"><div class="prime-dot"></div>Free Prime shipping</div>`;
 
