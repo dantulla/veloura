@@ -2915,6 +2915,23 @@ window.addEventListener('load', async () => {
     return await res.json();
   }
 
+
+  // ── Base64 image stripper ─────────────────────────────────────────────
+  // Firestore has a 1MB document limit. Pasted images become base64 strings
+  // that can be 2-5MB each. This strips them before saving and alerts the user.
+  function sanitizeBodyForFirestore(html) {
+    const hasBase64 = /src="data:image\/[^"]+"/i.test(html);
+    if (hasBase64) {
+      const cleaned = html.replace(/<img[^>]*src="data:image\/[^"]*"[^>]*>/gi,
+        '<p style="border:1px dashed #c9a96e;padding:8px;color:#c9a96e;font-size:.8rem">⚠ Image removed — paste an external image URL instead (e.g. from Amazon CDN or Imgur)</p>'
+      );
+      alert('⚠ One or more images were pasted directly into the editor.\n\nThese are too large to store in Firestore.\n\nThey have been removed from the saved version.\nUse external image URLs instead (Amazon CDN, Imgur, etc).');
+      return cleaned;
+    }
+    return html;
+  }
+  // ─────────────────────────────────────────────────────────────────────
+
   document.getElementById('bl-publish-btn').addEventListener('click', async () => {
     const title   = document.getElementById('bl-title').value.trim();
     const excerpt = document.getElementById('bl-excerpt').value.trim();
@@ -2931,6 +2948,7 @@ window.addEventListener('load', async () => {
       }
     }
     if (!body) body = document.getElementById('bl-body-hidden')?.value || '';
+    body = sanitizeBodyForFirestore(body);
     if (!title) { alert('Please add a post title.'); return; }
     if (!body || body === '<p><br></p>') { alert('Please add the article body.'); return; }
 
@@ -3141,6 +3159,7 @@ window.addEventListener('load', async () => {
     let body = '';
     const qEl = document.getElementById('be-quill-editor');
     if (qEl) { const qInner = qEl.querySelector('.ql-editor'); if (qInner) body = qInner.innerHTML; }
+    body = sanitizeBodyForFirestore(body);
     const currentBlog = blogs.find(b => b._id === id) || {};
     const title = document.getElementById('be-title').value.trim();
     const updated = {
