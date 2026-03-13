@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <title>Veloura</title>
   <script>
-    // Redirect /blog/my-post-slug/ → /#blog-my-post-slug
-    var path = window.location.pathname;
-    var base = '/veloura';
-    var blogMatch = path.match(/\/veloura\/blog\/([^\/]+)\/?$/);
-    if (blogMatch) {
-      window.location.replace('https://dantulla.github.io/veloura/#blog-' + blogMatch[1]);
-    } else {
-      window.location.replace('https://dantulla.github.io/veloura/');
-    }
+    // GitHub Pages SPA Redirect Fix
+    // Encodes the full URL path into a query string so index.html can decode it
+    var segmentCount = 0; // Set to 1 if using a Project Page (e.g. username.github.io/repo)
+                          // Set to 0 if using a Custom Domain (e.g. veloura.com)
+
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?p=' +
+      l.pathname.slice(1).split('/').join('~and~') +
+      (l.search ? '~and~' + l.search.slice(1) : '') +
+      l.hash
+    );
   </script>
 </head>
-<body></body>
+<body>
+  <!-- Redirecting... -->
+</body>
 </html>
