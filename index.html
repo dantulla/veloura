@@ -3123,6 +3123,22 @@ window.addEventListener('load', async () => {
   }, { once: true });
 
   /* ── PUBLISH BLOG ── */
+
+  /* Derive GitHub owner + repo from the siteUrl setting.
+     https://username.github.io            → repo: username.github.io
+     https://username.github.io/reponame   → repo: reponame             */
+  function parseGitHubFromSiteUrl(url) {
+    try {
+      const u         = new URL((url||'').replace(/\/$/,''));
+      const owner     = u.hostname.split('.')[0];
+      const pathParts = u.pathname.replace(/^\//,'').split('/').filter(Boolean);
+      const repo      = pathParts.length > 0 ? pathParts[0] : (owner + '.github.io');
+      return { owner, repo };
+    } catch(e) {
+      return { owner: 'dantulla', repo: 'dantulla.github.io' };
+    }
+  }
+
   async function pushToGitHub(owner, repo, branch, token, path, htmlContent) {
     const apiUrl  = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + path;
     const encoded = btoa(unescape(encodeURIComponent(htmlContent)));
@@ -3161,8 +3177,7 @@ window.addEventListener('load', async () => {
       return doc2.body.innerHTML;
     }
 
-    const OWNER  = 'dantulla';
-    const REPO   = 'veloura';
+    const { owner: OWNER, repo: REPO } = parseGitHubFromSiteUrl(settings.siteUrl || '');
     const BRANCH = 'main';
 
     await Promise.all(imgs.map(async (img) => {
@@ -3253,11 +3268,11 @@ window.addEventListener('load', async () => {
     await new Promise(r => setTimeout(r, 50)); // allow UI to repaint
     btn.textContent = 'Publishing…';
 
-    // ── GITHUB CONFIG — token stored in Admin → Settings, never in source code ──
+    // ── GITHUB CONFIG — derived from Site URL in Admin → Settings ──
     const GITHUB_TOKEN  = settings.githubToken || '';
-    const GITHUB_OWNER  = 'dantulla';
-    const GITHUB_REPO   = 'veloura';
     const GITHUB_BRANCH = 'main';
+    const siteUrl       = (settings.siteUrl || '').replace(/\/$/,'');
+    const { owner: GITHUB_OWNER, repo: GITHUB_REPO } = parseGitHubFromSiteUrl(siteUrl);
 
     if (!GITHUB_TOKEN && post.status !== 'draft') {
       btn.disabled = false; btn.textContent = 'Publish Post';
@@ -3266,9 +3281,9 @@ window.addEventListener('load', async () => {
     }
 
     try {
-      const newId   = await fbAddBlog(post);
-      const siteUrl = (settings.siteUrl||'https://dantulla.github.io/veloura').replace(/\/$/,'');
-      const directLink = siteUrl + '/blog/' + post.slug + '/';
+      const newId      = await fbAddBlog(post);
+      const resolvedUrl = siteUrl || 'https://' + GITHUB_OWNER + '.github.io/' + (GITHUB_REPO !== GITHUB_OWNER + '.github.io' ? GITHUB_REPO : '');
+      const directLink = resolvedUrl.replace(/\/$/,'') + '/blog/' + post.slug + '/';
 
       document.getElementById('bl-share-url').textContent = directLink;
       const sharePanel = document.getElementById('bl-share-panel');
@@ -3278,18 +3293,18 @@ window.addEventListener('load', async () => {
       if (post.status !== 'draft') {
         btn.textContent = 'Pushing to GitHub…';
         try {
-          const html     = window.generateBlogPage({ ...post, _id: newId }, siteUrl);
+          const html     = window.generateBlogPage({ ...post, _id: newId }, resolvedUrl);
           const filePath = 'blog/' + post.slug + '/index.html';
           await pushToGitHub(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, GITHUB_TOKEN, filePath, html);
           document.getElementById('bl-success').style.display = 'block';
-          document.getElementById('bl-success').textContent = '✓ Published! Live at dantulla.github.io/veloura/blog/' + post.slug + '/';
+          document.getElementById('bl-success').textContent = '✓ Published! Live at ' + resolvedUrl + '/blog/' + post.slug + '/';
           setTimeout(() => document.getElementById('bl-success').style.display = 'none', 7000);
         } catch(ghErr) {
           console.warn('GitHub push failed:', ghErr.message);
           document.getElementById('bl-success').style.display = 'block';
           document.getElementById('bl-success').textContent = '✓ Saved to Firebase. GitHub push failed — downloading file instead.';
           setTimeout(() => document.getElementById('bl-success').style.display = 'none', 5000);
-          const html = window.generateBlogPage({ ...post, _id: newId }, siteUrl);
+          const html = window.generateBlogPage({ ...post, _id: newId }, resolvedUrl);
           const blob = new Blob([html], { type: 'text/html' });
           const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = post.slug + '.html'; a.click(); URL.revokeObjectURL(a.href);
         }
@@ -3462,13 +3477,12 @@ window.addEventListener('load', async () => {
 
       // ── Re-push updated file to GitHub ──────────────────────────────
       const GITHUB_TOKEN  = settings.githubToken || '';
-      const GITHUB_OWNER  = 'dantulla';
-      const GITHUB_REPO   = 'veloura';
       const GITHUB_BRANCH = 'main';
+      const { owner: GITHUB_OWNER, repo: GITHUB_REPO } = parseGitHubFromSiteUrl(settings.siteUrl || '');
       if (GITHUB_TOKEN && updated.status !== 'draft') {
         btn.textContent = 'Pushing to GitHub…';
         try {
-          const siteUrl  = (settings.siteUrl || 'https://dantulla.github.io/veloura').replace(/\/$/,'');
+          const siteUrl  = (settings.siteUrl || '').replace(/\/$/,'');
           const fullPost = { ...currentBlog, ...updated, _id: id };
           const html     = window.generateBlogPage(fullPost, siteUrl);
           const filePath = 'blog/' + updated.slug + '/index.html';
