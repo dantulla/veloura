@@ -6,8 +6,8 @@
   <script>
     // GitHub Pages SPA Redirect Fix
     // Encodes the full URL path into a query string so index.html can decode it
-    var segmentCount = 0; // Set to 1 if using a Project Page (e.g. username.github.io/repo)
-                          // Set to 0 if using a Custom Domain (e.g. veloura.com)
+    var segmentCount = 1; // 1 = Project Page (dantulla.github.io/veloura)
+                          // 0 = Custom Domain (velourabeauty.com)
 
     var l = window.location;
     l.replace(
