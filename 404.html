@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <script>
-    window.location.replace(
-      'https://dantulla.github.io/veloura/' +
-      window.location.pathname.replace('/veloura','') +
-      window.location.search +
-      window.location.hash
-    );
+    // Redirect /blog/my-post-slug/ → /#blog-my-post-slug
+    var path = window.location.pathname;
+    var base = '/veloura';
+    var blogMatch = path.match(/\/veloura\/blog\/([^\/]+)\/?$/);
+    if (blogMatch) {
+      window.location.replace('https://dantulla.github.io/veloura/#blog-' + blogMatch[1]);
+    } else {
+      window.location.replace('https://dantulla.github.io/veloura/');
+    }
   </script>
 </head>
+<body></body>
 </html>
