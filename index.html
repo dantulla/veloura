@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
 <head>
+<!-- ================================================
+  GitHub Pages SPA Routing Fix
+  Decodes redirect from 404.html so Pinterest links
+  (and all direct URLs) load the correct page instantly
+  without bouncing through the homepage first.
+================================================ -->
+<script>
+  (function(l) {
+    if (l.search[1] === '/') {
+      var decoded = l.search.slice(1).split('~and~').map(function(s) {
+        return decodeURIComponent(s);
+      });
+      window.history.replaceState(
+        null, null,
+        l.pathname.slice(0, -1) + decoded[0] +
+        (decoded[1] || '') +
+        l.hash
+      );
+    }
+  }(window.location));
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Veloura | Beauty &amp; Fragrance - Curated Amazon Picks</title>
