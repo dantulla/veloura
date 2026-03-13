@@ -51,6 +51,8 @@ nav.scrolled{padding:18px 60px;background:rgba(8,8,8,.88);backdrop-filter:blur(2
 .nav-cta:hover{background:var(--gold-light);transform:translateY(-1px)}
 .admin-hint{font-size:7px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,169,110,.15);cursor:pointer;transition:color .3s}
 .admin-hint:hover{color:rgba(201,169,110,.4)}
+.mobile-blog-btn{display:none;align-items:center;gap:7px;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--cream);padding:9px 20px;border:1px solid rgba(245,240,232,.2);border-radius:2px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .3s;background:rgba(20,18,16,.6);backdrop-filter:blur(10px)}
+.mobile-blog-btn:hover{border-color:var(--gold);color:var(--gold)}
 
 /* ── HERO ── */
 #hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
@@ -307,6 +309,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 @media(max-width:768px){
   nav{padding:16px 24px;flex-wrap:wrap;justify-content:center;gap:16px}
   .nav-links{display:none}
+  .mobile-blog-btn{display:flex}
   section{padding:60px 24px}
   .category-section{padding:32px 24px}
   .category-grid{grid-template-columns:1fr;gap:8px}
@@ -380,6 +383,77 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 /* ── MANAGE SHARE BTN ── */
 .manage-share{font-size:8px;letter-spacing:.25em;text-transform:uppercase;color:#6ea8c9;border:1px solid rgba(110,168,201,.3);background:none;padding:8px 16px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;border-radius:2px}
 .manage-share:hover{background:rgba(110,168,201,.1);border-color:#6ea8c9}
+
+/* ══════════════════════════════════════
+   BLOG SECTION — PUBLIC
+══════════════════════════════════════ */
+#blog{background:var(--charcoal);padding:120px 60px;border-top:1px solid rgba(201,169,110,.1)}
+.blog-section-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;flex-wrap:wrap;gap:20px}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px}
+.blog-card{background:var(--surface);border:1px solid rgba(201,169,110,.08);border-radius:4px;overflow:hidden;transition:all .4s;cursor:pointer;position:relative}
+.blog-card:hover{border-color:rgba(201,169,110,.3);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.blog-card-img{height:220px;background:linear-gradient(135deg,#1c1510 0%,#241a12 100%);position:relative;overflow:hidden}
+.blog-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.8,.25,1)}
+.blog-card:hover .blog-card-img img{transform:scale(1.06)}
+.blog-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(201,169,110,.05) 0%,rgba(201,169,110,.02) 100%)}
+.blog-card-img-placeholder svg{opacity:.15}
+.blog-cat-badge{position:absolute;top:14px;left:14px;font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:5px 12px;font-weight:600;border-radius:1px;z-index:2}
+.blog-card-body{padding:28px}
+.blog-card-date{font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:block}
+.blog-card-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--cream);line-height:1.3;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.blog-card-excerpt{font-size:.82rem;color:var(--muted);line-height:1.75;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:20px}
+.blog-card-ctas{display:flex;flex-wrap:wrap;gap:8px;padding-top:20px;border-top:1px solid rgba(201,169,110,.08)}
+.blog-cta-btn{font-size:8px;letter-spacing:.3em;text-transform:uppercase;padding:10px 20px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .3s;border-radius:2px;white-space:nowrap}
+.blog-cta-btn.primary{background:var(--gold);color:var(--black);border:1px solid var(--gold)}
+.blog-cta-btn.primary:hover{background:transparent;color:var(--gold)}
+.blog-cta-btn.ghost{background:transparent;color:var(--cream);border:1px solid rgba(245,240,232,.2)}
+.blog-cta-btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.blog-empty{grid-column:1/-1;text-align:center;padding:80px 40px;border:1px dashed rgba(201,169,110,.15);border-radius:4px}
+.blog-empty-icon{font-size:2.5rem;margin-bottom:16px;filter:saturate(.4)}
+.blog-empty-title{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--cream);margin-bottom:8px}
+.blog-empty-sub{font-size:.82rem;color:var(--muted);max-width:320px;margin:0 auto;line-height:1.7}
+
+/* ── BLOG MODAL (full article) ── */
+#blog-modal{display:none;position:fixed;inset:0;background:rgba(8,8,8,.97);z-index:15000;overflow-y:auto;padding:0;backdrop-filter:blur(12px)}
+#blog-modal.show{display:block}
+.bm-inner{max-width:760px;margin:0 auto;padding:80px 48px 120px}
+.bm-close{position:fixed;top:28px;right:36px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(201,169,110,.3);padding:10px 24px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;z-index:15001}
+.bm-close:hover{border-color:var(--gold);color:var(--gold)}
+.bm-eyebrow{font-size:8px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block}
+.bm-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;color:var(--cream);line-height:1.15;margin-bottom:20px}
+.bm-meta{font-size:.78rem;color:var(--muted);letter-spacing:.06em;margin-bottom:36px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.bm-meta-sep{width:3px;height:3px;background:rgba(201,169,110,.4);border-radius:50%;flex-shrink:0}
+.bm-img{width:100%;height:380px;object-fit:cover;border-radius:4px;margin-bottom:40px;border:1px solid rgba(201,169,110,.1)}
+.bm-body{font-size:.95rem;color:rgba(245,240,232,.8);line-height:2;white-space:pre-wrap}
+.bm-body p{margin-bottom:1.4em}
+.bm-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,169,110,.12)}
+.bm-cta-btn{font-size:10px;letter-spacing:.3em;text-transform:uppercase;padding:14px 32px;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .3s;border-radius:2px}
+.bm-cta-btn.primary{background:var(--gold);color:var(--black);border:1px solid var(--gold)}
+.bm-cta-btn.primary:hover{background:transparent;color:var(--gold);transform:translateY(-2px)}
+.bm-cta-btn.ghost{background:transparent;color:var(--cream);border:1px solid rgba(245,240,232,.25)}
+.bm-cta-btn.ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+/* ── ADMIN BLOG STYLES ── */
+.blog-cta-row{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;padding:16px;background:rgba(201,169,110,.04);border:1px solid rgba(201,169,110,.1);border-radius:4px;margin-bottom:10px}
+.blog-cta-row .form-group{margin:0}
+.blog-cta-remove{background:none;border:1px solid rgba(201,110,110,.3);color:var(--red);font-size:8px;letter-spacing:.3em;text-transform:uppercase;padding:10px 14px;cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:2px;transition:all .3s;height:42px;align-self:flex-end}
+.blog-cta-remove:hover{background:rgba(201,110,110,.1);border-color:var(--red)}
+.add-cta-btn{font-size:9px;letter-spacing:.3em;text-transform:uppercase;background:none;border:1px solid rgba(201,169,110,.3);color:var(--gold);padding:10px 22px;cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:2px;transition:all .3s;margin-top:8px}
+.add-cta-btn:hover{background:rgba(201,169,110,.1);border-color:var(--gold)}
+.blog-manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:64px 1fr auto auto;gap:16px;align-items:center;border-radius:4px;transition:all .3s;margin-bottom:10px}
+.blog-manage-row:hover{border-color:rgba(201,169,110,.3)}
+.blog-manage-thumb{width:56px;height:56px;object-fit:cover;border-radius:3px;border:1px solid rgba(201,169,110,.15)}
+.blog-manage-thumb-placeholder{width:56px;height:56px;background:rgba(201,169,110,.08);border-radius:3px;border:1px solid rgba(201,169,110,.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.blog-manage-title{font-size:.9rem;color:var(--cream);margin-bottom:4px}
+.blog-manage-meta{font-size:.7rem;color:var(--muted);letter-spacing:.05em}
+@media(max-width:768px){
+  #blog{padding:60px 24px}
+  .blog-grid{grid-template-columns:1fr}
+  .blog-section-header{flex-direction:column;align-items:flex-start}
+  .bm-inner{padding:60px 24px 80px}
+  .blog-cta-row{grid-template-columns:1fr;gap:8px}
+  .blog-manage-row{grid-template-columns:48px 1fr auto}
+}
 /* override manage-row to add Share column */
 .manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:60px 1fr auto auto auto auto;gap:14px;align-items:center;border-radius:4px;transition:all .3s}
 /* ── STICKY MOBILE BAR ── */
@@ -485,11 +559,16 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   <a class="nav-logo" id="admin-trigger">VELO<span>U</span>RA</a>
   <ul class="nav-links">
     <li><a href="#products">Collections</a></li>
+    <li><a href="#blog">Blog</a></li>
     <li><a href="#social-proof">Reviews</a></li>
     <li><a href="#about">About</a></li>
     <li><a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Pinterest</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:12px">
+    <a href="#blog" class="mobile-blog-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Blog
+    </a>
     <a href="#products" class="nav-cta">Shop Now</a>
   </div>
 </nav>
@@ -710,6 +789,39 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </section>
 
+<!-- ══════════ BLOG SECTION ══════════ -->
+<section id="blog">
+  <div class="blog-section-header">
+    <div>
+      <span class="section-eyebrow">The Veloura Journal</span>
+      <h2 class="section-title">Beauty <em>Intelligence</em></h2>
+      <div class="gold-line"></div>
+      <p class="section-sub">Expert guides, honest reviews, and the routines worth stealing.</p>
+    </div>
+    <a href="#blog" class="view-all-link">All Articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+  <div class="blog-grid" id="blog-grid">
+    <div class="blog-empty" id="blog-empty" style="display:none">
+      <div class="blog-empty-icon">✍️</div>
+      <div class="blog-empty-title">No Posts Yet</div>
+      <div class="blog-empty-sub">The first piece of beauty intelligence is coming. Check back soon.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ BLOG MODAL ══════════ -->
+<div id="blog-modal">
+  <button class="bm-close" id="bm-close">Close ✕</button>
+  <div class="bm-inner" id="bm-inner">
+    <span class="bm-eyebrow" id="bm-eyebrow"></span>
+    <h1 class="bm-title" id="bm-title"></h1>
+    <div class="bm-meta" id="bm-meta"></div>
+    <img class="bm-img" id="bm-img" src="" alt="" style="display:none">
+    <div class="bm-body" id="bm-body"></div>
+    <div class="bm-ctas" id="bm-ctas"></div>
+  </div>
+</div>
+
 <!-- ══════════ FOOTER ══════════ -->
 <footer>
   <div class="footer-grid">
@@ -747,6 +859,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <h4>Company</h4>
       <ul class="footer-links">
         <li><a href="#about">About Us</a></li>
+        <li><a href="#blog">Blog</a></li>
         <li><a href="#social-proof">Reviews</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -907,6 +1020,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="admin-tabs">
       <button class="admin-tab active" data-tab="add">Add Product</button>
       <button class="admin-tab" data-tab="manage">Manage Products</button>
+      <button class="admin-tab" data-tab="blog">Blog</button>
       <button class="admin-tab" data-tab="analytics">Analytics</button>
       <button class="admin-tab" data-tab="settings">Settings</button>
     </div>
@@ -1031,6 +1145,87 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <div id="manage-count" class="manage-count"></div>
       <div class="manage-grid" id="manage-grid"></div>
       <div id="manage-empty" class="manage-empty">No products yet. Add your first product in the "Add Product" tab.</div>
+    </div>
+
+    <!-- BLOG TAB -->
+    <div class="admin-content" id="tab-blog">
+
+      <!-- Sub-tabs -->
+      <div style="display:flex;gap:2px;margin-bottom:36px;border-bottom:1px solid rgba(201,169,110,.1)">
+        <button class="admin-tab active" id="blog-sub-write" data-blogtab="write" style="border-bottom:2px solid var(--gold);color:var(--gold)">Publish Post</button>
+        <button class="admin-tab" id="blog-sub-manage" data-blogtab="manage-blogs" style="border-bottom:2px solid transparent">Manage Posts</button>
+      </div>
+
+      <!-- WRITE SUB-TAB -->
+      <div id="blogtab-write">
+        <div class="form-section">
+          <div class="form-section-title">Post Details</div>
+          <div class="form-grid">
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">Post Title</label>
+              <input type="text" id="bl-title" class="form-input" placeholder="e.g. The 5 Skincare Products Worth Every Penny">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="bl-category" class="form-select">
+                <option value="Skincare">Skincare</option>
+                <option value="Fragrance">Fragrance</option>
+                <option value="Hair Care">Hair Care</option>
+                <option value="Wellness">Wellness</option>
+                <option value="Beauty Tips">Beauty Tips</option>
+                <option value="Product Reviews">Product Reviews</option>
+                <option value="Routine Guides">Routine Guides</option>
+                <option value="Luxury Finds">Luxury Finds</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Author (optional)</label>
+              <input type="text" id="bl-author" class="form-input" placeholder="Veloura Edit Team">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Featured Image</div>
+          <div class="form-group">
+            <label class="form-label">Image URL (paste any image link)</label>
+            <input type="text" id="bl-image" class="form-input" placeholder="https://images.unsplash.com/... or Amazon image URL">
+          </div>
+          <div id="bl-img-preview-wrap" class="img-preview-wrap" style="margin-top:14px">
+            <img id="bl-img-preview" src="" alt="Preview" style="max-width:220px;max-height:140px;object-fit:cover;border-radius:4px;border:1px solid rgba(201,169,110,.2)">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Content</div>
+          <div class="form-group" style="margin-bottom:20px">
+            <label class="form-label">Short Excerpt (shown on blog card)</label>
+            <textarea id="bl-excerpt" class="form-textarea" style="min-height:70px" placeholder="A 1–2 sentence hook that makes them want to read more..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Full Article Body</label>
+            <textarea id="bl-body" class="form-textarea" style="min-height:240px" placeholder="Write your full article here. Use blank lines to separate paragraphs. No formatting codes needed — it renders beautifully."></textarea>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Call-to-Action Buttons</div>
+          <p style="font-size:.78rem;color:var(--muted);margin-bottom:20px;line-height:1.7">Add up to 4 buttons that appear at the bottom of the post and on the blog card. Direct readers to Amazon, Pinterest, your products, or anywhere else.</p>
+          <div id="bl-cta-list"></div>
+          <button class="add-cta-btn" id="bl-add-cta">+ Add Button</button>
+        </div>
+
+        <button id="bl-publish-btn" class="form-button">Publish Post</button>
+        <div id="bl-success" class="form-success">✓ Post published successfully!</div>
+      </div>
+
+      <!-- MANAGE BLOGS SUB-TAB -->
+      <div id="blogtab-manage-blogs" style="display:none">
+        <div id="blog-manage-count" class="manage-count"></div>
+        <div id="blog-manage-grid"></div>
+        <div id="blog-manage-empty" class="manage-empty">No blog posts yet. Publish your first post above.</div>
+      </div>
+
     </div>
 
     <!-- ANALYTICS TAB -->
@@ -1198,6 +1393,67 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </div>
 
+<!-- ══════════ BLOG EDIT MODAL ══════════ -->
+<div id="blog-edit-modal" style="display:none;position:fixed;inset:0;background:rgba(8,8,8,.97);z-index:20001;overflow-y:auto;padding:60px 40px;backdrop-filter:blur(10px)">
+  <button id="blog-edit-close" style="position:fixed;top:30px;right:40px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);background:none;border:1px solid rgba(201,169,110,.3);padding:10px 24px;cursor:pointer;transition:all .3s;font-family:'DM Sans',sans-serif;z-index:20002" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='';this.style.borderColor=''">Close</button>
+  <div style="max-width:800px;margin:0 auto">
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--cream);margin-bottom:8px">Edit Post</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:40px;letter-spacing:.05em">Changes save immediately</div>
+    <input type="hidden" id="be-id">
+    <div class="form-section">
+      <div class="form-section-title">Post Details</div>
+      <div class="form-grid">
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Title</label>
+          <input type="text" id="be-title" class="form-input">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="be-category" class="form-select">
+            <option value="Skincare">Skincare</option>
+            <option value="Fragrance">Fragrance</option>
+            <option value="Hair Care">Hair Care</option>
+            <option value="Wellness">Wellness</option>
+            <option value="Beauty Tips">Beauty Tips</option>
+            <option value="Product Reviews">Product Reviews</option>
+            <option value="Routine Guides">Routine Guides</option>
+            <option value="Luxury Finds">Luxury Finds</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Author</label>
+          <input type="text" id="be-author" class="form-input">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">Featured Image URL</label>
+          <input type="text" id="be-image" class="form-input">
+          <div class="img-preview-wrap" id="be-img-preview-wrap" style="margin-top:12px">
+            <img id="be-img-preview" src="" alt="Preview" style="max-width:200px;max-height:130px;object-fit:cover;border-radius:4px;border:1px solid rgba(201,169,110,.2)">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Content</div>
+      <div class="form-group" style="margin-bottom:20px">
+        <label class="form-label">Excerpt</label>
+        <textarea id="be-excerpt" class="form-textarea" style="min-height:70px"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Body</label>
+        <textarea id="be-body" class="form-textarea" style="min-height:200px"></textarea>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Call-to-Action Buttons</div>
+      <div id="be-cta-list"></div>
+      <button class="add-cta-btn" id="be-add-cta">+ Add Button</button>
+    </div>
+    <button id="be-save-btn" class="form-button" style="margin-top:20px">Save Changes</button>
+    <div id="be-success" class="edit-success">✓ Post updated!</div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot,
@@ -1221,6 +1477,7 @@ const DEFAULT_PASSWORD = 'veloura2024';
 const PRODUCTS_COL     = 'vl_products';
 const CLICKS_COL       = 'vl_clicks';
 const PV_COL           = 'vl_pageviews';
+const BLOGS_COL        = 'vl_blogs';
 
 /* ── FIREBASE ── */
 const fbApp = initializeApp(FIREBASE_CONFIG);
@@ -1231,6 +1488,9 @@ async function fbLoadSettings()      { const s = await getDoc(doc(db,'vl_setting
 async function fbAddProduct(p)       { return (await addDoc(collection(db,PRODUCTS_COL),p)).id; }
 async function fbUpdateProduct(id,p) { await updateDoc(doc(db,PRODUCTS_COL,id),p); }
 async function fbDeleteProduct(id)   { await deleteDoc(doc(db,PRODUCTS_COL,id)); }
+async function fbAddBlog(b)          { return (await addDoc(collection(db,BLOGS_COL),b)).id; }
+async function fbUpdateBlog(id,b)    { await updateDoc(doc(db,BLOGS_COL,id),b); }
+async function fbDeleteBlog(id)      { await deleteDoc(doc(db,BLOGS_COL,id)); }
 
 /* ── LOCAL STORAGE FALLBACK ── */
 const LOCAL = {
@@ -1243,6 +1503,7 @@ const LOCAL = {
 ════════════════════════════════════════ */
 let settings      = LOCAL.get('vl_settings') || { tag:DEFAULT_TAG, password:DEFAULT_PASSWORD, tagline:'', siteUrl:'' };
 let products      = [];
+let blogs         = [];
 let extractedASIN = '';
 let currentCategory = 'All';
 let adminIsOpen   = false;
@@ -1320,6 +1581,18 @@ window.addEventListener('load', async () => {
   }, () => {
     products = LOCAL.get('vl_products') || [];
     renderProducts();
+  });
+
+  /* ── Firebase real-time blogs ── */
+  onSnapshot(collection(db, BLOGS_COL), snap => {
+    blogs = [];
+    snap.forEach(d => blogs.push({ _id: d.id, ...d.data() }));
+    blogs.sort((a,b) => (b.publishedAt||'').localeCompare(a.publishedAt||''));
+    renderBlogSection();
+    if (adminIsOpen) renderBlogManage();
+  }, () => {
+    blogs = [];
+    renderBlogSection();
   });
 
   /* ── CURSOR ── */
@@ -1722,6 +1995,7 @@ window.addEventListener('load', async () => {
     document.body.style.overflow='hidden';
     loadSettings();
     renderManage();
+    renderBlogManage();
   }
   function hideAdminPanel(){
     adminIsOpen=false;
@@ -1757,13 +2031,15 @@ window.addEventListener('load', async () => {
   });
 
   /* ── ADMIN TABS ── */
-  document.querySelectorAll('.admin-tab').forEach(tab=>{
+  document.querySelectorAll('.admin-tab[data-tab]').forEach(tab=>{
     tab.addEventListener('click',()=>{
-      document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.admin-tab[data-tab]').forEach(t=>t.classList.remove('active'));
       document.querySelectorAll('.admin-content').forEach(c=>c.classList.remove('active'));
       tab.classList.add('active');
       document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
       if(tab.dataset.tab==='analytics') loadAnalytics();
+      if(tab.dataset.tab==='blog') { renderBlogManage(); switchBlogSubTab('write'); }
+      if(tab.dataset.tab==='manage') renderManage();
     });
   });
 
@@ -1989,6 +2265,321 @@ window.addEventListener('load', async () => {
     setTimeout(()=>saved.classList.remove('show'), 2200);
   });
 
+
+  /* ════════════════════════════════════════
+     BLOG — PUBLIC SECTION RENDER
+  ════════════════════════════════════════ */
+  function renderBlogSection() {
+    const grid  = document.getElementById('blog-grid');
+    const empty = document.getElementById('blog-empty');
+    if (!grid) return;
+    // Clear old cards
+    Array.from(grid.querySelectorAll('.blog-card')).forEach(el => el.remove());
+
+    if (blogs.length === 0) {
+      if (empty) empty.style.display = 'block';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    blogs.forEach(b => {
+      const card = document.createElement('div');
+      card.className = 'blog-card';
+
+      const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
+      const imgHTML = b.imageUrl
+        ? `<img src="${b.imageUrl}" alt="${b.title||''}" loading="lazy">`
+        : `<div class="blog-card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>`;
+
+      // Build CTA buttons for card (first 2)
+      const cardCtas = (b.ctas||[]).slice(0,2).map(cta =>
+        `<a href="${cta.url||'#'}" target="_blank" rel="noopener" class="blog-cta-btn ${cta.style||'primary'}">${cta.label||'Read More'}</a>`
+      ).join('');
+
+      card.innerHTML = `
+        <div class="blog-card-img">
+          ${b.category ? `<div class="blog-cat-badge">${b.category}</div>` : ''}
+          ${imgHTML}
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-card-date">${dateStr}</span>
+          <div class="blog-card-title">${b.title||'Untitled'}</div>
+          <div class="blog-card-excerpt">${b.excerpt||''}</div>
+          <div class="blog-card-ctas">
+            <button class="blog-cta-btn primary bl-read-btn" data-id="${b._id}">Read Article →</button>
+            ${cardCtas}
+          </div>
+        </div>`;
+
+      card.querySelector('.bl-read-btn').addEventListener('click', () => openBlogModal(b));
+      card.querySelector('.blog-card-title').addEventListener('click', () => openBlogModal(b));
+      card.querySelector('.blog-card-img').addEventListener('click', () => openBlogModal(b));
+      grid.appendChild(card);
+    });
+  }
+
+  /* ── BLOG MODAL ── */
+  function openBlogModal(b) {
+    const modal = document.getElementById('blog-modal');
+    const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
+    document.getElementById('bm-eyebrow').textContent = b.category || 'Veloura Journal';
+    document.getElementById('bm-title').textContent   = b.title || '';
+    document.getElementById('bm-meta').innerHTML      = [
+      dateStr,
+      b.author ? `<div class="bm-meta-sep"></div>By ${b.author}` : ''
+    ].filter(Boolean).join('');
+    const bmImg = document.getElementById('bm-img');
+    if (b.imageUrl) { bmImg.src = b.imageUrl; bmImg.style.display = 'block'; }
+    else { bmImg.style.display = 'none'; }
+    document.getElementById('bm-body').textContent = b.body || '';
+    // CTAs
+    const bmCtas = document.getElementById('bm-ctas');
+    bmCtas.innerHTML = (b.ctas||[]).map(cta =>
+      `<a href="${cta.url||'#'}" target="_blank" rel="noopener" class="bm-cta-btn ${cta.style||'primary'}">${cta.label||'Shop Now'}</a>`
+    ).join('');
+    if ((b.ctas||[]).length === 0) bmCtas.style.display = 'none';
+    else bmCtas.style.display = 'flex';
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+    modal.scrollTop = 0;
+  }
+
+  document.getElementById('bm-close').addEventListener('click', () => {
+    document.getElementById('blog-modal').classList.remove('show');
+    document.body.style.overflow = 'auto';
+  });
+  document.getElementById('blog-modal').addEventListener('click', e => {
+    if (e.target === document.getElementById('blog-modal')) {
+      document.getElementById('blog-modal').classList.remove('show');
+      document.body.style.overflow = 'auto';
+    }
+  });
+
+  /* ════════════════════════════════════════
+     BLOG — ADMIN SUBTABS
+  ════════════════════════════════════════ */
+  function switchBlogSubTab(name) {
+    ['write','manage-blogs'].forEach(t => {
+      const el = document.getElementById('blogtab-'+t);
+      if (el) el.style.display = (t === name) ? 'block' : 'none';
+    });
+    document.querySelectorAll('[data-blogtab]').forEach(btn => {
+      const isActive = btn.dataset.blogtab === name;
+      btn.style.color       = isActive ? 'var(--gold)'  : '';
+      btn.style.borderBottomColor = isActive ? 'var(--gold)' : 'transparent';
+    });
+    if (name === 'manage-blogs') renderBlogManage();
+  }
+
+  document.querySelectorAll('[data-blogtab]').forEach(btn => {
+    btn.addEventListener('click', () => switchBlogSubTab(btn.dataset.blogtab));
+  });
+
+  /* ── CTA BUILDER helper ── */
+  function buildCtaRow(container, cta={}) {
+    const row = document.createElement('div');
+    row.className = 'blog-cta-row';
+    row.innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Button Label</label>
+        <select class="form-select bl-cta-label-sel">
+          <option ${cta.label==='Shop Now'?'selected':''}>Shop Now</option>
+          <option ${cta.label==='Get It Here'?'selected':''}>Get It Here</option>
+          <option ${cta.label==='Check It Out'?'selected':''}>Check It Out</option>
+          <option ${cta.label==='Buy on Amazon'?'selected':''}>Buy on Amazon</option>
+          <option ${cta.label==='Read More'?'selected':''}>Read More</option>
+          <option ${cta.label==='Follow on Pinterest'?'selected':''}>Follow on Pinterest</option>
+          <option ${cta.label==='Save This Pin'?'selected':''}>Save This Pin</option>
+          <option value="__custom__" ${!['Shop Now','Get It Here','Check It Out','Buy on Amazon','Read More','Follow on Pinterest','Save This Pin'].includes(cta.label)?'selected':''}>Custom…</option>
+        </select>
+        <input type="text" class="form-input bl-cta-label-custom" placeholder="Custom label" style="margin-top:8px;display:${!['Shop Now','Get It Here','Check It Out','Buy on Amazon','Read More','Follow on Pinterest','Save This Pin'].includes(cta.label)?'block':'none'}" value="${!['Shop Now','Get It Here','Check It Out','Buy on Amazon','Read More','Follow on Pinterest','Save This Pin'].includes(cta.label)?cta.label:''}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Link URL</label>
+        <input type="text" class="form-input bl-cta-url" placeholder="https://..." value="${cta.url||''}">
+        <select class="form-select bl-cta-style" style="margin-top:8px">
+          <option value="primary" ${(cta.style||'primary')==='primary'?'selected':''}>Gold (Primary)</option>
+          <option value="ghost"   ${cta.style==='ghost'?'selected':''}>Ghost (Outline)</option>
+        </select>
+      </div>
+      <button class="blog-cta-remove" title="Remove">✕</button>`;
+
+    row.querySelector('.bl-cta-label-sel').addEventListener('change', function() {
+      const custom = row.querySelector('.bl-cta-label-custom');
+      custom.style.display = this.value === '__custom__' ? 'block' : 'none';
+    });
+    row.querySelector('.blog-cta-remove').addEventListener('click', () => row.remove());
+    container.appendChild(row);
+  }
+
+  function collectCtas(container) {
+    return Array.from(container.querySelectorAll('.blog-cta-row')).map(row => {
+      const sel    = row.querySelector('.bl-cta-label-sel').value;
+      const custom = row.querySelector('.bl-cta-label-custom').value.trim();
+      return {
+        label: sel === '__custom__' ? custom : sel,
+        url:   row.querySelector('.bl-cta-url').value.trim(),
+        style: row.querySelector('.bl-cta-style').value
+      };
+    }).filter(c => c.label && c.url);
+  }
+
+  /* init add-CTA buttons */
+  const blCtaList = document.getElementById('bl-cta-list');
+  document.getElementById('bl-add-cta').addEventListener('click', () => {
+    if (blCtaList.querySelectorAll('.blog-cta-row').length < 4) buildCtaRow(blCtaList);
+  });
+
+  /* blog image preview */
+  document.getElementById('bl-image').addEventListener('input', function() {
+    const wrap = document.getElementById('bl-img-preview-wrap');
+    const img  = document.getElementById('bl-img-preview');
+    if (this.value.trim()) { img.src = this.value.trim(); wrap.style.display = 'block'; }
+    else wrap.style.display = 'none';
+  });
+
+  /* ── PUBLISH BLOG ── */
+  document.getElementById('bl-publish-btn').addEventListener('click', async () => {
+    const title   = document.getElementById('bl-title').value.trim();
+    const excerpt = document.getElementById('bl-excerpt').value.trim();
+    const body    = document.getElementById('bl-body').value.trim();
+    if (!title) { alert('Please add a post title.'); return; }
+    if (!body)  { alert('Please add the article body.'); return; }
+
+    const post = {
+      title,
+      excerpt,
+      body,
+      category:    document.getElementById('bl-category').value,
+      author:      document.getElementById('bl-author').value.trim() || 'Veloura Edit Team',
+      imageUrl:    document.getElementById('bl-image').value.trim(),
+      ctas:        collectCtas(blCtaList),
+      publishedAt: new Date().toISOString()
+    };
+
+    const btn = document.getElementById('bl-publish-btn');
+    btn.disabled = true; btn.textContent = 'Publishing…';
+    try {
+      await fbAddBlog(post);
+      document.getElementById('bl-success').style.display = 'block';
+      setTimeout(() => document.getElementById('bl-success').style.display = 'none', 3000);
+      // reset form
+      ['bl-title','bl-excerpt','bl-body','bl-image','bl-author'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('bl-img-preview-wrap').style.display = 'none';
+      blCtaList.innerHTML = '';
+    } catch(e) { alert('Error publishing: ' + e.message); }
+    finally { btn.disabled = false; btn.textContent = 'Publish Post'; }
+  });
+
+  /* ════════════════════════════════════════
+     BLOG — MANAGE POSTS
+  ════════════════════════════════════════ */
+  function renderBlogManage() {
+    const grid  = document.getElementById('blog-manage-grid');
+    const empty = document.getElementById('blog-manage-empty');
+    const count = document.getElementById('blog-manage-count');
+    if (!grid) return;
+    grid.innerHTML = '';
+    if (blogs.length === 0) {
+      if (empty) empty.style.display = 'block';
+      if (count) count.innerHTML = '';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+    if (count) count.innerHTML = `<strong>${blogs.length}</strong> post${blogs.length!==1?'s':''} published`;
+
+    blogs.forEach((b, idx) => {
+      const row = document.createElement('div');
+      row.className = 'blog-manage-row';
+      const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+      const thumb = b.imageUrl
+        ? `<img class="blog-manage-thumb" src="${b.imageUrl}" alt="${b.title||''}">`
+        : `<div class="blog-manage-thumb-placeholder">✍️</div>`;
+      row.innerHTML = `
+        ${thumb}
+        <div>
+          <div class="blog-manage-title">${b.title||'Untitled'}</div>
+          <div class="blog-manage-meta">${b.category||''} · ${dateStr} · ${(b.ctas||[]).length} CTA${(b.ctas||[]).length!==1?'s':''}</div>
+        </div>
+        <button class="manage-edit" data-idx="${idx}">Edit</button>
+        <button class="manage-del" data-idx="${idx}">Delete</button>`;
+
+      row.querySelector('.manage-edit').addEventListener('click', () => openBlogEditModal(idx));
+      row.querySelector('.manage-del').addEventListener('click', async () => {
+        if (confirm('Delete this post permanently?')) {
+          try { await fbDeleteBlog(b._id); }
+          catch(e) { alert('Error: '+e.message); }
+        }
+      });
+      grid.appendChild(row);
+    });
+  }
+
+  /* ── BLOG EDIT MODAL ── */
+  function openBlogEditModal(idx) {
+    const b = blogs[idx];
+    document.getElementById('be-id').value      = b._id;
+    document.getElementById('be-title').value   = b.title||'';
+    document.getElementById('be-excerpt').value = b.excerpt||'';
+    document.getElementById('be-body').value    = b.body||'';
+    document.getElementById('be-author').value  = b.author||'';
+    document.getElementById('be-image').value   = b.imageUrl||'';
+    document.getElementById('be-category').value= b.category||'Skincare';
+    const wrap = document.getElementById('be-img-preview-wrap');
+    const img  = document.getElementById('be-img-preview');
+    if (b.imageUrl) { img.src = b.imageUrl; wrap.style.display = 'block'; }
+    else wrap.style.display = 'none';
+    // CTA rows
+    const beCtaList = document.getElementById('be-cta-list');
+    beCtaList.innerHTML = '';
+    (b.ctas||[]).forEach(cta => buildCtaRow(beCtaList, cta));
+    document.getElementById('be-success').style.display = 'none';
+    document.getElementById('blog-edit-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('be-image').addEventListener('input', function() {
+    const wrap = document.getElementById('be-img-preview-wrap');
+    const img  = document.getElementById('be-img-preview');
+    if (this.value.trim()) { img.src = this.value.trim(); wrap.style.display = 'block'; }
+    else wrap.style.display = 'none';
+  });
+
+  document.getElementById('be-add-cta').addEventListener('click', () => {
+    const beCtaList = document.getElementById('be-cta-list');
+    if (beCtaList.querySelectorAll('.blog-cta-row').length < 4) buildCtaRow(beCtaList);
+  });
+
+  document.getElementById('blog-edit-close').addEventListener('click', () => {
+    document.getElementById('blog-edit-modal').style.display = 'none';
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('be-save-btn').addEventListener('click', async () => {
+    const id  = document.getElementById('be-id').value;
+    const beCtaList = document.getElementById('be-cta-list');
+    const updated = {
+      title:    document.getElementById('be-title').value.trim(),
+      excerpt:  document.getElementById('be-excerpt').value.trim(),
+      body:     document.getElementById('be-body').value.trim(),
+      author:   document.getElementById('be-author').value.trim(),
+      imageUrl: document.getElementById('be-image').value.trim(),
+      category: document.getElementById('be-category').value,
+      ctas:     collectCtas(beCtaList)
+    };
+    const btn = document.getElementById('be-save-btn');
+    btn.textContent = 'Saving…'; btn.disabled = true;
+    try {
+      await fbUpdateBlog(id, updated);
+      document.getElementById('be-success').style.display = 'block';
+      setTimeout(() => {
+        document.getElementById('be-success').style.display = 'none';
+        document.getElementById('blog-edit-modal').style.display = 'none';
+        renderBlogManage();
+      }, 1800);
+    } catch(e) { alert('Error: '+e.message); }
+    finally { btn.textContent = 'Save Changes'; btn.disabled = false; }
+  });
 
   /* ── LEGAL MODALS ── */
   window.openModal = function(id) {
