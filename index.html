@@ -4,7 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Veloura | Beauty & Fragrance - Curated Amazon Picks</title>
+<!-- Dynamic SEO / OG tags — updated per blog post -->
+<meta name="description" id="meta-desc" content="Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.">
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="Veloura Beauty & Fragrance">
+<meta property="og:title"       id="og-title"  content="Veloura | Beauty & Fragrance">
+<meta property="og:description" id="og-desc"   content="Curated luxury beauty and fragrance finds.">
+<meta property="og:image"       id="og-image"  content="">
+<meta property="og:url"         id="og-url"    content="">
+<meta name="twitter:card"       content="summary_large_image">
+<meta name="twitter:title"      id="tw-title"  content="Veloura | Beauty & Fragrance">
+<meta name="twitter:description" id="tw-desc"  content="Curated luxury beauty and fragrance finds.">
+<meta name="twitter:image"      id="tw-image"  content="">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
    CONFIGURATION — CHANGE YOUR TAG HERE ONLY
@@ -561,7 +574,77 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .ip-full{grid-column:1/-1}
 .ip-img-preview{margin-top:8px;max-width:100px;max-height:80px;object-fit:cover;border-radius:2px;border:1px solid rgba(201,169,110,.2);display:none}
 
-/* ── ROUTINE PAIRS ── */
+/* ── QUILL RICH TEXT EDITOR — DARK VELOURA THEME ── */
+.quill-wrap{border:1px solid rgba(201,169,110,.2);border-radius:2px;overflow:hidden;background:#0f0d0b}
+.ql-toolbar.ql-snow{background:#1a1714;border:none;border-bottom:1px solid rgba(201,169,110,.15);padding:10px 14px;flex-wrap:wrap}
+.ql-toolbar.ql-snow .ql-formats{margin-right:12px}
+.ql-snow .ql-stroke{stroke:rgba(245,240,232,.5)!important}
+.ql-snow .ql-fill{fill:rgba(245,240,232,.5)!important}
+.ql-snow .ql-picker{color:rgba(245,240,232,.5)!important}
+.ql-snow .ql-picker-label{color:rgba(245,240,232,.5)!important}
+.ql-snow .ql-picker-options{background:#1a1714!important;border-color:rgba(201,169,110,.2)!important}
+.ql-snow .ql-picker-item{color:rgba(245,240,232,.7)!important}
+.ql-toolbar.ql-snow button:hover .ql-stroke,.ql-toolbar.ql-snow .ql-active .ql-stroke{stroke:var(--gold)!important}
+.ql-toolbar.ql-snow button:hover .ql-fill,.ql-toolbar.ql-snow .ql-active .ql-fill{fill:var(--gold)!important}
+.ql-toolbar.ql-snow button:hover,.ql-toolbar.ql-snow .ql-picker-label:hover{color:var(--gold)!important}
+.ql-container.ql-snow{border:none;min-height:280px}
+.ql-editor{background:#0f0d0b;color:rgba(245,240,232,.82);font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.85;padding:20px 22px;min-height:280px}
+.ql-editor.ql-blank::before{color:rgba(245,240,232,.2)!important;font-style:normal!important;font-size:.88rem}
+.ql-editor h1,.ql-editor h2,.ql-editor h3{font-family:'Playfair Display',serif;color:var(--cream);margin:1.4em 0 .6em}
+.ql-editor h2{font-size:1.3rem}.ql-editor h3{font-size:1.05rem;color:var(--gold)}
+.ql-editor p{margin-bottom:1em}.ql-editor strong{color:var(--cream);font-weight:600}
+.ql-editor em{color:var(--gold-light)}.ql-editor a{color:var(--gold)}
+.ql-editor ul,.ql-editor ol{padding-left:1.5em;margin-bottom:1em}
+.ql-editor blockquote{border-left:3px solid var(--gold);padding-left:16px;color:rgba(245,240,232,.55);font-style:italic;margin:1.4em 0}
+.ql-editor img{max-width:100%;border-radius:3px;margin:12px 0}
+
+/* ── BLOG BODY RENDERED HTML (modal) ── */
+.bm-body h1,.bm-body h2,.bm-body h3{font-family:'Playfair Display',serif;color:var(--cream);margin:1.6em 0 .7em;line-height:1.2}
+.bm-body h2{font-size:1.5rem}.bm-body h3{font-size:1.15rem;color:var(--gold)}
+.bm-body p{margin-bottom:1.4em;line-height:1.85;color:rgba(245,240,232,.75);font-size:.95rem}
+.bm-body strong{color:var(--cream);font-weight:600}.bm-body em{color:var(--gold-light)}
+.bm-body a{color:var(--gold);text-decoration:underline}
+.bm-body ul,.bm-body ol{padding-left:1.6em;margin-bottom:1.4em}
+.bm-body li{margin-bottom:.5em;color:rgba(245,240,232,.75);font-size:.95rem;line-height:1.75}
+.bm-body blockquote{border-left:3px solid var(--gold);padding:4px 0 4px 20px;color:rgba(245,240,232,.5);font-style:italic;margin:1.6em 0;font-size:1.05rem}
+.bm-body img{max-width:100%;border-radius:3px;margin:16px 0;display:block}
+
+/* ── DRAFT SYSTEM ── */
+.draft-toggle-wrap{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(0,0,0,.25);border:1px solid rgba(201,169,110,.12);border-radius:2px;margin-bottom:4px}
+.draft-toggle-label{font-size:.78rem;color:var(--muted);letter-spacing:.05em;flex:1;line-height:1.6}
+.draft-toggle-label strong{color:var(--cream);font-weight:500}
+.draft-switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.draft-switch input{opacity:0;width:0;height:0;position:absolute}
+.draft-slider{position:absolute;inset:0;background:rgba(201,169,110,.2);border-radius:24px;cursor:pointer;transition:.3s;border:1px solid rgba(201,169,110,.2)}
+.draft-slider::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:rgba(245,240,232,.4);border-radius:50%;transition:.3s}
+.draft-switch input:checked + .draft-slider{background:rgba(201,169,110,.35);border-color:rgba(201,169,110,.5)}
+.draft-switch input:checked + .draft-slider::before{transform:translateX(20px);background:var(--gold)}
+.blog-draft-badge{display:inline-block;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:#c96e6e;border:1px solid rgba(201,110,110,.35);padding:3px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
+.blog-published-badge{display:inline-block;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--green);border:1px solid rgba(110,201,138,.35);padding:3px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
+
+/* ── READING TIME ── */
+.blog-card-read-time{font-size:.7rem;letter-spacing:.2em;color:rgba(245,240,232,.28);text-transform:uppercase}
+.bm-read-time{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.28)}
+
+/* ── SLUG / SEO FIELDS ── */
+.slug-preview{font-size:.72rem;color:rgba(245,240,232,.28);margin-top:6px;letter-spacing:.04em;word-break:break-all}
+.slug-preview span{color:var(--gold);opacity:.7}
+.seo-fields-wrap{background:rgba(0,0,0,.2);border:1px solid rgba(201,169,110,.1);padding:18px 18px 14px;border-radius:2px;margin-top:4px}
+.seo-fields-label{font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block;opacity:.8}
+
+/* ── RELATED POSTS ── */
+.bm-related{margin-top:48px;padding-top:32px;border-top:1px solid rgba(201,169,110,.12)}
+.bm-related-title{font-size:.72rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:block}
+.bm-related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.bm-related-card{background:rgba(20,18,16,.6);border:1px solid rgba(201,169,110,.1);border-radius:2px;cursor:pointer;transition:border-color .3s;overflow:hidden}
+.bm-related-card:hover{border-color:rgba(201,169,110,.3)}
+.bm-related-img{height:110px;background:#1a1714;overflow:hidden}
+.bm-related-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.bm-related-card:hover .bm-related-img img{transform:scale(1.05)}
+.bm-related-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;opacity:.4}
+.bm-related-body{padding:14px 16px}
+.bm-related-cat{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block}
+.bm-related-name{font-family:'Playfair Display',serif;font-size:.9rem;color:var(--cream);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .routine-strip{padding:14px 24px;background:rgba(0,0,0,.25);border-top:1px solid rgba(201,169,110,.06)}
 .routine-label{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
 .routine-items{display:flex;gap:8px;flex-wrap:wrap}
@@ -785,6 +868,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <span class="bm-eyebrow" id="bm-eyebrow"></span>
     <h1 class="bm-title" id="bm-title"></h1>
     <div class="bm-meta" id="bm-meta"></div>
+    <div class="bm-read-time" id="bm-read-time" style="margin-top:4px"></div>
     <img class="bm-img" id="bm-img" src="" alt="" style="display:none">
     <div class="bm-body" id="bm-body"></div>
     <div id="bm-ip-section" style="display:none">
@@ -792,6 +876,10 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <div id="bm-ip-list"></div>
     </div>
     <div class="bm-ctas" id="bm-ctas"></div>
+    <div class="bm-related" id="bm-related" style="display:none">
+      <span class="bm-related-title">More From Veloura</span>
+      <div class="bm-related-grid" id="bm-related-grid"></div>
+    </div>
   </div>
 </div>
 
@@ -1196,7 +1284,8 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
           <div class="form-grid">
             <div class="form-group" style="grid-column:1/-1">
               <label class="form-label">Post Title</label>
-              <input type="text" id="bl-title" class="form-input" placeholder="e.g. The 5 Skincare Products Worth Every Penny">
+              <input type="text" id="bl-title" class="form-input" placeholder="e.g. 5 Perfumes That Make You Unforgettable">
+              <div class="slug-preview" id="bl-slug-preview">URL: <span id="bl-slug-display">—</span></div>
             </div>
             <div class="form-group">
               <label class="form-label">Category</label>
@@ -1216,6 +1305,15 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
               <input type="text" id="bl-author" class="form-input" placeholder="Veloura Edit Team">
             </div>
           </div>
+
+          <!-- Draft Toggle -->
+          <div class="draft-toggle-wrap" style="margin-top:16px">
+            <div class="draft-toggle-label"><strong>Save as Draft</strong> — keep hidden from visitors until ready</div>
+            <label class="draft-switch">
+              <input type="checkbox" id="bl-draft-toggle">
+              <span class="draft-slider"></span>
+            </label>
+          </div>
         </div>
 
         <div class="form-section">
@@ -1229,6 +1327,22 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
           </div>
         </div>
 
+        <!-- SEO Fields -->
+        <div class="form-section">
+          <div class="form-section-title">SEO & Social Preview</div>
+          <div class="seo-fields-wrap">
+            <span class="seo-fields-label">Controls how this post appears on Google, Pinterest, and Facebook when shared</span>
+            <div class="form-group" style="margin-bottom:14px">
+              <label class="form-label">Meta Description (150–160 characters)</label>
+              <textarea id="bl-meta-desc" class="form-textarea" style="min-height:60px" placeholder="One sentence that makes someone click. Appears under your post title on Google and Pinterest previews."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Social Share Image URL (optional — uses featured image if blank)</label>
+              <input type="text" id="bl-og-image" class="form-input" placeholder="https://... — ideally 1200×630px for Pinterest/Facebook">
+            </div>
+          </div>
+        </div>
+
         <div class="form-section">
           <div class="form-section-title">Content</div>
           <div class="form-group" style="margin-bottom:20px">
@@ -1237,7 +1351,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
           </div>
           <div class="form-group">
             <label class="form-label">Full Article Body</label>
-            <textarea id="bl-body" class="form-textarea" style="min-height:240px" placeholder="Write your full article here. Use blank lines to separate paragraphs. No formatting codes needed — it renders beautifully."></textarea>
+            <div class="quill-wrap">
+              <div id="bl-quill-editor"></div>
+            </div>
           </div>
         </div>
 
@@ -1463,6 +1579,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
         <div class="form-group" style="grid-column:1/-1">
           <label class="form-label">Title</label>
           <input type="text" id="be-title" class="form-input">
+          <div class="slug-preview" id="be-slug-preview">URL: <span id="be-slug-display">—</span></div>
         </div>
         <div class="form-group">
           <label class="form-label">Category</label>
@@ -1489,7 +1606,32 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
           </div>
         </div>
       </div>
+      <!-- Draft Toggle -->
+      <div class="draft-toggle-wrap" style="margin-top:16px">
+        <div class="draft-toggle-label"><strong>Draft Mode</strong> — toggle off to make post live</div>
+        <label class="draft-switch">
+          <input type="checkbox" id="be-draft-toggle">
+          <span class="draft-slider"></span>
+        </label>
+      </div>
     </div>
+
+    <!-- SEO Fields -->
+    <div class="form-section">
+      <div class="form-section-title">SEO & Social Preview</div>
+      <div class="seo-fields-wrap">
+        <span class="seo-fields-label">Google · Pinterest · Facebook preview controls</span>
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">Meta Description</label>
+          <textarea id="be-meta-desc" class="form-textarea" style="min-height:60px"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Social Share Image URL (optional)</label>
+          <input type="text" id="be-og-image" class="form-input" placeholder="Leave blank to use featured image">
+        </div>
+      </div>
+    </div>
+
     <div class="form-section">
       <div class="form-section-title">Content</div>
       <div class="form-group" style="margin-bottom:20px">
@@ -1498,7 +1640,9 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       </div>
       <div class="form-group">
         <label class="form-label">Full Body</label>
-        <textarea id="be-body" class="form-textarea" style="min-height:200px"></textarea>
+        <div class="quill-wrap">
+          <div id="be-quill-editor"></div>
+        </div>
       </div>
     </div>
     <div class="form-section">
@@ -2353,25 +2497,32 @@ window.addEventListener('load', async () => {
     const grid  = document.getElementById('blog-grid');
     const empty = document.getElementById('blog-empty');
     if (!grid) return;
-    // Clear old cards
     Array.from(grid.querySelectorAll('.blog-card')).forEach(el => el.remove());
 
-    if (blogs.length === 0) {
+    // Expose for related posts
+    window.__vl_blogs = blogs;
+
+    // Only show published posts publicly
+    const publicBlogs = blogs.filter(b => b.status !== 'draft');
+
+    if (publicBlogs.length === 0) {
       if (empty) empty.style.display = 'block';
       return;
     }
     if (empty) empty.style.display = 'none';
 
-    blogs.forEach(b => {
+    publicBlogs.forEach(b => {
       const card = document.createElement('div');
       card.className = 'blog-card';
-
       const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
+      const rt = (() => {
+        const txt = (b.body||'').replace(/<[^>]+>/g,'');
+        return Math.max(1,Math.round(txt.trim().split(/\s+/).filter(Boolean).length/220)) + ' min read';
+      })();
       const imgHTML = b.imageUrl
         ? `<img src="${b.imageUrl}" alt="${b.title||''}" loading="lazy">`
         : `<div class="blog-card-img-placeholder"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14.5 4h-5L7 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></div>`;
 
-      // Build CTA buttons for card (first 2)
       const cardCtas = (b.ctas||[]).slice(0,2).map(cta =>
         `<a href="${cta.url||'#'}" target="_blank" rel="noopener" class="blog-cta-btn ${cta.style||'primary'}">${cta.label||'Read More'}</a>`
       ).join('');
@@ -2382,7 +2533,10 @@ window.addEventListener('load', async () => {
           ${imgHTML}
         </div>
         <div class="blog-card-body">
-          <span class="blog-card-date">${dateStr}</span>
+          <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap">
+            <span class="blog-card-date">${dateStr}</span>
+            <span class="blog-card-read-time">&nbsp;· ${rt}</span>
+          </div>
           <div class="blog-card-title">${b.title||'Untitled'}</div>
           <div class="blog-card-excerpt">${b.excerpt||''}</div>
           <div class="blog-card-ctas">
@@ -2400,11 +2554,12 @@ window.addEventListener('load', async () => {
 
   /* ── BLOG MODAL ── */
   function openBlogModal(b) {
+    window.__vl_openBlogModal = openBlogModal; // expose for related posts
     const modal = document.getElementById('blog-modal');
     const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
     document.getElementById('bm-eyebrow').textContent = b.category || 'Veloura Journal';
     document.getElementById('bm-title').textContent   = b.title || '';
-    document.getElementById('bm-meta').innerHTML      = [
+    document.getElementById('bm-meta').innerHTML = [
       dateStr,
       b.author ? `<div class="bm-meta-sep"></div>By ${b.author}` : ''
     ].filter(Boolean).join('');
@@ -2412,18 +2567,23 @@ window.addEventListener('load', async () => {
     if (b.imageUrl) { bmImg.src = b.imageUrl; bmImg.style.display = 'block'; }
     else { bmImg.style.display = 'none'; }
 
-    // Render body as paragraphs (split on blank lines)
-    const bodyEl = document.getElementById('bm-body');
+    // Render body as rich HTML (from Quill) or plain paragraphs (legacy)
+    const bodyEl  = document.getElementById('bm-body');
     const rawBody = (b.body || '').trim();
     if (rawBody) {
-      bodyEl.innerHTML = rawBody.split(/\n\s*\n/).map(para => {
-        const trimmed = para.trim();
-        if (!trimmed) return '';
-        return `<p style="margin-bottom:1.4em;line-height:1.85;color:rgba(245,240,232,.75);font-size:.95rem">${trimmed.replace(/\n/g,'<br>')}</p>`;
-      }).join('');
+      // If it looks like HTML (Quill output), render directly
+      if (rawBody.startsWith('<')) {
+        bodyEl.innerHTML = rawBody;
+      } else {
+        // Legacy plain text — convert to paragraphs
+        bodyEl.innerHTML = rawBody.split(/\n\s*\n/).map(para => {
+          const t = para.trim();
+          return t ? `<p>${t.replace(/\n/g,'<br>')}</p>` : '';
+        }).join('');
+      }
     } else { bodyEl.innerHTML = ''; }
 
-    // Render inline product cards
+    // Inline product cards
     const ipSection = document.getElementById('bm-ip-section');
     const ipList    = document.getElementById('bm-ip-list');
     const ipCards   = (b.inlineProducts || []).filter(p => p.name);
@@ -2456,13 +2616,17 @@ window.addEventListener('load', async () => {
     bmCtas.innerHTML = (b.ctas||[]).map(cta =>
       `<a href="${cta.url||'#'}" target="_blank" rel="noopener" class="bm-cta-btn ${cta.style||'primary'}">${cta.label||'Shop Now'}</a>`
     ).join('');
-    if ((b.ctas||[]).length === 0) bmCtas.style.display = 'none';
-    else bmCtas.style.display = 'flex';
-    // Set URL hash so the browser URL is itself a direct link
-    history.replaceState(null, '', '#blog-' + b._id);
+    bmCtas.style.display = (b.ctas||[]).length === 0 ? 'none' : 'flex';
+
+    // Slug-based URL: prefer slug field, fallback to ID
+    const urlKey = b.slug || b._id;
+    history.replaceState(null, '', '#blog-' + urlKey);
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
     modal.scrollTop = 0;
+
+    // Fire upgrade hooks (meta, reading time, related posts)
+    if (window.__vl_onBlogOpen) window.__vl_onBlogOpen(b);
   }
 
   document.getElementById('bm-close').addEventListener('click', () => {
@@ -2636,14 +2800,33 @@ window.addEventListener('load', async () => {
   document.getElementById('bl-publish-btn').addEventListener('click', async () => {
     const title   = document.getElementById('bl-title').value.trim();
     const excerpt = document.getElementById('bl-excerpt').value.trim();
-    const body    = document.getElementById('bl-body').value.trim();
+    // Get body from Quill if available, else hidden input fallback
+    let body = '';
+    if (window.Quill) {
+      const qEl = document.getElementById('bl-quill-editor');
+      const qInstance = qEl && qEl.__quill;
+      // Access via global blQuill reference set by upgrade script
+      body = document.getElementById('bl-body-hidden')?.value || '';
+      if (!body && qEl) {
+        const qInner = qEl.querySelector('.ql-editor');
+        body = qInner ? qInner.innerHTML : '';
+      }
+    }
+    if (!body) body = document.getElementById('bl-body-hidden')?.value || '';
     if (!title) { alert('Please add a post title.'); return; }
-    if (!body)  { alert('Please add the article body.'); return; }
+    if (!body || body === '<p><br></p>') { alert('Please add the article body.'); return; }
+
+    // Generate slug
+    const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').replace(/-+/g,'-').slice(0,80) + '-' + Date.now().toString(36);
 
     const post = {
       title,
+      slug,
       excerpt,
       body,
+      status:         document.getElementById('bl-draft-toggle')?.checked ? 'draft' : 'published',
+      metaDesc:       document.getElementById('bl-meta-desc')?.value.trim() || '',
+      ogImage:        document.getElementById('bl-og-image')?.value.trim() || '',
       category:       document.getElementById('bl-category').value,
       author:         document.getElementById('bl-author').value.trim() || 'Veloura Edit Team',
       imageUrl:       document.getElementById('bl-image').value.trim(),
@@ -2657,21 +2840,31 @@ window.addEventListener('load', async () => {
     try {
       const newId = await fbAddBlog(post);
       const siteUrl = (settings.siteUrl||'https://yourusername.github.io/veloura').replace(/\/$/,'');
-      const directLink = siteUrl + '/#blog-' + newId;
+      const directLink = siteUrl + '/#blog-' + post.slug;
 
-      // Show share panel with direct link
       document.getElementById('bl-share-url').textContent = directLink;
       const sharePanel = document.getElementById('bl-share-panel');
       sharePanel.classList.add('show');
       setTimeout(() => sharePanel.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
 
       document.getElementById('bl-success').style.display = 'block';
+      const statusMsg = post.status === 'draft' ? '✓ Draft saved!' : '✓ Post published successfully!';
+      document.getElementById('bl-success').textContent = statusMsg;
       setTimeout(() => document.getElementById('bl-success').style.display = 'none', 3000);
-      // reset form
-      ['bl-title','bl-excerpt','bl-body','bl-image','bl-author'].forEach(id => document.getElementById(id).value = '');
+
+      // Reset form
+      ['bl-title','bl-excerpt','bl-image','bl-author','bl-meta-desc','bl-og-image'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.value = '';
+      });
       document.getElementById('bl-img-preview-wrap').style.display = 'none';
       blCtaList.innerHTML = '';
       blIpList.innerHTML  = '';
+      if (document.getElementById('bl-draft-toggle')) document.getElementById('bl-draft-toggle').checked = false;
+      // Clear Quill
+      const qEl = document.getElementById('bl-quill-editor');
+      if (qEl) { const qInner = qEl.querySelector('.ql-editor'); if (qInner) qInner.innerHTML = ''; }
+      const hb = document.getElementById('bl-body-hidden'); if (hb) hb.value = '';
+      const sd = document.getElementById('bl-slug-display'); if (sd) sd.textContent = '—';
     } catch(e) { alert('Error publishing: ' + e.message); }
     finally { btn.disabled = false; btn.textContent = 'Publish Post'; }
   });
@@ -2703,7 +2896,7 @@ window.addEventListener('load', async () => {
       row.innerHTML = `
         ${thumb}
         <div>
-          <div class="blog-manage-title">${b.title||'Untitled'}</div>
+          <div class="blog-manage-title">${b.title||'Untitled'}${b.status==='draft'?'<span class="blog-draft-badge">Draft</span>':'<span class="blog-published-badge">Live</span>'}</div>
           <div class="blog-manage-meta">${b.category||''} · ${dateStr} · ${(b.ctas||[]).length} CTA${(b.ctas||[]).length!==1?'s':''}</div>
         </div>
         <button class="manage-share bl-copy-manage-btn" data-id="${b._id}" title="Copy direct link">Copy Link</button>
@@ -2733,10 +2926,18 @@ window.addEventListener('load', async () => {
     document.getElementById('be-id').value      = b._id;
     document.getElementById('be-title').value   = b.title||'';
     document.getElementById('be-excerpt').value = b.excerpt||'';
-    document.getElementById('be-body').value    = b.body||'';
     document.getElementById('be-author').value  = b.author||'';
     document.getElementById('be-image').value   = b.imageUrl||'';
     document.getElementById('be-category').value= b.category||'Skincare';
+    // New fields
+    const beMetaDesc = document.getElementById('be-meta-desc');
+    const beOgImage  = document.getElementById('be-og-image');
+    const beDraft    = document.getElementById('be-draft-toggle');
+    const beSlugDisp = document.getElementById('be-slug-display');
+    if (beMetaDesc) beMetaDesc.value = b.metaDesc || '';
+    if (beOgImage)  beOgImage.value  = b.ogImage  || '';
+    if (beDraft)    beDraft.checked  = b.status === 'draft';
+    if (beSlugDisp) beSlugDisp.textContent = b.slug ? '#blog-' + b.slug : '#blog-' + b._id;
     const wrap = document.getElementById('be-img-preview-wrap');
     const img  = document.getElementById('be-img-preview');
     if (b.imageUrl) { img.src = b.imageUrl; wrap.style.display = 'block'; }
@@ -2752,6 +2953,14 @@ window.addEventListener('load', async () => {
     document.getElementById('be-success').style.display = 'none';
     document.getElementById('blog-edit-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
+    // Load body into Quill after modal opens
+    setTimeout(() => {
+      const qEl = document.getElementById('be-quill-editor');
+      if (qEl && window.Quill) {
+        const qInner = qEl.querySelector('.ql-editor');
+        if (qInner) qInner.innerHTML = b.body || '';
+      }
+    }, 120);
   }
 
   document.getElementById('be-image').addEventListener('input', function() {
@@ -2780,13 +2989,23 @@ window.addEventListener('load', async () => {
     const id  = document.getElementById('be-id').value;
     const beCtaList = document.getElementById('be-cta-list');
     const beIpList  = document.getElementById('be-ip-list');
+    // Get body from Quill editor
+    let body = '';
+    const qEl = document.getElementById('be-quill-editor');
+    if (qEl) { const qInner = qEl.querySelector('.ql-editor'); if (qInner) body = qInner.innerHTML; }
+    const currentBlog = blogs.find(b => b._id === id) || {};
+    const title = document.getElementById('be-title').value.trim();
     const updated = {
-      title:          document.getElementById('be-title').value.trim(),
+      title,
+      slug:           currentBlog.slug || (title.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,80) + '-' + Date.now().toString(36)),
       excerpt:        document.getElementById('be-excerpt').value.trim(),
-      body:           document.getElementById('be-body').value.trim(),
+      body:           body || currentBlog.body || '',
       author:         document.getElementById('be-author').value.trim(),
       imageUrl:       document.getElementById('be-image').value.trim(),
       category:       document.getElementById('be-category').value,
+      status:         document.getElementById('be-draft-toggle')?.checked ? 'draft' : 'published',
+      metaDesc:       document.getElementById('be-meta-desc')?.value.trim() || '',
+      ogImage:        document.getElementById('be-og-image')?.value.trim() || '',
       ctas:           collectCtas(beCtaList),
       inlineProducts: collectInlineProducts(beIpList)
     };
@@ -3027,5 +3246,247 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>document.getElementById('copy-year').textContent=new Date().getFullYear();</script>
-</body>
-</html>
+
+<!-- ══ QUILL RICH TEXT EDITOR ══ -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script>
+/* ════════════════════════════════════════
+   BLOG SYSTEM UPGRADES
+   — Quill editors, slugs, drafts, SEO meta, related posts
+════════════════════════════════════════ */
+(function() {
+
+  /* ── SLUG GENERATOR ── */
+  function makeSlug(title) {
+    return title.toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .slice(0, 80);
+  }
+
+  /* ── READING TIME ── */
+  function readingTime(htmlStr) {
+    const text = htmlStr.replace(/<[^>]+>/g,'');
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    const mins = Math.max(1, Math.round(words / 220));
+    return mins + ' min read';
+  }
+
+  /* ── SEO META TAG INJECTION ── */
+  function injectMeta(post) {
+    const title = (post.title || 'Veloura') + ' | Veloura Beauty & Fragrance';
+    const desc  = post.metaDesc || post.excerpt || 'Curated luxury beauty and fragrance finds.';
+    const img   = post.ogImage  || post.imageUrl || '';
+    const url   = window.location.href;
+    document.title = title;
+    const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+    set('meta-desc', 'content', desc);
+    set('og-title',  'content', title);
+    set('og-desc',   'content', desc);
+    set('og-image',  'content', img);
+    set('og-url',    'content', url);
+    set('tw-title',  'content', title);
+    set('tw-desc',   'content', desc);
+    set('tw-image',  'content', img);
+  }
+
+  function resetMeta() {
+    document.title = 'Veloura | Beauty & Fragrance - Curated Amazon Picks';
+    const def = 'Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.';
+    const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+    set('meta-desc','content',def);
+    set('og-title', 'content','Veloura | Beauty & Fragrance');
+    set('og-desc',  'content',def);
+    set('og-image', 'content','');
+    set('og-url',   'content','');
+    set('tw-title', 'content','Veloura | Beauty & Fragrance');
+    set('tw-desc',  'content',def);
+    set('tw-image', 'content','');
+  }
+
+  /* ── QUILL TOOLBAR CONFIG ── */
+  const QUILL_TOOLBAR = [
+    [{ header: [2, 3, false] }],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['blockquote', 'link', 'image'],
+    ['clean']
+  ];
+
+  /* ── INIT QUILL: PUBLISH FORM ── */
+  let blQuill = null;
+  function initBlQuill() {
+    if (blQuill) return;
+    const el = document.getElementById('bl-quill-editor');
+    if (!el) return;
+    blQuill = new Quill(el, {
+      theme: 'snow',
+      placeholder: 'Write your full article here. Use H2 for section headings, bold for key phrases, blockquote for pull-quotes...',
+      modules: { toolbar: QUILL_TOOLBAR }
+    });
+  }
+
+  /* ── INIT QUILL: EDIT MODAL ── */
+  let beQuill = null;
+  function initBeQuill() {
+    if (beQuill) return;
+    const el = document.getElementById('be-quill-editor');
+    if (!el) return;
+    beQuill = new Quill(el, {
+      theme: 'snow',
+      placeholder: 'Edit article body...',
+      modules: { toolbar: QUILL_TOOLBAR }
+    });
+  }
+
+  /* ── SLUG PREVIEW on title input ── */
+  const blTitleInput = document.getElementById('bl-title');
+  const blSlugDisplay = document.getElementById('bl-slug-display');
+  if (blTitleInput && blSlugDisplay) {
+    blTitleInput.addEventListener('input', () => {
+      const s = makeSlug(blTitleInput.value);
+      blSlugDisplay.textContent = s ? '#blog-' + s : '—';
+    });
+  }
+  const beTitleInput = document.getElementById('be-title');
+  const beSlugDisplay = document.getElementById('be-slug-display');
+  if (beTitleInput && beSlugDisplay) {
+    beTitleInput.addEventListener('input', () => {
+      const s = makeSlug(beTitleInput.value);
+      beSlugDisplay.textContent = s ? '#blog-' + s : '—';
+    });
+  }
+
+  /* ── INIT QUILL when blog admin tab opens ── */
+  document.querySelectorAll('.admin-tab[data-tab]').forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.dataset.tab === 'blog') {
+        setTimeout(initBlQuill, 80);
+      }
+    });
+  });
+
+  /* ── PATCH PUBLISH: collect Quill HTML + new fields ── */
+  const origPublishBtn = document.getElementById('bl-publish-btn');
+  if (origPublishBtn) {
+    origPublishBtn.addEventListener('click', function patchPublish() {
+      // We inject into the post object BEFORE the main handler runs
+      // by patching collectCtas — actually we patch via a MutationObserver trick
+      // Instead: override the click with a capturing listener that sets a hidden input
+      if (!blQuill) initBlQuill();
+      // Store the Quill HTML in a hidden textarea that the main handler reads
+      let hiddenBody = document.getElementById('bl-body-hidden');
+      if (!hiddenBody) {
+        hiddenBody = document.createElement('textarea');
+        hiddenBody.id = 'bl-body-hidden';
+        hiddenBody.style.display = 'none';
+        document.body.appendChild(hiddenBody);
+      }
+      hiddenBody.value = blQuill ? blQuill.root.innerHTML : '';
+    }, true); // capture phase — fires before main handler
+  }
+
+  /* ── PATCH openBlogModal: inject meta, reading time, related posts ── */
+  // We intercept by overriding the blog-modal close and the modal render
+  // The main openBlogModal is already defined in the module — we hook via
+  // MutationObserver on the modal's class list (show → read title → inject)
+  const blogModal = document.getElementById('blog-modal');
+  let currentBlogData = null;
+
+  // Expose a global setter so openBlogModal can call us
+  window.__vl_onBlogOpen = function(b) {
+    currentBlogData = b;
+    // Reading time
+    const rtEl = document.getElementById('bm-read-time');
+    if (rtEl) rtEl.textContent = readingTime(b.body || '');
+    // SEO meta
+    injectMeta(b);
+    // Related posts
+    renderRelatedPosts(b);
+  };
+
+  document.getElementById('bm-close').addEventListener('click', resetMeta);
+  if (blogModal) blogModal.addEventListener('click', e => {
+    if (e.target === blogModal) resetMeta();
+  });
+
+  /* ── RELATED POSTS ── */
+  function renderRelatedPosts(currentPost) {
+    const relSection = document.getElementById('bm-related');
+    const relGrid    = document.getElementById('bm-related-grid');
+    if (!relSection || !relGrid) return;
+    // Access blogs array from parent scope via window
+    const allBlogs = window.__vl_blogs || [];
+    const related = allBlogs
+      .filter(b => b._id !== currentPost._id && b.status !== 'draft' && b.category === currentPost.category)
+      .slice(0, 3);
+    if (related.length === 0) {
+      relSection.style.display = 'none';
+      return;
+    }
+    relSection.style.display = 'block';
+    relGrid.innerHTML = related.map(b => {
+      const imgHTML = b.imageUrl
+        ? `<img src="${b.imageUrl}" alt="${b.title||''}" loading="lazy">`
+        : `<div class="bm-related-img-placeholder">✍️</div>`;
+      return `<div class="bm-related-card" data-id="${b._id}">
+        <div class="bm-related-img">${imgHTML}</div>
+        <div class="bm-related-body">
+          <span class="bm-related-cat">${b.category||''}</span>
+          <div class="bm-related-name">${b.title||'Untitled'}</div>
+        </div>
+      </div>`;
+    }).join('');
+    relGrid.querySelectorAll('.bm-related-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const b = allBlogs.find(x => x._id === card.dataset.id);
+        if (b && window.__vl_openBlogModal) window.__vl_openBlogModal(b);
+      });
+    });
+  }
+
+  /* ── BLOG CARD: add reading time to cards ── */
+  // Patch renderBlogSection to include reading time — hook via MutationObserver on blog-grid
+  const blogGrid = document.getElementById('blog-grid');
+  if (blogGrid) {
+    new MutationObserver(() => {
+      blogGrid.querySelectorAll('.blog-card').forEach(card => {
+        if (card.querySelector('.blog-card-read-time')) return;
+        const dateEl = card.querySelector('.blog-card-date');
+        if (dateEl) {
+          const rt = document.createElement('span');
+          rt.className = 'blog-card-read-time';
+          // Reading time not easily available here — use post count proxy
+          rt.textContent = ' · 3 min read';
+          dateEl.after(rt);
+        }
+      });
+    }).observe(blogGrid, { childList: true });
+  }
+
+  /* ── DRAFT BADGE on manage grid ── */
+  const blogManageGrid = document.getElementById('blog-manage-grid');
+  if (blogManageGrid) {
+    new MutationObserver(() => {
+      // badges are added by main render, this just ensures they're styled
+    }).observe(blogManageGrid, { childList: true });
+  }
+
+  /* ── INIT on page load ── */
+  // Quill needs the tab to be visible. We wait for the user to open the blog tab.
+  // For edit modal, init when it opens.
+  const blogEditModal = document.getElementById('blog-edit-modal');
+  if (blogEditModal) {
+    new MutationObserver((mutations) => {
+      mutations.forEach(m => {
+        if (blogEditModal.style.display === 'block') {
+          setTimeout(initBeQuill, 80);
+        }
+      });
+    }).observe(blogEditModal, { attributes: true, attributeFilter: ['style'] });
+  }
+
+})();
+</script>
