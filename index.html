@@ -1960,8 +1960,25 @@ window.addEventListener('load', async () => {
     }
   } catch(e) {}
 
-  /* ── Deep link: #p-ASIN and #blog-ID ── */
+  /* ── Deep link: #p-ASIN, #blog-ID, #blog-SLUG, and /blog/slug/ path ── */
   function handleDeepLink() {
+    // ── Path-based blog URL: /blog/some-slug/ ───────────────────────
+    // Catches redirects from 404.html and any direct /blog/ navigation
+    const pathMatch = window.location.pathname.match(/\/blog\/([^/]+)\/?$/);
+    if (pathMatch) {
+      const slugOrId = decodeURIComponent(pathMatch[1]);
+      const tryOpenPath = (attempts) => {
+        const found = blogs.find(b => b.slug === slugOrId || b._id === slugOrId);
+        if (found) {
+          openBlogModal(found);
+        } else if (attempts > 0) {
+          setTimeout(() => tryOpenPath(attempts - 1), 300);
+        }
+      };
+      setTimeout(() => tryOpenPath(20), 300);
+      return;
+    }
+
     const h = window.location.hash;
     if (h.startsWith('#p-')) {
       const asin = h.slice(3);
@@ -1975,17 +1992,17 @@ window.addEventListener('load', async () => {
       }, 800);
     }
     if (h.startsWith('#blog-')) {
-      const id = h.slice(6);
-      // Wait for blogs to load from Firestore then open
+      const slugOrId = h.slice(6);
+      // Match by ID first, then by slug (handles both formats)
       const tryOpen = (attempts) => {
-        const found = blogs.find(b => b._id === id);
+        const found = blogs.find(b => b._id === slugOrId || b.slug === slugOrId);
         if (found) {
           openBlogModal(found);
         } else if (attempts > 0) {
           setTimeout(() => tryOpen(attempts - 1), 300);
         }
       };
-      setTimeout(() => tryOpen(15), 400);
+      setTimeout(() => tryOpen(20), 400);
     }
   }
   handleDeepLink();
