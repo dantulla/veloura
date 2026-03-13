@@ -3279,7 +3279,7 @@ window.addEventListener('load', async () => {
         btn.textContent = 'Pushing to GitHub…';
         try {
           const html     = window.generateBlogPage({ ...post, _id: newId }, siteUrl);
-          const filePath = 'blog/' + post.slug + '.html';
+          const filePath = 'blog/' + post.slug + '/index.html';
           await pushToGitHub(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, GITHUB_TOKEN, filePath, html);
           document.getElementById('bl-success').style.display = 'block';
           document.getElementById('bl-success').textContent = '✓ Published! Live at dantulla.github.io/veloura/blog/' + post.slug + '/';
@@ -3459,6 +3459,27 @@ window.addEventListener('load', async () => {
     btn.textContent = 'Saving…'; btn.disabled = true;
     try {
       await fbUpdateBlog(id, updated);
+
+      // ── Re-push updated file to GitHub ──────────────────────────────
+      const GITHUB_TOKEN  = settings.githubToken || '';
+      const GITHUB_OWNER  = 'dantulla';
+      const GITHUB_REPO   = 'veloura';
+      const GITHUB_BRANCH = 'main';
+      if (GITHUB_TOKEN && updated.status !== 'draft') {
+        btn.textContent = 'Pushing to GitHub…';
+        try {
+          const siteUrl  = (settings.siteUrl || 'https://dantulla.github.io/veloura').replace(/\/$/,'');
+          const fullPost = { ...currentBlog, ...updated, _id: id };
+          const html     = window.generateBlogPage(fullPost, siteUrl);
+          const filePath = 'blog/' + updated.slug + '/index.html';
+          await pushToGitHub(GITHUB_OWNER, GITHUB_REPO, GITHUB_BRANCH, GITHUB_TOKEN, filePath, html);
+        } catch(ghErr) {
+          console.warn('GitHub re-push failed:', ghErr.message);
+          // Silent fail — Firestore is still updated
+        }
+      }
+      // ────────────────────────────────────────────────────────────────
+
       document.getElementById('be-success').style.display = 'block';
       setTimeout(() => {
         document.getElementById('be-success').style.display = 'none';
