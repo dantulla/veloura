@@ -1755,7 +1755,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 </div>
 
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { initializeApp }                                from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot,
          addDoc, deleteDoc, updateDoc, getDocs, increment }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
@@ -1781,7 +1781,7 @@ const BLOGS_COL        = 'vl_blogs';
 
 /* ── FIREBASE ── */
 const fbApp = initializeApp(FIREBASE_CONFIG);
-const db    = getFirestore(fbApp);
+const db      = getFirestore(fbApp);
 
 async function fbSaveSettings(s)     { await setDoc(doc(db,'vl_settings','main'), s); }
 async function fbLoadSettings()      { const s = await getDoc(doc(db,'vl_settings','main')); return s.exists()?s.data():null; }
@@ -2916,19 +2916,69 @@ window.addEventListener('load', async () => {
   }
 
 
-  // ── Base64 image stripper ─────────────────────────────────────────────
-  // Firestore has a 1MB document limit. Pasted images become base64 strings
-  // that can be 2-5MB each. This strips them before saving and alerts the user.
-  function sanitizeBodyForFirestore(html) {
-    const hasBase64 = /src="data:image\/[^"]+"/i.test(html);
-    if (hasBase64) {
-      const cleaned = html.replace(/<img[^>]*src="data:image\/[^"]*"[^>]*>/gi,
-        '<p style="border:1px dashed #c9a96e;padding:8px;color:#c9a96e;font-size:.8rem">⚠ Image removed — paste an external image URL instead (e.g. from Amazon CDN or Imgur)</p>'
-      );
-      alert('⚠ One or more images were pasted directly into the editor.\n\nThese are too large to store in Firestore.\n\nThey have been removed from the saved version.\nUse external image URLs instead (Amazon CDN, Imgur, etc).');
-      return cleaned;
+  // ── GitHub image uploader ────────────────────────────────────────────
+  // When an image is pasted into Quill (base64), this uploads it to the
+  // GitHub repo under /blog-images/, gets the CDN URL, and swaps the src.
+  // Uses the same GitHub token already stored in Admin → Settings.
+  async function uploadBase64ImagesToStorage(html) {
+    const parser = new DOMParser();
+    const doc2   = parser.parseFromString(html, 'text/html');
+    const imgs   = Array.from(doc2.querySelectorAll('img[src^="data:image"]'));
+    if (!imgs.length) return html;
+
+    const token  = settings.githubToken || '';
+    if (!token) {
+      // No token — strip base64 images silently to prevent Firestore overflow
+      imgs.forEach(img => img.remove());
+      alert('Images could not be saved — no GitHub token found.\nGo to Admin → Settings → GitHub Auto-Publish and add your token.');
+      return doc2.body.innerHTML;
     }
-    return html;
+
+    const OWNER  = 'dantulla';
+    const REPO   = 'veloura';
+    const BRANCH = 'main';
+
+    await Promise.all(imgs.map(async (img) => {
+      try {
+        const dataUrl   = img.src;
+        const mimeMatch = dataUrl.match(/data:(image\/[^;]+);base64,/);
+        const mimeType  = mimeMatch ? mimeMatch[1] : 'image/png';
+        const ext       = mimeType.split('/')[1].split('+')[0] || 'png';
+        const base64    = dataUrl.split(',')[1];
+        const filename  = 'blog-images/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+
+        const apiUrl = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + filename;
+        const res = await fetch(apiUrl, {
+          method:  'PUT',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type':  'application/json',
+            'Accept':        'application/vnd.github+json'
+          },
+          body: JSON.stringify({
+            message: 'Upload blog image: ' + filename,
+            content: base64,
+            branch:  BRANCH
+          })
+        });
+
+        if (!res.ok) throw new Error('GitHub upload failed: ' + res.status);
+
+        // Use jsDelivr CDN for fast global delivery (auto-caches GitHub raw files)
+        const cdnUrl = 'https://cdn.jsdelivr.net/gh/' + OWNER + '/' + REPO + '@' + BRANCH + '/' + filename;
+        img.src = cdnUrl;
+
+      } catch (err) {
+        console.warn('Image upload failed:', err);
+        img.remove();
+      }
+    }));
+
+    return doc2.body.innerHTML;
+  }
+
+  async function sanitizeBodyForFirestore(html) {
+    return await uploadBase64ImagesToStorage(html);
   }
   // ─────────────────────────────────────────────────────────────────────
 
@@ -2948,7 +2998,7 @@ window.addEventListener('load', async () => {
       }
     }
     if (!body) body = document.getElementById('bl-body-hidden')?.value || '';
-    body = sanitizeBodyForFirestore(body);
+    body = await sanitizeBodyForFirestore(body);
     if (!title) { alert('Please add a post title.'); return; }
     if (!body || body === '<p><br></p>') { alert('Please add the article body.'); return; }
 
@@ -2972,7 +3022,9 @@ window.addEventListener('load', async () => {
     };
 
     const btn = document.getElementById('bl-publish-btn');
-    btn.disabled = true; btn.textContent = 'Publishing…';
+    btn.disabled = true; btn.textContent = 'Uploading images…';
+    await new Promise(r => setTimeout(r, 50)); // allow UI to repaint
+    btn.textContent = 'Publishing…';
 
     // ── GITHUB CONFIG — token stored in Admin → Settings, never in source code ──
     const GITHUB_TOKEN  = settings.githubToken || '';
@@ -3159,7 +3211,7 @@ window.addEventListener('load', async () => {
     let body = '';
     const qEl = document.getElementById('be-quill-editor');
     if (qEl) { const qInner = qEl.querySelector('.ql-editor'); if (qInner) body = qInner.innerHTML; }
-    body = sanitizeBodyForFirestore(body);
+    body = await sanitizeBodyForFirestore(body);
     const currentBlog = blogs.find(b => b._id === id) || {};
     const title = document.getElementById('be-title').value.trim();
     const updated = {
