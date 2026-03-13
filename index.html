@@ -440,7 +440,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .blog-cta-remove:hover{background:rgba(201,110,110,.1);border-color:var(--red)}
 .add-cta-btn{font-size:9px;letter-spacing:.3em;text-transform:uppercase;background:none;border:1px solid rgba(201,169,110,.3);color:var(--gold);padding:10px 22px;cursor:pointer;font-family:'DM Sans',sans-serif;border-radius:2px;transition:all .3s;margin-top:8px}
 .add-cta-btn:hover{background:rgba(201,169,110,.1);border-color:var(--gold)}
-.blog-manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:64px 1fr auto auto;gap:16px;align-items:center;border-radius:4px;transition:all .3s;margin-bottom:10px}
+.blog-manage-row{background:var(--charcoal);border:1px solid rgba(201,169,110,.1);padding:20px;display:grid;grid-template-columns:64px 1fr auto auto auto;gap:16px;align-items:center;border-radius:4px;transition:all .3s;margin-bottom:10px}
 .blog-manage-row:hover{border-color:rgba(201,169,110,.3)}
 .blog-manage-thumb{width:56px;height:56px;object-fit:cover;border-radius:3px;border:1px solid rgba(201,169,110,.15)}
 .blog-manage-thumb-placeholder{width:56px;height:56px;background:rgba(201,169,110,.08);border-radius:3px;border:1px solid rgba(201,169,110,.1);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
@@ -1217,6 +1217,23 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 
         <button id="bl-publish-btn" class="form-button">Publish Post</button>
         <div id="bl-success" class="form-success">✓ Post published successfully!</div>
+
+        <!-- BLOG SHARE PANEL -->
+        <div class="share-panel" id="bl-share-panel" style="margin-top:24px">
+          <div class="share-panel-head">
+            <div class="share-check">✓</div>
+            <div class="share-panel-title">Post Live — Share the Direct Link</div>
+          </div>
+          <div class="share-panel-sub">This link opens your post <strong>directly</strong> — not the blog page. Anyone who clicks it lands straight in the article.</div>
+          <div class="share-link-row">
+            <div class="share-link-label">🔗 Direct Post Link — opens this article instantly</div>
+            <div class="share-url-box" id="bl-share-url"></div>
+            <div class="share-copy-row">
+              <button class="copy-btn" id="bl-copy-link-btn">Copy Link</button>
+              <span class="copy-hint">→ Paste in Pinterest pin, TikTok bio, Instagram bio, DMs</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- MANAGE BLOGS SUB-TAB -->
@@ -1554,19 +1571,33 @@ window.addEventListener('load', async () => {
     }
   } catch(e) {}
 
-  /* ── Deep link: #p-ASIN ── */
+  /* ── Deep link: #p-ASIN and #blog-ID ── */
   function handleDeepLink() {
     const h = window.location.hash;
-    if (!h.startsWith('#p-')) return;
-    const asin = h.slice(3);
-    setTimeout(() => {
-      const el = document.getElementById('p-' + asin);
-      if (!el) return;
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.style.outline = '2px solid var(--gold)';
-      el.style.outlineOffset = '4px';
-      setTimeout(() => { el.style.outline=''; el.style.outlineOffset=''; }, 3000);
-    }, 800);
+    if (h.startsWith('#p-')) {
+      const asin = h.slice(3);
+      setTimeout(() => {
+        const el = document.getElementById('p-' + asin);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.style.outline = '2px solid var(--gold)';
+        el.style.outlineOffset = '4px';
+        setTimeout(() => { el.style.outline=''; el.style.outlineOffset=''; }, 3000);
+      }, 800);
+    }
+    if (h.startsWith('#blog-')) {
+      const id = h.slice(6);
+      // Wait for blogs to load from Firestore then open
+      const tryOpen = (attempts) => {
+        const found = blogs.find(b => b._id === id);
+        if (found) {
+          openBlogModal(found);
+        } else if (attempts > 0) {
+          setTimeout(() => tryOpen(attempts - 1), 300);
+        }
+      };
+      setTimeout(() => tryOpen(15), 400);
+    }
   }
   handleDeepLink();
   window.addEventListener('hashchange', handleDeepLink);
@@ -1584,12 +1615,15 @@ window.addEventListener('load', async () => {
   });
 
   /* ── Firebase real-time blogs ── */
+  let blogFirstLoad = true;
   onSnapshot(collection(db, BLOGS_COL), snap => {
     blogs = [];
     snap.forEach(d => blogs.push({ _id: d.id, ...d.data() }));
     blogs.sort((a,b) => (b.publishedAt||'').localeCompare(a.publishedAt||''));
     renderBlogSection();
     if (adminIsOpen) renderBlogManage();
+    // On first load, honour any #blog-ID in the URL immediately
+    if (blogFirstLoad) { blogFirstLoad = false; handleDeepLink(); }
   }, () => {
     blogs = [];
     renderBlogSection();
@@ -2339,6 +2373,8 @@ window.addEventListener('load', async () => {
     ).join('');
     if ((b.ctas||[]).length === 0) bmCtas.style.display = 'none';
     else bmCtas.style.display = 'flex';
+    // Set URL hash so the browser URL is itself a direct link
+    history.replaceState(null, '', '#blog-' + b._id);
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
     modal.scrollTop = 0;
@@ -2347,11 +2383,13 @@ window.addEventListener('load', async () => {
   document.getElementById('bm-close').addEventListener('click', () => {
     document.getElementById('blog-modal').classList.remove('show');
     document.body.style.overflow = 'auto';
+    history.replaceState(null, '', window.location.pathname);
   });
   document.getElementById('blog-modal').addEventListener('click', e => {
     if (e.target === document.getElementById('blog-modal')) {
       document.getElementById('blog-modal').classList.remove('show');
       document.body.style.overflow = 'auto';
+      history.replaceState(null, '', window.location.pathname);
     }
   });
 
@@ -2430,6 +2468,12 @@ window.addEventListener('load', async () => {
     if (blCtaList.querySelectorAll('.blog-cta-row').length < 4) buildCtaRow(blCtaList);
   });
 
+  /* copy direct blog link button */
+  document.getElementById('bl-copy-link-btn').addEventListener('click', () => {
+    const el = document.getElementById('bl-share-url');
+    copyText(el ? el.textContent.trim() : '', document.getElementById('bl-copy-link-btn'));
+  });
+
   /* blog image preview */
   document.getElementById('bl-image').addEventListener('input', function() {
     const wrap = document.getElementById('bl-img-preview-wrap');
@@ -2460,7 +2504,16 @@ window.addEventListener('load', async () => {
     const btn = document.getElementById('bl-publish-btn');
     btn.disabled = true; btn.textContent = 'Publishing…';
     try {
-      await fbAddBlog(post);
+      const newId = await fbAddBlog(post);
+      const siteUrl = (settings.siteUrl||'https://yourusername.github.io/veloura').replace(/\/$/,'');
+      const directLink = siteUrl + '/#blog-' + newId;
+
+      // Show share panel with direct link
+      document.getElementById('bl-share-url').textContent = directLink;
+      const sharePanel = document.getElementById('bl-share-panel');
+      sharePanel.classList.add('show');
+      setTimeout(() => sharePanel.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+
       document.getElementById('bl-success').style.display = 'block';
       setTimeout(() => document.getElementById('bl-success').style.display = 'none', 3000);
       // reset form
@@ -2501,8 +2554,15 @@ window.addEventListener('load', async () => {
           <div class="blog-manage-title">${b.title||'Untitled'}</div>
           <div class="blog-manage-meta">${b.category||''} · ${dateStr} · ${(b.ctas||[]).length} CTA${(b.ctas||[]).length!==1?'s':''}</div>
         </div>
+        <button class="manage-share bl-copy-manage-btn" data-id="${b._id}" title="Copy direct link">Copy Link</button>
         <button class="manage-edit" data-idx="${idx}">Edit</button>
         <button class="manage-del" data-idx="${idx}">Delete</button>`;
+
+      row.querySelector('.bl-copy-manage-btn').addEventListener('click', function() {
+        const siteUrl = (settings.siteUrl||'https://yourusername.github.io/veloura').replace(/\/$/,'');
+        const link = siteUrl + '/#blog-' + b._id;
+        copyText(link, this);
+      });
 
       row.querySelector('.manage-edit').addEventListener('click', () => openBlogEditModal(idx));
       row.querySelector('.manage-del').addEventListener('click', async () => {
