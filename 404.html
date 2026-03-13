@@ -1,25 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Veloura</title>
-  <script>
-    // GitHub Pages SPA Redirect Fix
-    // Encodes the full URL path into a query string so index.html can decode it
-    var segmentCount = 1; // 1 = Project Page (dantulla.github.io/veloura)
-                          // 0 = Custom Domain (velourabeauty.com)
+<meta charset="UTF-8">
+<title>Veloura | Beauty &amp; Fragrance</title>
+<script>
+  // ─────────────────────────────────────────────────────────────────
+  // GitHub Pages SPA Redirect  (Part 1 of 2)
+  //
+  // GitHub Pages serves THIS file whenever a path doesn't exist as a
+  // real file (e.g. /blog/your-slug/, /products/skincare/).
+  //
+  // We encode the full URL into a query-string param and immediately
+  // redirect to the root index.html. The decode script already in
+  // index.html will read it and call history.replaceState() so the
+  // browser shows the correct URL with no visible redirect flash.
+  //
+  // Pattern: /blog/my-post/  →  /?/blog/my-post/
+  // ─────────────────────────────────────────────────────────────────
+  (function() {
+    var loc = window.location;
+    // Don't redirect if we're already at the root or a raw file request
+    if (loc.pathname === '/' || loc.pathname === '/index.html') return;
 
-    var l = window.location;
-    l.replace(
-      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-      l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?p=' +
-      l.pathname.slice(1).split('/').join('~and~') +
-      (l.search ? '~and~' + l.search.slice(1) : '') +
-      l.hash
+    var encodedPath = loc.pathname.split('/').slice(1).join('~and~');
+    var queryStr    = loc.search  ? '~and~' + loc.search.slice(1) : '';
+    var hashStr     = loc.hash    ? '~and~' + loc.hash.slice(1)   : '';
+
+    // Redirect to root with encoded path — 0 so back-button still works
+    window.location.replace(
+      loc.protocol + '//' + loc.host + loc.pathname.split('/')[0] +
+      '/?/' + encodedPath + queryStr + hashStr
     );
-  </script>
+  }());
+</script>
+<!-- Minimal styles — prevents white flash before redirect fires -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#080808;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif}
+  .v-logo{font-family:Georgia,serif;font-size:1.4rem;letter-spacing:.35em;color:#f5f0e8;text-transform:uppercase}
+  .v-logo span{color:#c9a96e}
+  .v-sub{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-top:12px;text-align:center}
+  @keyframes fade{0%,100%{opacity:.3}50%{opacity:.8}}
+  .v-sub{animation:fade 1.8s ease infinite}
+</style>
 </head>
 <body>
-  <!-- Redirecting... -->
+  <div style="text-align:center">
+    <div class="v-logo">VELO<span>U</span>RA</div>
+    <div class="v-sub">Redirecting&hellip;</div>
+  </div>
 </body>
 </html>
