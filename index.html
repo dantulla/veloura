@@ -532,6 +532,35 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .exit-popup-success{display:none;padding:20px 0}
 .exit-popup-success-text{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold)}
 
+/* ── BLOG INLINE PRODUCT CARDS ── */
+.bm-products-section{margin:44px 0 0}
+.bm-products-label{font-size:.72rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:24px;display:block;border-bottom:1px solid rgba(201,169,110,.15);padding-bottom:12px}
+.bm-product-card{display:flex;gap:28px;background:rgba(20,18,16,.7);border:1px solid rgba(201,169,110,.14);padding:24px 28px;margin-bottom:18px;border-radius:3px;align-items:flex-start;transition:border-color .3s}
+.bm-product-card:hover{border-color:rgba(201,169,110,.3)}
+.bm-product-img-wrap{width:130px;height:155px;flex-shrink:0;background:#1c1510;border-radius:2px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.bm-product-img-wrap img{width:100%;height:100%;object-fit:cover}
+.bm-product-img-placeholder{font-size:2.8rem;opacity:.5}
+.bm-product-body{flex:1;min-width:0}
+.bm-product-num{font-size:.68rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;display:block}
+.bm-product-name{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--cream);margin-bottom:10px;line-height:1.35}
+.bm-product-desc{font-size:.855rem;color:var(--muted);line-height:1.8;margin-bottom:18px}
+.bm-product-btn{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:11px 22px;text-decoration:none;font-weight:600;border-radius:1px;transition:opacity .2s}
+.bm-product-btn:hover{opacity:.85}
+.bm-product-btn-ghost{background:transparent;color:var(--gold);border:1px solid var(--gold);padding:10px 21px}
+.bm-product-btn-ghost:hover{background:rgba(201,169,110,.1)}
+@media(max-width:580px){.bm-product-card{flex-direction:column}.bm-product-img-wrap{width:100%;height:220px}}
+
+/* ── ADMIN INLINE PRODUCT BUILDER ── */
+.ip-section-label{font-size:.7rem;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;line-height:1.7}
+.ip-row{background:rgba(0,0,0,.3);border:1px solid rgba(201,169,110,.12);padding:20px 18px 16px;margin-bottom:14px;position:relative;border-radius:2px}
+.ip-row-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ip-row-num{font-size:.68rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.ip-remove-btn{background:none;border:none;color:rgba(201,110,110,.7);cursor:pointer;font-size:.75rem;letter-spacing:.2em;font-family:'DM Sans',sans-serif;padding:4px 8px;transition:color .2s}
+.ip-remove-btn:hover{color:#e89090}
+.ip-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ip-full{grid-column:1/-1}
+.ip-img-preview{margin-top:8px;max-width:100px;max-height:80px;object-fit:cover;border-radius:2px;border:1px solid rgba(201,169,110,.2);display:none}
+
 /* ── ROUTINE PAIRS ── */
 .routine-strip{padding:14px 24px;background:rgba(0,0,0,.25);border-top:1px solid rgba(201,169,110,.06)}
 .routine-label{font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
@@ -758,6 +787,10 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="bm-meta" id="bm-meta"></div>
     <img class="bm-img" id="bm-img" src="" alt="" style="display:none">
     <div class="bm-body" id="bm-body"></div>
+    <div id="bm-ip-section" style="display:none">
+      <span class="bm-products-label">Featured Products</span>
+      <div id="bm-ip-list"></div>
+    </div>
     <div class="bm-ctas" id="bm-ctas"></div>
   </div>
 </div>
@@ -1215,6 +1248,13 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
           <button class="add-cta-btn" id="bl-add-cta">+ Add Button</button>
         </div>
 
+        <div class="form-section">
+          <div class="form-section-title">Inline Product Cards</div>
+          <p class="ip-section-label">Add each product individually — image, name, description, and shop link.<br>No limit. Perfect for "5 Perfumes That Make You Memorable" style posts.</p>
+          <div id="bl-ip-list"></div>
+          <button class="add-cta-btn" id="bl-add-ip">+ Add Product Card</button>
+        </div>
+
         <button id="bl-publish-btn" class="form-button">Publish Post</button>
         <div id="bl-success" class="form-success">✓ Post published successfully!</div>
 
@@ -1465,6 +1505,12 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <div class="form-section-title">Call-to-Action Buttons</div>
       <div id="be-cta-list"></div>
       <button class="add-cta-btn" id="be-add-cta">+ Add Button</button>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Inline Product Cards</div>
+      <p class="ip-section-label">Edit product cards shown inside this post. No limit.</p>
+      <div id="be-ip-list"></div>
+      <button class="add-cta-btn" id="be-add-ip">+ Add Product Card</button>
     </div>
     <button id="be-save-btn" class="form-button" style="margin-top:20px">Save Changes</button>
     <div id="be-success" class="edit-success">✓ Post updated!</div>
@@ -2365,7 +2411,46 @@ window.addEventListener('load', async () => {
     const bmImg = document.getElementById('bm-img');
     if (b.imageUrl) { bmImg.src = b.imageUrl; bmImg.style.display = 'block'; }
     else { bmImg.style.display = 'none'; }
-    document.getElementById('bm-body').textContent = b.body || '';
+
+    // Render body as paragraphs (split on blank lines)
+    const bodyEl = document.getElementById('bm-body');
+    const rawBody = (b.body || '').trim();
+    if (rawBody) {
+      bodyEl.innerHTML = rawBody.split(/\n\s*\n/).map(para => {
+        const trimmed = para.trim();
+        if (!trimmed) return '';
+        return `<p style="margin-bottom:1.4em;line-height:1.85;color:rgba(245,240,232,.75);font-size:.95rem">${trimmed.replace(/\n/g,'<br>')}</p>`;
+      }).join('');
+    } else { bodyEl.innerHTML = ''; }
+
+    // Render inline product cards
+    const ipSection = document.getElementById('bm-ip-section');
+    const ipList    = document.getElementById('bm-ip-list');
+    const ipCards   = (b.inlineProducts || []).filter(p => p.name);
+    if (ipCards.length > 0) {
+      ipList.innerHTML = ipCards.map((p, i) => {
+        const imgHTML = p.imageUrl
+          ? `<img src="${p.imageUrl}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=bm-product-img-placeholder>✨</div>'">`
+          : `<div class="bm-product-img-placeholder">✨</div>`;
+        const btnClass = p.linkStyle === 'ghost' ? 'bm-product-btn bm-product-btn-ghost' : 'bm-product-btn';
+        const btnHTML  = p.linkUrl
+          ? `<a href="${p.linkUrl}" target="_blank" rel="noopener sponsored" class="${btnClass}">${p.linkLabel || 'Shop on Amazon'} →</a>`
+          : '';
+        return `<div class="bm-product-card">
+          <div class="bm-product-img-wrap">${imgHTML}</div>
+          <div class="bm-product-body">
+            <span class="bm-product-num">No. ${i + 1}</span>
+            <div class="bm-product-name">${p.name}</div>
+            ${p.description ? `<div class="bm-product-desc">${p.description}</div>` : ''}
+            ${btnHTML}
+          </div>
+        </div>`;
+      }).join('');
+      if (ipSection) ipSection.style.display = 'block';
+    } else {
+      if (ipSection) ipSection.style.display = 'none';
+    }
+
     // CTAs
     const bmCtas = document.getElementById('bm-ctas');
     bmCtas.innerHTML = (b.ctas||[]).map(cta =>
@@ -2465,8 +2550,73 @@ window.addEventListener('load', async () => {
   /* init add-CTA buttons */
   const blCtaList = document.getElementById('bl-cta-list');
   document.getElementById('bl-add-cta').addEventListener('click', () => {
-    if (blCtaList.querySelectorAll('.blog-cta-row').length < 4) buildCtaRow(blCtaList);
+    buildCtaRow(blCtaList);
   });
+
+  /* ── INLINE PRODUCT BUILDER ── */
+  function buildInlineProductRow(container, p = {}) {
+    const count = container.querySelectorAll('.ip-row').length + 1;
+    const row = document.createElement('div');
+    row.className = 'ip-row';
+    row.innerHTML = `
+      <div class="ip-row-header">
+        <span class="ip-row-num">Product No. ${count}</span>
+        <button class="ip-remove-btn" title="Remove">✕ Remove</button>
+      </div>
+      <div class="ip-grid">
+        <div class="form-group ip-full">
+          <label class="form-label">Product Name</label>
+          <input type="text" class="form-input ip-name" placeholder="e.g. Maison Margiela Replica — Flower Market" value="${p.name||''}">
+        </div>
+        <div class="form-group ip-full">
+          <label class="form-label">Description (what makes it special)</label>
+          <textarea class="form-textarea ip-desc" style="min-height:70px" placeholder="Warm, feminine, and impossibly soft. This is the fragrance that makes people turn around and ask what you're wearing...">${p.description||''}</textarea>
+        </div>
+        <div class="form-group ip-full">
+          <label class="form-label">Product Image URL</label>
+          <input type="text" class="form-input ip-image" placeholder="https://m.media-amazon.com/images/I/..." value="${p.imageUrl||''}">
+          <img class="ip-img-preview" src="${p.imageUrl||''}" style="display:${p.imageUrl?'block':'none'}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amazon / Shop Link</label>
+          <input type="text" class="form-input ip-link-url" placeholder="https://www.amazon.com/dp/ASIN?tag=..." value="${p.linkUrl||''}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Button Label</label>
+          <input type="text" class="form-input ip-link-label" placeholder="Shop on Amazon" value="${p.linkLabel||'Shop on Amazon'}">
+          <select class="form-select ip-link-style" style="margin-top:8px">
+            <option value="primary" ${(p.linkStyle||'primary')==='primary'?'selected':''}>Gold (Primary)</option>
+            <option value="ghost"   ${p.linkStyle==='ghost'?'selected':''}>Ghost (Outline)</option>
+          </select>
+        </div>
+      </div>`;
+    row.querySelector('.ip-remove-btn').addEventListener('click', () => {
+      row.remove();
+      // Re-number remaining rows
+      container.querySelectorAll('.ip-row-num').forEach((el, i) => el.textContent = `Product No. ${i+1}`);
+    });
+    row.querySelector('.ip-image').addEventListener('input', function() {
+      const prev = row.querySelector('.ip-img-preview');
+      if (this.value.trim()) { prev.src = this.value.trim(); prev.style.display = 'block'; }
+      else prev.style.display = 'none';
+    });
+    container.appendChild(row);
+  }
+
+  function collectInlineProducts(container) {
+    return Array.from(container.querySelectorAll('.ip-row')).map(row => ({
+      name:        row.querySelector('.ip-name').value.trim(),
+      description: row.querySelector('.ip-desc').value.trim(),
+      imageUrl:    row.querySelector('.ip-image').value.trim(),
+      linkUrl:     row.querySelector('.ip-link-url').value.trim(),
+      linkLabel:   row.querySelector('.ip-link-label').value.trim() || 'Shop on Amazon',
+      linkStyle:   row.querySelector('.ip-link-style').value
+    })).filter(p => p.name);
+  }
+
+  /* wire up inline product add buttons */
+  const blIpList = document.getElementById('bl-ip-list');
+  document.getElementById('bl-add-ip').addEventListener('click', () => buildInlineProductRow(blIpList));
 
   /* copy direct blog link button */
   document.getElementById('bl-copy-link-btn').addEventListener('click', () => {
@@ -2494,11 +2644,12 @@ window.addEventListener('load', async () => {
       title,
       excerpt,
       body,
-      category:    document.getElementById('bl-category').value,
-      author:      document.getElementById('bl-author').value.trim() || 'Veloura Edit Team',
-      imageUrl:    document.getElementById('bl-image').value.trim(),
-      ctas:        collectCtas(blCtaList),
-      publishedAt: new Date().toISOString()
+      category:       document.getElementById('bl-category').value,
+      author:         document.getElementById('bl-author').value.trim() || 'Veloura Edit Team',
+      imageUrl:       document.getElementById('bl-image').value.trim(),
+      ctas:           collectCtas(blCtaList),
+      inlineProducts: collectInlineProducts(blIpList),
+      publishedAt:    new Date().toISOString()
     };
 
     const btn = document.getElementById('bl-publish-btn');
@@ -2520,6 +2671,7 @@ window.addEventListener('load', async () => {
       ['bl-title','bl-excerpt','bl-body','bl-image','bl-author'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('bl-img-preview-wrap').style.display = 'none';
       blCtaList.innerHTML = '';
+      blIpList.innerHTML  = '';
     } catch(e) { alert('Error publishing: ' + e.message); }
     finally { btn.disabled = false; btn.textContent = 'Publish Post'; }
   });
@@ -2593,6 +2745,10 @@ window.addEventListener('load', async () => {
     const beCtaList = document.getElementById('be-cta-list');
     beCtaList.innerHTML = '';
     (b.ctas||[]).forEach(cta => buildCtaRow(beCtaList, cta));
+    // Inline product rows
+    const beIpList = document.getElementById('be-ip-list');
+    beIpList.innerHTML = '';
+    (b.inlineProducts||[]).forEach(p => buildInlineProductRow(beIpList, p));
     document.getElementById('be-success').style.display = 'none';
     document.getElementById('blog-edit-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
@@ -2607,7 +2763,12 @@ window.addEventListener('load', async () => {
 
   document.getElementById('be-add-cta').addEventListener('click', () => {
     const beCtaList = document.getElementById('be-cta-list');
-    if (beCtaList.querySelectorAll('.blog-cta-row').length < 4) buildCtaRow(beCtaList);
+    buildCtaRow(beCtaList);
+  });
+
+  document.getElementById('be-add-ip').addEventListener('click', () => {
+    const beIpList = document.getElementById('be-ip-list');
+    buildInlineProductRow(beIpList);
   });
 
   document.getElementById('blog-edit-close').addEventListener('click', () => {
@@ -2618,14 +2779,16 @@ window.addEventListener('load', async () => {
   document.getElementById('be-save-btn').addEventListener('click', async () => {
     const id  = document.getElementById('be-id').value;
     const beCtaList = document.getElementById('be-cta-list');
+    const beIpList  = document.getElementById('be-ip-list');
     const updated = {
-      title:    document.getElementById('be-title').value.trim(),
-      excerpt:  document.getElementById('be-excerpt').value.trim(),
-      body:     document.getElementById('be-body').value.trim(),
-      author:   document.getElementById('be-author').value.trim(),
-      imageUrl: document.getElementById('be-image').value.trim(),
-      category: document.getElementById('be-category').value,
-      ctas:     collectCtas(beCtaList)
+      title:          document.getElementById('be-title').value.trim(),
+      excerpt:        document.getElementById('be-excerpt').value.trim(),
+      body:           document.getElementById('be-body').value.trim(),
+      author:         document.getElementById('be-author').value.trim(),
+      imageUrl:       document.getElementById('be-image').value.trim(),
+      category:       document.getElementById('be-category').value,
+      ctas:           collectCtas(beCtaList),
+      inlineProducts: collectInlineProducts(beIpList)
     };
     const btn = document.getElementById('be-save-btn');
     btn.textContent = 'Saving…'; btn.disabled = true;
