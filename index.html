@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
 <head>
+
+<!-- GitHub Pages Deep-Link Fix -->
+<script>
+(function () {
+  const redirect = sessionStorage.getItem("redirect_path");
+  if (redirect) {
+    sessionStorage.removeItem("redirect_path");
+    history.replaceState(null, null, redirect);
+  }
+})();
+</script>
+
 <!-- GitHub Pages SPA Routing Fix -->
 <script>
   (function(l) {
