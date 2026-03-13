@@ -1,39 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Veloura | Beauty &amp; Fragrance</title>
+<meta charset="utf-8">
+<title>Redirecting...</title>
+
 <script>
-  (function() {
-    var loc  = window.location;
-    var path = loc.pathname;
+(function(){
 
-    // Blog post path: /blog/some-slug/ → redirect to /#blog-slug
-    var blogMatch = path.match(/\/blog\/([^/]+)\/?$/);
-    if (blogMatch) {
-      var slug = blogMatch[1];
-      window.location.replace(loc.protocol + '//' + loc.host + '/#blog-' + slug);
-      return;
-    }
+  const path =
+    window.location.pathname +
+    window.location.search +
+    window.location.hash;
 
-    // Any other missing page → go home
-    window.location.replace(loc.protocol + '//' + loc.host + '/');
-  }());
+  sessionStorage.setItem("redirect_path", path);
+
+  window.location.replace("/");
+
+})();
 </script>
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;background:#080808;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif}
-  .v-logo{font-size:1.4rem;letter-spacing:.35em;color:#f5f0e8;text-transform:uppercase}
-  .v-logo span{color:#c9a96e}
-  .v-sub{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.35);margin-top:12px;text-align:center;font-family:sans-serif}
-  @keyframes fade{0%,100%{opacity:.3}50%{opacity:.8}}
-  .v-sub{animation:fade 1.8s ease infinite}
-</style>
+
 </head>
+
 <body>
-  <div style="text-align:center">
-    <div class="v-logo">VELO<span>U</span>RA</div>
-    <div class="v-sub">Opening article&hellip;</div>
-  </div>
+Redirecting...
 </body>
 </html>
