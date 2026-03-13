@@ -1,21 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Veloura | Beauty & Fragrance - Curated Amazon Picks</title>
+<title>Veloura | Beauty &amp; Fragrance - Curated Amazon Picks</title>
+<meta name="robots" content="index, follow, max-image-preview:large">
+<!-- Canonical — updated per blog post -->
+<link rel="canonical" id="canonical-url" href="https://velourabeauty.com/">
 <!-- Dynamic SEO / OG tags — updated per blog post -->
 <meta name="description" id="meta-desc" content="Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.">
-<meta property="og:type"        content="website">
-<meta property="og:site_name"   content="Veloura Beauty & Fragrance">
-<meta property="og:title"       id="og-title"  content="Veloura | Beauty & Fragrance">
+<!-- Open Graph (Facebook, Pinterest, iMessage, Slack…) -->
+<meta property="og:type"        id="og-type"   content="website">
+<meta property="og:site_name"   content="Veloura Beauty &amp; Fragrance">
+<meta property="og:title"       id="og-title"  content="Veloura | Beauty &amp; Fragrance">
 <meta property="og:description" id="og-desc"   content="Curated luxury beauty and fragrance finds.">
 <meta property="og:image"       id="og-image"  content="">
+<meta property="og:image:width"  id="og-image-w" content="1200">
+<meta property="og:image:height" id="og-image-h" content="630">
+<meta property="og:image:alt"   id="og-image-alt" content="Veloura Beauty &amp; Fragrance">
 <meta property="og:url"         id="og-url"    content="">
-<meta name="twitter:card"       content="summary_large_image">
-<meta name="twitter:title"      id="tw-title"  content="Veloura | Beauty & Fragrance">
-<meta name="twitter:description" id="tw-desc"  content="Curated luxury beauty and fragrance finds.">
-<meta name="twitter:image"      id="tw-image"  content="">
+<!-- Article meta (filled when a blog post opens) -->
+<meta property="article:author"         id="og-article-author"  content="">
+<meta property="article:published_time" id="og-article-pubtime" content="">
+<meta property="article:section"        id="og-article-section" content="">
+<!-- Twitter / X Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@VelouraBeauty">
+<meta name="twitter:title"       id="tw-title"  content="Veloura | Beauty &amp; Fragrance">
+<meta name="twitter:description" id="tw-desc"   content="Curated luxury beauty and fragrance finds.">
+<meta name="twitter:image"       id="tw-image"  content="">
+<meta name="twitter:image:alt"   id="tw-image-alt" content="Veloura Beauty &amp; Fragrance">
+<!-- Pinterest Rich Pins -->
+<meta name="pinterest-rich-pin" content="true">
+<meta name="pinterest:description" id="pin-desc" content="Curated luxury beauty and fragrance finds.">
+<!-- JSON-LD Structured Data — Website + Organization (base) -->
+<script type="application/ld+json" id="ld-website">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://velourabeauty.com/#website",
+      "url": "https://velourabeauty.com/",
+      "name": "Veloura Beauty & Fragrance",
+      "description": "Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.",
+      "publisher": {"@id": "https://velourabeauty.com/#organization"},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://velourabeauty.com/?q={search_term_string}"},
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://velourabeauty.com/#organization",
+      "name": "Veloura Beauty & Fragrance",
+      "url": "https://velourabeauty.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://velourabeauty.com/logo.png",
+        "width": 512,
+        "height": 512
+      },
+      "sameAs": [
+        "https://www.pinterest.com/VelouraBeautyFragrance",
+        "https://www.instagram.com/VelouraBeautyFragrance",
+        "https://www.tiktok.com/@VelouraBeautyFragrance"
+      ]
+    }
+  ]
+}
+</script>
+<!-- JSON-LD for current article — injected/updated dynamically per blog post -->
+<script type="application/ld+json" id="ld-article"></script>
+<!-- ─── ANALYTICS — drop your GA4 snippet here ───────────────────────────
+     Example (replace G-XXXXXXXXXX with your Measurement ID):
+     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"><\/script>
+     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');<\/script>
+     The site's JS will auto-fire virtual pageviews to gtag, GTM dataLayer,
+     Plausible, and Fathom whenever a blog post opens or closes.
+─────────────────────────────────────────────────────────────────────────── -->
+<!-- RSS Feed (create /feed.xml with your blog posts for Google Discover) -->
+<link rel="alternate" type="application/rss+xml" title="Veloura Beauty &amp; Fragrance" href="/feed.xml">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <style>
@@ -2619,8 +2685,9 @@ window.addEventListener('load', async () => {
     bmCtas.style.display = (b.ctas||[]).length === 0 ? 'none' : 'flex';
 
     // Slug-based URL: prefer slug field, fallback to ID
+    // NOTE: history.pushState + meta injection is handled by injectMeta() via __vl_onBlogOpen
     const urlKey = b.slug || b._id;
-    history.replaceState(null, '', '#blog-' + urlKey);
+    history.replaceState({ veloura: 'blog', id: b._id }, document.title, '#blog-' + urlKey);
     modal.classList.add('show');
     document.body.style.overflow = 'hidden';
     modal.scrollTop = 0;
@@ -2632,13 +2699,13 @@ window.addEventListener('load', async () => {
   document.getElementById('bm-close').addEventListener('click', () => {
     document.getElementById('blog-modal').classList.remove('show');
     document.body.style.overflow = 'auto';
-    history.replaceState(null, '', window.location.pathname);
+    resetMeta(); // resets title, tags, and pushes history back to /
   });
   document.getElementById('blog-modal').addEventListener('click', e => {
     if (e.target === document.getElementById('blog-modal')) {
       document.getElementById('blog-modal').classList.remove('show');
       document.body.style.overflow = 'auto';
-      history.replaceState(null, '', window.location.pathname);
+      resetMeta(); // resets title, tags, and pushes history back to /
     }
   });
 
@@ -3274,37 +3341,239 @@ document.addEventListener('DOMContentLoaded', () => {
     return mins + ' min read';
   }
 
-  /* ── SEO META TAG INJECTION ── */
+  /* ══════════════════════════════════════════════════════
+     SEO / PINTEREST / SHARE / ANALYTICS UPGRADE
+     ══════════════════════════════════════════════════════ */
+
+  // Resolve the site's base URL (admin can set it in Settings; fallback to current origin)
+  function getSiteBase() {
+    const stored = (typeof settings !== 'undefined' && settings.siteUrl)
+      ? settings.siteUrl.replace(/\/$/, '')
+      : window.location.origin;
+    return stored || window.location.origin;
+  }
+
+  /* ── ANALYTICS HELPER ──
+     Fires a virtual pageview to GA4 / GTM / any analytics layer.
+     Works with gtag.js, analytics.js (ga), and GTM dataLayer.   */
+  function trackPageView(url, title) {
+    try {
+      // GA4 / gtag
+      if (typeof gtag === 'function') {
+        gtag('event', 'page_view', { page_title: title, page_location: url });
+      }
+      // Universal Analytics (legacy)
+      if (typeof ga === 'function') {
+        ga('set', 'page', url);
+        ga('send', 'pageview');
+      }
+      // GTM dataLayer
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'virtualPageview', virtualPageURL: url, virtualPageTitle: title });
+      }
+      // Plausible
+      if (typeof plausible === 'function') {
+        plausible('pageview', { u: url });
+      }
+      // Fathom
+      if (window.fathom && typeof window.fathom.trackPageview === 'function') {
+        window.fathom.trackPageview({ url });
+      }
+    } catch(e) {}
+  }
+
+  /* ── INJECT ALL META TAGS for a blog post ── */
   function injectMeta(post) {
-    const title = (post.title || 'Veloura') + ' | Veloura Beauty & Fragrance';
-    const desc  = post.metaDesc || post.excerpt || 'Curated luxury beauty and fragrance finds.';
-    const img   = post.ogImage  || post.imageUrl || '';
-    const url   = window.location.href;
+    const siteBase = getSiteBase();
+    const urlKey   = post.slug || post._id;
+    const postUrl  = siteBase + '/blog/' + urlKey + '/';
+    const title    = (post.title || 'Veloura') + ' | Veloura Beauty & Fragrance';
+    const desc     = post.metaDesc || post.excerpt || 'Curated luxury beauty and fragrance finds.';
+    const img      = post.ogImage  || post.imageUrl || '';
+    const imgAlt   = (post.title || 'Veloura') + ' — Veloura Beauty & Fragrance';
+    const author   = post.author   || 'Veloura Edit Team';
+    const pubTime  = post.publishedAt || '';
+    const section  = post.category || 'Beauty';
+
+    // ── <title> and canonical ──
     document.title = title;
+    const canonical = document.getElementById('canonical-url');
+    if (canonical) canonical.setAttribute('href', postUrl);
+
+    // ── Generic helper ──
     const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+
+    // ── meta description ──
     set('meta-desc', 'content', desc);
-    set('og-title',  'content', title);
-    set('og-desc',   'content', desc);
-    set('og-image',  'content', img);
-    set('og-url',    'content', url);
-    set('tw-title',  'content', title);
-    set('tw-desc',   'content', desc);
-    set('tw-image',  'content', img);
+
+    // ── Open Graph (Facebook, Pinterest, iMessage, Slack…) ──
+    set('og-type',       'content', 'article');
+    set('og-title',      'content', title);
+    set('og-desc',       'content', desc);
+    set('og-image',      'content', img);
+    set('og-image-w',    'content', '1200');
+    set('og-image-h',    'content', '630');
+    set('og-image-alt',  'content', imgAlt);
+    set('og-url',        'content', postUrl);
+
+    // ── Article-specific OG ──
+    set('og-article-author',  'content', author);
+    set('og-article-pubtime', 'content', pubTime);
+    set('og-article-section', 'content', section);
+
+    // ── Twitter / X Card ──
+    set('tw-title',     'content', title);
+    set('tw-desc',      'content', desc);
+    set('tw-image',     'content', img);
+    set('tw-image-alt', 'content', imgAlt);
+
+    // ── Pinterest rich pin meta ──
+    set('pin-desc', 'content', desc);
+    // Pinterest also reads og:image — already set above.
+    // Ensure images have alt text in the modal
+    const bmImg = document.getElementById('bm-img');
+    if (bmImg) bmImg.setAttribute('alt', imgAlt);
+
+    // ── JSON-LD BlogPosting ──
+    const ldArticleEl = document.getElementById('ld-article');
+    if (ldArticleEl) {
+      const jsonLD = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "@id": postUrl + '#article',
+        "headline": post.title || '',
+        "description": desc,
+        "datePublished": pubTime,
+        "dateModified":  pubTime,
+        "author": {
+          "@type": "Person",
+          "name": author
+        },
+        "publisher": {
+          "@type": "Organization",
+          "@id": siteBase + '/#organization',
+          "name": "Veloura Beauty & Fragrance",
+          "logo": { "@type": "ImageObject", "url": siteBase + '/logo.png' }
+        },
+        "url": postUrl,
+        "mainEntityOfPage": { "@type": "WebPage", "@id": postUrl },
+        "articleSection": section,
+        "image": img ? [{
+          "@type": "ImageObject",
+          "url": img,
+          "width": 1200,
+          "height": 630,
+          "caption": imgAlt
+        }] : undefined
+      };
+      if (!img) delete jsonLD.image;
+      ldArticleEl.textContent = JSON.stringify(jsonLD);
+    }
+
+    // ── Push a clean URL to the browser history ──
+    // This lets analytics see a real /blog/slug/ pageview instead of /#blog-slug
+    try {
+      history.pushState({ veloura: 'blog', id: post._id }, title, postUrl);
+    } catch(e) {}
+
+    // ── Fire analytics virtual pageview ──
+    trackPageView(postUrl, title);
   }
 
   function resetMeta() {
-    document.title = 'Veloura | Beauty & Fragrance - Curated Amazon Picks';
-    const def = 'Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.';
+    const siteBase = getSiteBase();
+    const homeUrl  = siteBase + '/';
+    const defTitle = 'Veloura | Beauty & Fragrance - Curated Amazon Picks';
+    const defDesc  = 'Curated luxury beauty and fragrance finds. Hand-picked Amazon picks for an elevated routine.';
+
+    document.title = defTitle;
+
+    const canonical = document.getElementById('canonical-url');
+    if (canonical) canonical.setAttribute('href', homeUrl);
+
     const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
-    set('meta-desc','content',def);
-    set('og-title', 'content','Veloura | Beauty & Fragrance');
-    set('og-desc',  'content',def);
-    set('og-image', 'content','');
-    set('og-url',   'content','');
-    set('tw-title', 'content','Veloura | Beauty & Fragrance');
-    set('tw-desc',  'content',def);
-    set('tw-image', 'content','');
+
+    set('meta-desc',     'content', defDesc);
+    set('og-type',       'content', 'website');
+    set('og-title',      'content', 'Veloura | Beauty & Fragrance');
+    set('og-desc',       'content', defDesc);
+    set('og-image',      'content', '');
+    set('og-image-alt',  'content', 'Veloura Beauty & Fragrance');
+    set('og-url',        'content', homeUrl);
+    set('og-article-author',  'content', '');
+    set('og-article-pubtime', 'content', '');
+    set('og-article-section', 'content', '');
+    set('tw-title',      'content', 'Veloura | Beauty & Fragrance');
+    set('tw-desc',       'content', defDesc);
+    set('tw-image',      'content', '');
+    set('tw-image-alt',  'content', 'Veloura Beauty & Fragrance');
+    set('pin-desc',      'content', defDesc);
+
+    // Clear article JSON-LD
+    const ldArticleEl = document.getElementById('ld-article');
+    if (ldArticleEl) ldArticleEl.textContent = '';
+
+    // Restore URL to home
+    try { history.pushState({ veloura: 'home' }, defTitle, homeUrl); } catch(e) {}
+
+    // Fire analytics pageview for home
+    trackPageView(homeUrl, defTitle);
   }
+
+  /* ── DEEP-LINK: open correct post when landing on /blog/slug/ ──
+     Runs once on page load so Google, Pinterest, and shared links
+     resolve to the actual article instead of the homepage.         */
+  function handleDeepLinkOnLoad() {
+    // Support both /blog/slug/ paths and legacy #blog-slug hashes
+    const path  = window.location.pathname; // e.g. /blog/my-post-abc123/
+    const hash  = window.location.hash;     // e.g. #blog-my-post-abc123
+
+    let keyFromPath = null;
+    const pathMatch = path.match(/\/blog\/([^\/]+)\/?$/);
+    if (pathMatch) keyFromPath = pathMatch[1];
+
+    let keyFromHash = null;
+    const hashMatch = hash.match(/^#blog-(.+)$/);
+    if (hashMatch) keyFromHash = hashMatch[1];
+
+    const key = keyFromPath || keyFromHash;
+    if (!key) return;
+
+    // Wait for Firebase blogs to load (up to 5 s), then open the post
+    let attempts = 0;
+    const tryOpen = setInterval(() => {
+      attempts++;
+      const allBlogs = window.__vl_blogs || [];
+      const post = allBlogs.find(b => b.slug === key || b._id === key);
+      if (post) {
+        clearInterval(tryOpen);
+        if (window.__vl_openBlogModal) window.__vl_openBlogModal(post);
+      } else if (attempts > 50) {
+        clearInterval(tryOpen); // give up after 5 s
+      }
+    }, 100);
+  }
+
+  // Run deep-link handler after a short tick so Firebase has time to init
+  setTimeout(handleDeepLinkOnLoad, 500);
+
+  /* ── POPSTATE: back/forward button support ── */
+  window.addEventListener('popstate', (e) => {
+    if (e.state && e.state.veloura === 'blog') {
+      // Re-open the modal for back-nav if needed
+      const allBlogs = window.__vl_blogs || [];
+      const post = allBlogs.find(b => b._id === e.state.id);
+      if (post && window.__vl_openBlogModal) window.__vl_openBlogModal(post);
+    } else {
+      // Back to home — close modal if open
+      const modal = document.getElementById('blog-modal');
+      if (modal && modal.classList.contains('show')) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+        resetMeta();
+      }
+    }
+  });
 
   /* ── QUILL TOOLBAR CONFIG ── */
   const QUILL_TOOLBAR = [
@@ -3407,10 +3676,11 @@ document.addEventListener('DOMContentLoaded', () => {
     renderRelatedPosts(b);
   };
 
-  document.getElementById('bm-close').addEventListener('click', resetMeta);
-  if (blogModal) blogModal.addEventListener('click', e => {
-    if (e.target === blogModal) resetMeta();
+  document.getElementById('bm-close').addEventListener('click', () => {
+    // resetMeta() is called by the primary bm-close listener above;
+    // this listener exists only so the upgrade script doesn't conflict.
   });
+  // Note: blogModal backdrop click resetMeta is also handled by the primary listener.
 
   /* ── RELATED POSTS ── */
   function renderRelatedPosts(currentPost) {
