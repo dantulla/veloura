@@ -1062,8 +1062,14 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     </div>
     <img class="bm-img" id="bm-img" src="" alt="" style="display:none">
     <div class="bm-body" id="bm-body"></div>
-    <div id="bm-ip-section" style="display:none">
+    <!-- Mid-article product cards (position: "mid") -->
+    <div id="bm-mid-section" style="display:none;margin-top:44px;padding-top:36px;border-top:1px solid rgba(201,169,110,.12)">
       <span class="bm-products-label">Featured Products</span>
+      <div id="bm-mid-list"></div>
+    </div>
+    <!-- End-of-article product cards (position: "end") -->
+    <div id="bm-ip-section" style="display:none">
+      <span class="bm-products-label">More Picks For You</span>
       <div id="bm-ip-list"></div>
     </div>
     <div class="bm-ctas" id="bm-ctas"></div>
@@ -3016,46 +3022,45 @@ window.addEventListener('load', async () => {
       }
     } else { bodyEl.innerHTML = ''; }
 
-    // Inline product cards — Review-card style
+    // Inline product cards — Review-card style, split by position
     const ipSection = document.getElementById('bm-ip-section');
     const ipList    = document.getElementById('bm-ip-list');
     const ipCards   = (b.inlineProducts || []).filter(p => p.name);
-    if (ipCards.length > 0) {
-      ipList.innerHTML = ipCards.map((p, i) => {
+    const ipMid     = ipCards.filter(p => !p.position || p.position === 'mid');
+    const ipEnd     = ipCards.filter(p => p.position === 'end');
+
+    function buildReviewCards(cards) {
+      return cards.map((p, i) => {
         const imgHTML = p.imageUrl
           ? `<img class="review-card-img" src="${p.imageUrl}" alt="${p.name}" onerror="this.outerHTML='<div class=review-card-img-placeholder>✨</div>'">`
           : `<div class="review-card-img-placeholder">✨</div>`;
-        const badgeHTML = p.badge
-          ? `<span class="review-card-badge${p.badgeOwned?' owned':''}">${p.badge}</span><br>`
-          : '';
-        const prosHTML = (p.pros||[]).filter(Boolean).length > 0
-          ? `<div class="review-pc-col"><div class="review-pc-title pros">✓ Pros</div><ul class="review-pc-list pros-list">${(p.pros||[]).filter(Boolean).map(t=>`<li>${t}</li>`).join('')}</ul></div>`
-          : '';
-        const consHTML = (p.cons||[]).filter(Boolean).length > 0
-          ? `<div class="review-pc-col"><div class="review-pc-title cons">– Cons</div><ul class="review-pc-list cons-list">${(p.cons||[]).filter(Boolean).map(t=>`<li>${t}</li>`).join('')}</ul></div>`
-          : '';
-        const btnClass = p.linkStyle === 'ghost' ? 'review-card-btn review-card-btn-ghost' : 'review-card-btn';
-        const btnHTML  = p.linkUrl
-          ? `<a href="${p.linkUrl}" target="_blank" rel="noopener sponsored" class="${btnClass}">${p.linkLabel||'Read Reviews'} →</a>`
-          : '';
-        const prosConsHTML = (prosHTML || consHTML)
-          ? `<div class="review-pros-cons">${prosHTML}${consHTML}</div>`
-          : '';
+        const badgeHTML = p.badge ? `<span class="review-card-badge${p.badgeOwned?' owned':''}">${p.badge}</span><br>` : '';
+        const prosHTML  = (p.pros||[]).filter(Boolean).length > 0
+          ? `<div class="review-pc-col"><div class="review-pc-title pros">✓ Pros</div><ul class="review-pc-list pros-list">${(p.pros||[]).filter(Boolean).map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
+        const consHTML  = (p.cons||[]).filter(Boolean).length > 0
+          ? `<div class="review-pc-col"><div class="review-pc-title cons">– Cons</div><ul class="review-pc-list cons-list">${(p.cons||[]).filter(Boolean).map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
+        const btnClass  = p.linkStyle === 'ghost' ? 'review-card-btn review-card-btn-ghost' : 'review-card-btn';
+        const btnHTML   = p.linkUrl ? `<a href="${p.linkUrl}" target="_blank" rel="noopener sponsored" class="${btnClass}">${p.linkLabel||'Read Reviews'} →</a>` : '';
+        const pcHTML    = (prosHTML||consHTML) ? `<div class="review-pros-cons">${prosHTML}${consHTML}</div>` : '';
         return `<div class="review-card">
-          <div class="review-card-top">
-            ${imgHTML}
-            <div class="review-card-meta">
-              ${badgeHTML}
-              ${p.brand ? `<div class="review-card-brand">${p.brand}</div>` : ''}
-              <div class="review-card-name">${p.name}</div>
-              ${p.price ? `<div class="review-card-price">${p.price}</div>` : ''}
-            </div>
-          </div>
-          ${p.description ? `<div class="review-card-desc">${p.description}</div>` : ''}
-          ${prosConsHTML}
-          ${btnHTML}
+          <div class="review-card-top">${imgHTML}
+            <div class="review-card-meta">${badgeHTML}${p.brand?`<div class="review-card-brand">${p.brand}</div>`:''}
+              <div class="review-card-name">${p.name}</div>${p.price?`<div class="review-card-price">${p.price}</div>`:''}
+            </div></div>
+          ${p.description?`<div class="review-card-desc">${p.description}</div>`:''}${pcHTML}${btnHTML}
         </div>`;
       }).join('');
+    }
+
+    const bmMidSection = document.getElementById('bm-mid-section');
+    const bmMidList    = document.getElementById('bm-mid-list');
+    if (ipMid.length > 0 && bmMidSection && bmMidList) {
+      bmMidList.innerHTML = buildReviewCards(ipMid);
+      bmMidSection.style.display = 'block';
+    } else if (bmMidSection) { bmMidSection.style.display = 'none'; }
+
+    if (ipEnd.length > 0) {
+      ipList.innerHTML = buildReviewCards(ipEnd);
       if (ipSection) ipSection.style.display = 'block';
     } else {
       if (ipSection) ipSection.style.display = 'none';
@@ -3241,6 +3246,22 @@ window.addEventListener('load', async () => {
         <div class="form-group">
           <label class="form-label">Button Label</label>
           <input type="text" class="form-input ip-link-label" placeholder="Read Reviews" value="${p.linkLabel||'Read Reviews'}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Button Style</label>
+          <select class="form-select ip-link-style">
+            <option value="primary" ${(p.linkStyle||'primary')==='primary'?'selected':''}>Gold (Primary)</option>
+            <option value="ghost"   ${p.linkStyle==='ghost'?'selected':''}>Ghost (Outline)</option>
+          </select>
+        </div>
+        <div class="form-group ip-full" style="background:rgba(201,169,110,.04);border:1px solid rgba(201,169,110,.15);padding:16px 18px;border-radius:4px;margin-top:4px">
+          <label class="form-label" style="color:var(--gold)">📍 Placement in Article</label>
+          <select class="form-select ip-position" style="margin-top:8px">
+            <option value="mid" ${(p.position||'mid')==='mid'?'selected':''}>Mid-Article — injected into the middle of the body</option>
+            <option value="end" ${p.position==='end'?'selected':''}>End of Article — "More Picks For You" section below body</option>
+          </select>
+          <p style="font-size:.72rem;color:rgba(245,240,232,.4);margin-top:8px;line-height:1.65">Use this for cards that appear at a fixed position. To place a product at an <strong style="color:rgba(245,240,232,.5)">exact spot</strong> inside your body text, use the <strong style="color:var(--gold)">🛍 Insert Product</strong> button in the article editor toolbar above.</p>
+        </div>
           <select class="form-select ip-link-style" style="margin-top:8px">
             <option value="primary" ${(p.linkStyle||'primary')==='primary'?'selected':''}>Gold (Primary)</option>
             <option value="ghost"   ${p.linkStyle==='ghost'?'selected':''}>Ghost (Outline)</option>
@@ -3302,7 +3323,8 @@ window.addEventListener('load', async () => {
       cons:       Array.from(row.querySelectorAll('.ip-cons-input')).map(i=>i.value.trim()).filter(Boolean),
       linkUrl:    row.querySelector('.ip-link-url').value.trim(),
       linkLabel:  row.querySelector('.ip-link-label').value.trim() || 'Read Reviews',
-      linkStyle:  row.querySelector('.ip-link-style').value
+      linkStyle:  row.querySelector('.ip-link-style').value,
+      position:   row.querySelector('.ip-position')?.value || 'mid'
     })).filter(p => p.name);
   }
 
@@ -4231,6 +4253,228 @@ document.addEventListener('DOMContentLoaded', () => {
     ['clean']
   ];
 
+  /* ── INSERT-PRODUCT POPUP ──────────────────────────────────────────────
+     A small modal that lets you drop a product card at the exact cursor
+     position inside the Quill editor body.
+  ──────────────────────────────────────────────────────────────────────── */
+  // Inject popup HTML once
+  (function injectInsertProductPopup() {
+    if (document.getElementById('ip-insert-popup')) return;
+    const pop = document.createElement('div');
+    pop.id = 'ip-insert-popup';
+    pop.style.cssText = 'display:none;position:fixed;inset:0;z-index:30000;background:rgba(8,8,8,.82);backdrop-filter:blur(8px);align-items:center;justify-content:center';
+    pop.innerHTML = `
+      <div style="background:#1a1714;border:1px solid rgba(201,169,110,.25);border-radius:6px;padding:40px 36px;max-width:520px;width:90%;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.7)">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);border-radius:6px 6px 0 0"></div>
+        <button id="ip-insert-close" style="position:absolute;top:14px;right:18px;background:none;border:none;color:rgba(245,240,232,.4);font-size:1.2rem;cursor:pointer;line-height:1;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color=''">✕</button>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#f5f0e8;margin-bottom:4px">Insert Product Card</div>
+        <div style="font-size:.75rem;color:rgba(245,240,232,.4);letter-spacing:.06em;margin-bottom:28px">Drops a product card right at your cursor in the article</div>
+
+        <div style="display:grid;gap:14px">
+          <div>
+            <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Product Image URL <span style="color:rgba(245,240,232,.25);font-size:.65rem;letter-spacing:.1em;text-transform:none">(optional)</span></label>
+            <input id="ipp-img" type="text" class="form-input" placeholder="https://m.media-amazon.com/images/I/..." style="width:100%">
+            <img id="ipp-img-preview" src="" alt="" style="display:none;margin-top:10px;max-width:100px;max-height:80px;object-fit:cover;border-radius:4px;border:1px solid rgba(201,169,110,.2)">
+          </div>
+          <div>
+            <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Product Name <span style="color:#c96e6e">*</span></label>
+            <input id="ipp-name" type="text" class="form-input" placeholder="e.g. Charlotte Tilbury Flawless Filter" style="width:100%">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Brand <span style="color:rgba(245,240,232,.25);font-size:.65rem;letter-spacing:.1em;text-transform:none">(opt)</span></label>
+              <input id="ipp-brand" type="text" class="form-input" placeholder="e.g. Charlotte Tilbury" style="width:100%">
+            </div>
+            <div>
+              <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Price <span style="color:rgba(245,240,232,.25);font-size:.65rem;letter-spacing:.1em;text-transform:none">(opt)</span></label>
+              <input id="ipp-price" type="text" class="form-input" placeholder="e.g. $48.00" style="width:100%">
+            </div>
+          </div>
+          <div>
+            <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Short Description <span style="color:rgba(245,240,232,.25);font-size:.65rem;letter-spacing:.1em;text-transform:none">(opt)</span></label>
+            <textarea id="ipp-desc" class="form-textarea" placeholder="Why this product is worth it..." style="min-height:60px;width:100%"></textarea>
+          </div>
+          <div>
+            <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Shop Link (Amazon / URL) <span style="color:rgba(245,240,232,.25);font-size:.65rem;letter-spacing:.1em;text-transform:none">(opt)</span></label>
+            <input id="ipp-url" type="text" class="form-input" placeholder="https://www.amazon.com/dp/..." style="width:100%">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Button Label</label>
+              <input id="ipp-btn-label" type="text" class="form-input" placeholder="Shop Now" value="Shop Now" style="width:100%">
+            </div>
+            <div>
+              <label style="font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);display:block;margin-bottom:7px">Card Style</label>
+              <select id="ipp-style" class="form-select" style="width:100%">
+                <option value="full">Full Card (image + text)</option>
+                <option value="compact">Compact (text + button only)</option>
+                <option value="image-link">Image + Link only</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:28px">
+          <button id="ipp-insert-btn" style="flex:1;background:#c9a96e;color:#080808;border:none;padding:13px 24px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;font-weight:600;cursor:pointer;border-radius:2px;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">🛍 Insert into Article</button>
+          <button id="ipp-cancel-btn" style="background:transparent;color:rgba(245,240,232,.5);border:1px solid rgba(201,169,110,.2);padding:13px 20px;font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='';this.style.color=''">Cancel</button>
+        </div>
+        <div id="ipp-err" style="display:none;margin-top:12px;font-size:.78rem;color:#c96e6e;letter-spacing:.05em">Please enter a product name.</div>
+      </div>`;
+    document.body.appendChild(pop);
+
+    // Image preview
+    document.getElementById('ipp-img').addEventListener('input', function() {
+      const prev = document.getElementById('ipp-img-preview');
+      if (this.value.trim()) { prev.src = this.value.trim(); prev.style.display = 'block'; }
+      else prev.style.display = 'none';
+    });
+    document.getElementById('ip-insert-close').addEventListener('click', closeInsertPopup);
+    document.getElementById('ipp-cancel-btn').addEventListener('click', closeInsertPopup);
+    pop.addEventListener('click', e => { if (e.target === pop) closeInsertPopup(); });
+  })();
+
+  let _ippTargetQuill = null; // which quill instance the popup was opened for
+  let _ippSavedRange = null;  // cursor range saved before popup opened
+
+  function openInsertProductPopup(quillInstance) {
+    _ippTargetQuill = quillInstance;
+    // Save cursor position now, before focus leaves the editor
+    _ippSavedRange = quillInstance.getSelection();
+    // Clear fields
+    ['ipp-img','ipp-name','ipp-brand','ipp-price','ipp-desc','ipp-url'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    const btnLabel = document.getElementById('ipp-btn-label');
+    if (btnLabel) btnLabel.value = 'Shop Now';
+    const style = document.getElementById('ipp-style');
+    if (style) style.value = 'full';
+    const prev = document.getElementById('ipp-img-preview');
+    if (prev) { prev.src = ''; prev.style.display = 'none'; }
+    const err = document.getElementById('ipp-err');
+    if (err) err.style.display = 'none';
+    const pop = document.getElementById('ip-insert-popup');
+    if (pop) { pop.style.display = 'flex'; }
+    setTimeout(() => { const n = document.getElementById('ipp-name'); if (n) n.focus(); }, 80);
+  }
+
+  function closeInsertPopup() {
+    const pop = document.getElementById('ip-insert-popup');
+    if (pop) pop.style.display = 'none';
+    _ippTargetQuill = null;
+    _ippSavedRange = null;
+  }
+
+  function buildInsertProductHTML(imgUrl, name, brand, price, desc, url, btnLabel, style) {
+    const gold = '#c9a96e', cream = '#f5f0e8', muted = 'rgba(245,240,232,.65)', surface = '#141210';
+    const imgTag = imgUrl
+      ? `<img src="${imgUrl}" alt="${name}" style="width:100px;height:100px;object-fit:cover;border-radius:4px;border:1px solid rgba(201,169,110,.18);flex-shrink:0;display:block">`
+      : '';
+    const brandTag  = brand ? `<div style="font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:${gold};margin-bottom:5px">${brand}</div>` : '';
+    const priceTag  = price ? `<div style="font-size:.82rem;color:${muted};margin-bottom:10px">${price}</div>` : '';
+    const descTag   = desc  ? `<div style="font-size:.88rem;color:${muted};line-height:1.75;margin-bottom:14px">${desc}</div>` : '';
+    const btnTag    = url   ? `<a href="${url}" target="_blank" rel="noopener sponsored" style="display:inline-block;padding:9px 22px;background:${gold};color:#080808;font-family:DM Sans,sans-serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;font-weight:600;text-decoration:none;border-radius:2px">${btnLabel||'Shop Now'} →</a>` : '';
+
+    if (style === 'image-link') {
+      if (!imgUrl && !url) return `<p><strong>${name}</strong></p>`;
+      return `<div contenteditable="false" style="display:inline-flex;align-items:center;gap:14px;padding:14px 18px;background:${surface};border:1px solid rgba(201,169,110,.18);border-radius:4px;margin:14px 0;max-width:360px">
+        ${imgTag}
+        <div style="flex:1">${brandTag}<div style="font-family:'Playfair Display',serif;font-size:1rem;color:${cream};margin-bottom:8px">${name}</div>${btnTag}</div>
+      </div><p><br></p>`;
+    }
+    if (style === 'compact') {
+      return `<div contenteditable="false" style="padding:18px 22px;background:${surface};border:1px solid rgba(201,169,110,.18);border-left:3px solid ${gold};border-radius:0 4px 4px 0;margin:20px 0">
+        ${brandTag}<div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:${cream};margin-bottom:6px">${name}</div>${priceTag}${descTag}${btnTag}
+      </div><p><br></p>`;
+    }
+    // full
+    const leftCol = imgTag ? `<div style="flex-shrink:0">${imgTag}</div>` : '';
+    return `<div contenteditable="false" style="display:flex;gap:20px;align-items:flex-start;padding:22px 24px;background:${surface};border:1px solid rgba(201,169,110,.18);border-radius:6px;margin:24px 0">
+      ${leftCol}
+      <div style="flex:1;min-width:0">${brandTag}<div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:${cream};line-height:1.3;margin-bottom:6px">${name}</div>${priceTag}${descTag}${btnTag}</div>
+    </div><p><br></p>`;
+  }
+
+  // Wire the Insert button
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'ipp-insert-btn') {
+      const name     = (document.getElementById('ipp-name')?.value || '').trim();
+      if (!name) { document.getElementById('ipp-err').style.display = 'block'; return; }
+      const imgUrl   = (document.getElementById('ipp-img')?.value   || '').trim();
+      const brand    = (document.getElementById('ipp-brand')?.value  || '').trim();
+      const price    = (document.getElementById('ipp-price')?.value  || '').trim();
+      const desc     = (document.getElementById('ipp-desc')?.value   || '').trim();
+      const url      = (document.getElementById('ipp-url')?.value    || '').trim();
+      const btnLabel = (document.getElementById('ipp-btn-label')?.value || 'Shop Now').trim();
+      const style    = document.getElementById('ipp-style')?.value || 'full';
+      const html     = buildInsertProductHTML(imgUrl, name, brand, price, desc, url, btnLabel, style);
+
+      if (_ippTargetQuill) {
+        const range = _ippSavedRange || { index: _ippTargetQuill.getLength() - 1, length: 0 };
+        _ippTargetQuill.clipboard.dangerouslyPasteHTML(range.index, html);
+        // Move cursor after inserted block
+        setTimeout(() => {
+          const newLen = _ippTargetQuill.getLength();
+          _ippTargetQuill.setSelection(Math.min(range.index + 2, newLen - 1));
+          _ippTargetQuill.focus();
+        }, 50);
+      }
+      closeInsertPopup();
+    }
+  });
+
+  /* ── QUILL TOOLBAR CONFIG ── now includes 🛍 insert-product button ── */
+  const QUILL_TOOLBAR = [
+    [{ header: [2, 3, false] }],
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['blockquote', 'link', 'image'],
+    ['insert-product'],
+    ['clean']
+  ];
+
+  // Register the custom blot so Quill doesn't strip our product divs
+  const BlockEmbed = Quill.import('blots/block/embed');
+  class ProductBlot extends BlockEmbed {
+    static create(value) {
+      const node = super.create();
+      node.innerHTML = value;
+      node.setAttribute('contenteditable', 'false');
+      return node;
+    }
+    static value(node) { return node.innerHTML; }
+  }
+  ProductBlot.blotName = 'product-card';
+  ProductBlot.tagName  = 'div';
+  ProductBlot.className = 'ql-product-card';
+  try { Quill.register(ProductBlot); } catch(e) {}
+
+  function addInsertProductBtn(quillInstance, toolbarEl) {
+    if (!toolbarEl || toolbarEl._ipp_wired) return;
+    toolbarEl._ipp_wired = true;
+    const btn = document.createElement('button');
+    btn.className = 'ql-insert-product';
+    btn.title = 'Insert Product Card at cursor';
+    btn.innerHTML = '🛍';
+    btn.style.cssText = 'font-size:1rem;width:auto;padding:0 8px;background:rgba(201,169,110,.12);border-radius:3px;border:1px solid rgba(201,169,110,.25);color:#c9a96e;cursor:pointer;transition:background .2s';
+    btn.onmouseover = () => btn.style.background = 'rgba(201,169,110,.25)';
+    btn.onmouseout  = () => btn.style.background = 'rgba(201,169,110,.12)';
+    btn.addEventListener('mousedown', (e) => {
+      e.preventDefault(); // don't blur editor
+      openInsertProductPopup(quillInstance);
+    });
+    // Add to its own format group
+    const span = document.createElement('span');
+    span.className = 'ql-formats';
+    span.appendChild(btn);
+    toolbarEl.appendChild(span);
+
+    // Add a small label next to the button
+    const label = document.createElement('span');
+    label.style.cssText = 'font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,169,110,.55);align-self:center;padding-left:2px;line-height:1';
+    label.textContent = 'Insert Product';
+    span.appendChild(label);
+  }
+
   /* ── INIT QUILL: PUBLISH FORM ── */
   let blQuill = null;
   function initBlQuill() {
@@ -4242,6 +4486,8 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholder: 'Write your full article here. Use H2 for section headings, bold for key phrases, blockquote for pull-quotes...',
       modules: { toolbar: QUILL_TOOLBAR }
     });
+    const tb = el.closest('.quill-wrap')?.previousElementSibling || el.previousElementSibling || el.parentElement?.querySelector('.ql-toolbar');
+    addInsertProductBtn(blQuill, el.parentElement?.querySelector('.ql-toolbar'));
   }
 
   /* ── INIT QUILL: EDIT MODAL ── */
@@ -4255,6 +4501,7 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholder: 'Edit article body...',
       modules: { toolbar: QUILL_TOOLBAR }
     });
+    addInsertProductBtn(beQuill, el.parentElement?.querySelector('.ql-toolbar'));
   }
 
   /* ── SLUG PREVIEW on title input ── */
@@ -4463,11 +4710,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }).join('');
     }
 
-    // Split products: first half mid-article, second half at end
+    // Split products by position field (default 'mid' for legacy)
     var allProducts = (post.inlineProducts||[]).filter(function(p){ return p.name; });
-    var splitIdx = Math.ceil(allProducts.length / 2);
-    var productsHTMLMid = allProducts.length ? buildProductCards(allProducts.slice(0, splitIdx)) : '';
-    var productsHTMLEnd = allProducts.length > 1 ? buildProductCards(allProducts.slice(splitIdx)) : '';
+    var midProducts = allProducts.filter(function(p){ return !p.position || p.position === 'mid'; });
+    var endProducts = allProducts.filter(function(p){ return p.position === 'end'; });
+    // Legacy fallback: all have no position → auto-split
+    if (allProducts.length > 0 && midProducts.length === allProducts.length && endProducts.length === 0) {
+      var splitIdx = Math.ceil(allProducts.length / 2);
+      midProducts = allProducts.slice(0, splitIdx);
+      endProducts = allProducts.length > 1 ? allProducts.slice(splitIdx) : [];
+    }
+    var productsHTMLMid = midProducts.length ? buildProductCards(midProducts) : '';
+    var productsHTMLEnd = endProducts.length ? buildProductCards(endProducts) : '';
     var productsHTML = productsHTMLMid;
 
     // ── Mid-article product injection ──────────────────────────────────────
