@@ -4249,15 +4249,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* ── QUILL TOOLBAR CONFIG ── */
-  const QUILL_TOOLBAR = [
-    [{ header: [2, 3, false] }],
-    ['bold', 'italic', 'underline'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['blockquote', 'link', 'image'],
-    ['clean']
-  ];
-
   /* ── INSERT-PRODUCT POPUP ──────────────────────────────────────────────
      A small modal that lets you drop a product card at the exact cursor
      position inside the Quill editor body.
@@ -4491,7 +4482,6 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholder: 'Write your full article here. Use H2 for section headings, bold for key phrases, blockquote for pull-quotes...',
       modules: { toolbar: QUILL_TOOLBAR }
     });
-    const tb = el.closest('.quill-wrap')?.previousElementSibling || el.previousElementSibling || el.parentElement?.querySelector('.ql-toolbar');
     addInsertProductBtn(blQuill, el.parentElement?.querySelector('.ql-toolbar'));
   }
 
