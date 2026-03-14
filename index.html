@@ -4248,6 +4248,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  /* ══════════════════════════════════════════════════════════════
+     QUILL EDITOR INIT — runs immediately, no tab-click dependency
+  ══════════════════════════════════════════════════════════════ */
+  (function initQuillEditors() {
+    if (typeof Quill === 'undefined') { setTimeout(initQuillEditors, 100); return; }
+
+    var TOOLBAR = [
+      [{ header: [2, 3, false] }],
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['blockquote', 'link', 'image'],
+      ['clean']
+    ];
+
+    // ── Publish form editor ──
+    var blEl = document.getElementById('bl-quill-editor');
+    if (blEl && !blEl._quillReady) {
+      blEl._quillReady = true;
+      window.blQuill = new Quill(blEl, {
+        theme: 'snow',
+        placeholder: 'Write your full article here…',
+        modules: { toolbar: TOOLBAR }
+      });
+    }
+
+    // ── Edit modal editor ──
+    var beEl = document.getElementById('be-quill-editor');
+    if (beEl && !beEl._quillReady) {
+      beEl._quillReady = true;
+      window.beQuill = new Quill(beEl, {
+        theme: 'snow',
+        placeholder: 'Edit article body…',
+        modules: { toolbar: TOOLBAR }
+      });
+    }
+  })();
+
   /* ── INSERT-PRODUCT POPUP ──────────────────────────────────────────────
      A small modal that lets you drop a product card at the exact cursor
      position inside the Quill editor body.
@@ -4417,112 +4454,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  /* ── QUILL TOOLBAR CONFIG ── now includes 🛍 insert-product button ── */
-  const QUILL_TOOLBAR = [
-    [{ header: [2, 3, false] }],
-    ['bold', 'italic', 'underline'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['blockquote', 'link', 'image'],
-    ['insert-product'],
-    ['clean']
-  ];
-
-  // Register the custom blot so Quill doesn't strip our product divs
-  const BlockEmbed = Quill.import('blots/block/embed');
-  class ProductBlot extends BlockEmbed {
-    static create(value) {
-      const node = super.create();
-      node.innerHTML = value;
-      node.setAttribute('contenteditable', 'false');
-      return node;
-    }
-    static value(node) { return node.innerHTML; }
-  }
-  ProductBlot.blotName = 'product-card';
-  ProductBlot.tagName  = 'div';
-  ProductBlot.className = 'ql-product-card';
-  try { Quill.register(ProductBlot); } catch(e) {}
-
-  function addInsertProductBtn(quillInstance, toolbarEl) {
-    if (!toolbarEl || toolbarEl._ipp_wired) return;
-    toolbarEl._ipp_wired = true;
-    const btn = document.createElement('button');
-    btn.className = 'ql-insert-product';
-    btn.title = 'Insert Product Card at cursor';
-    btn.innerHTML = '🛍';
-    btn.style.cssText = 'font-size:1rem;width:auto;padding:0 8px;background:rgba(201,169,110,.12);border-radius:3px;border:1px solid rgba(201,169,110,.25);color:#c9a96e;cursor:pointer;transition:background .2s';
-    btn.onmouseover = () => btn.style.background = 'rgba(201,169,110,.25)';
-    btn.onmouseout  = () => btn.style.background = 'rgba(201,169,110,.12)';
-    btn.addEventListener('mousedown', (e) => {
-      e.preventDefault(); // don't blur editor
-      openInsertProductPopup(quillInstance);
-    });
-    // Add to its own format group
-    const span = document.createElement('span');
-    span.className = 'ql-formats';
-    span.appendChild(btn);
-    toolbarEl.appendChild(span);
-
-    // Add a small label next to the button
-    const label = document.createElement('span');
-    label.style.cssText = 'font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,169,110,.55);align-self:center;padding-left:2px;line-height:1';
-    label.textContent = 'Insert Product';
-    span.appendChild(label);
-  }
-
-  /* ── INIT QUILL: PUBLISH FORM ── */
-  let blQuill = null;
-  function initBlQuill() {
-    if (blQuill) return;
-    const el = document.getElementById('bl-quill-editor');
-    if (!el) return;
-    blQuill = new Quill(el, {
-      theme: 'snow',
-      placeholder: 'Write your full article here. Use H2 for section headings, bold for key phrases, blockquote for pull-quotes...',
-      modules: { toolbar: QUILL_TOOLBAR }
-    });
-    window.blQuill = blQuill;
-    addInsertProductBtn(blQuill, el.parentElement?.querySelector('.ql-toolbar'));
-  }
-
-  /* ── INIT QUILL: EDIT MODAL ── */
-  let beQuill = null;
-  function initBeQuill() {
-    if (beQuill) return;
-    const el = document.getElementById('be-quill-editor');
-    if (!el) return;
-    beQuill = new Quill(el, {
-      theme: 'snow',
-      placeholder: 'Edit article body...',
-      modules: { toolbar: QUILL_TOOLBAR }
-    });
-    window.beQuill = beQuill;
-    addInsertProductBtn(beQuill, el.parentElement?.querySelector('.ql-toolbar'));
-  }
-
-  /* ── INIT BOTH QUILL INSTANCES IMMEDIATELY ──
-     Quill handles display:none containers fine. We init now so the
-     editor is always ready regardless of which tab the user opens first.
-     We also re-expose initBlQuill/initBeQuill on window so the module
-     script (separate scope) can call them.                              */
-  initBlQuill();
-  initBeQuill();
-  window.initBlQuill = initBlQuill;
-  window.initBeQuill = initBeQuill;
-
-  /* ── TAB SWITCH: force Quill to redraw when Blog tab becomes visible ── */
-  document.querySelectorAll('.admin-tab[data-tab]').forEach(function(tab) {
-    tab.addEventListener('click', function() {
-      if (tab.dataset.tab === 'blog') {
-        setTimeout(function() {
-          // Re-init if somehow not done, then update() forces correct height
-          initBlQuill();
-          if (blQuill) blQuill.update();
-        }, 80);
-      }
-    });
-  });
-
   /* ── SLUG PREVIEW on title input ── */
   const blTitleInput = document.getElementById('bl-title');
   const blSlugDisplay = document.getElementById('bl-slug-display');
@@ -4541,15 +4472,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── PATCH PUBLISH: collect Quill HTML + new fields ── */
+  /* ── PATCH PUBLISH: pipe Quill HTML into the hidden input the main handler reads ── */
   const origPublishBtn = document.getElementById('bl-publish-btn');
   if (origPublishBtn) {
-    origPublishBtn.addEventListener('click', function patchPublish() {
-      // We inject into the post object BEFORE the main handler runs
-      // by patching collectCtas — actually we patch via a MutationObserver trick
-      // Instead: override the click with a capturing listener that sets a hidden input
-      if (!blQuill) initBlQuill();
-      // Store the Quill HTML in a hidden textarea that the main handler reads
+    origPublishBtn.addEventListener('click', function() {
       let hiddenBody = document.getElementById('bl-body-hidden');
       if (!hiddenBody) {
         hiddenBody = document.createElement('textarea');
@@ -4557,8 +4483,8 @@ document.addEventListener('DOMContentLoaded', () => {
         hiddenBody.style.display = 'none';
         document.body.appendChild(hiddenBody);
       }
-      hiddenBody.value = blQuill ? blQuill.root.innerHTML : (window.blQuill ? window.blQuill.root.innerHTML : '');
-    }, true); // capture phase — fires before main handler
+      hiddenBody.value = window.blQuill ? window.blQuill.root.innerHTML : '';
+    }, true);
   }
 
   /* ── PATCH openBlogModal: inject meta, reading time, related posts ── */
@@ -4648,10 +4574,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }).observe(blogManageGrid, { childList: true });
   }
 
-  /* ── INIT on page load ── */
-  // initBlQuill fires when the Blog tab is clicked (main tab switcher).
-  // initBeQuill fires directly inside openBlogEditModal when the edit modal opens.
-  // No additional observers needed.
+  /* ── INIT on page load — Quill is initialized immediately above ── */
 
 
   /* ══════════════════════════════════════════════════════════════
