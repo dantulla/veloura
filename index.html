@@ -2022,8 +2022,6 @@ function copyText(text, btnEl) {
 
 /* ════════════════════════════════════════
    MAILCHIMP EMAIL CAPTURE
-   Uses hidden iframe form — works on all
-   static / GitHub Pages sites, no server.
 ════════════════════════════════════════ */
 var VL_MC = {
   dc : 'us6',
@@ -2031,40 +2029,22 @@ var VL_MC = {
   id : 'bff4f48dc0'
 };
 
-(function(){
-  var iframe = document.createElement('iframe');
-  iframe.name = 'vl_mc_frame';
-  iframe.style.cssText = 'display:none;width:0;height:0;border:0;position:absolute;left:-9999px';
-  var form = document.createElement('form');
-  form.id = 'vl_mc_form';
-  form.action = 'https://' + VL_MC.dc + '.list-manage.com/subscribe/post';
-  form.method = 'POST';
-  form.target = 'vl_mc_frame';
-  form.innerHTML =
-    '<input type="hidden" name="u"     value="' + VL_MC.u  + '">' +
-    '<input type="hidden" name="id"    value="' + VL_MC.id + '">' +
-    '<input type="hidden" name="EMAIL" id="vl_mc_email">' +
-    '<input type="hidden" name="b_' + VL_MC.u + '_' + VL_MC.id + '" value="">';
-  document.addEventListener('DOMContentLoaded', function(){
-    document.body.appendChild(iframe);
-    document.body.appendChild(form);
-  });
-})();
-
 function vlSubscribeMailchimp(email, callback) {
   try {
     var stored = JSON.parse(localStorage.getItem('vl_emails') || '[]');
     if (!stored.includes(email)) { stored.push(email); localStorage.setItem('vl_emails', JSON.stringify(stored)); }
   } catch(e) {}
-  var emailInput = document.getElementById('vl_mc_email');
-  var form = document.getElementById('vl_mc_form');
-  if (!emailInput || !form) { callback(true); return; }
-  emailInput.value = email;
-  form.submit();
-  // Mailchimp processes the submission in the hidden iframe.
-  // We optimistically show success after 1.2s — the email is already
-  // saved to localStorage as backup regardless.
-  setTimeout(function(){ callback(true); }, 1200);
+  var data = new FormData();
+  data.append('u', VL_MC.u);
+  data.append('id', VL_MC.id);
+  data.append('EMAIL', email);
+  data.append('b_' + VL_MC.u + '_' + VL_MC.id, '');
+  fetch('https://' + VL_MC.dc + '.list-manage.com/subscribe/post', {
+    method : 'POST',
+    mode   : 'no-cors',
+    body   : data
+  }).then(function(){ callback(true); })
+    .catch(function(){ callback(true); });
 }
 
 /* ════════════════════════════════════════
