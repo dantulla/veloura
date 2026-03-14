@@ -756,8 +756,8 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .ql-toolbar.ql-snow button:hover .ql-stroke,.ql-toolbar.ql-snow .ql-active .ql-stroke{stroke:var(--gold)!important}
 .ql-toolbar.ql-snow button:hover .ql-fill,.ql-toolbar.ql-snow .ql-active .ql-fill{fill:var(--gold)!important}
 .ql-toolbar.ql-snow button:hover,.ql-toolbar.ql-snow .ql-picker-label:hover{color:var(--gold)!important}
-.ql-container.ql-snow{border:none;min-height:280px}
-.ql-editor{background:#0f0d0b;color:rgba(245,240,232,.82);font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.85;padding:20px 22px;min-height:280px}
+.ql-container.ql-snow{border:none;min-height:340px}
+.ql-editor{background:#0f0d0b;color:rgba(245,240,232,.82);font-family:'DM Sans',sans-serif;font-size:.93rem;line-height:1.85;padding:20px 22px;min-height:340px}
 .ql-editor.ql-blank::before{color:rgba(245,240,232,.2)!important;font-style:normal!important;font-size:.88rem}
 .ql-editor h1,.ql-editor h2,.ql-editor h3{font-family:'Playfair Display',serif;color:var(--cream);margin:1.4em 0 .6em}
 .ql-editor h2{font-size:1.3rem}.ql-editor h3{font-size:1.05rem;color:var(--gold)}
@@ -2558,7 +2558,7 @@ window.addEventListener('load', async () => {
       tab.classList.add('active');
       document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
       if(tab.dataset.tab==='analytics') loadAnalytics();
-      if(tab.dataset.tab==='blog') { renderBlogManage(); switchBlogSubTab('write'); }
+      if(tab.dataset.tab==='blog') { renderBlogManage(); switchBlogSubTab('write'); setTimeout(function(){ if(typeof initBlQuill==='function') initBlQuill(); }, 120); }
       if(tab.dataset.tab==='manage') renderManage();
     });
   });
@@ -3668,14 +3668,19 @@ window.addEventListener('load', async () => {
     document.getElementById('be-success').style.display = 'none';
     document.getElementById('blog-edit-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
-    // Load body into Quill after modal opens
+    // Init Quill if not done yet, then load the body content
     setTimeout(() => {
+      if (typeof initBeQuill === 'function') initBeQuill();
       const qEl = document.getElementById('be-quill-editor');
-      if (qEl && window.Quill) {
-        const qInner = qEl.querySelector('.ql-editor');
-        if (qInner) qInner.innerHTML = b.body || '';
+      if (qEl) {
+        if (typeof beQuill !== 'undefined' && beQuill && beQuill.root) {
+          beQuill.root.innerHTML = b.body || '';
+        } else {
+          const qInner = qEl.querySelector('.ql-editor');
+          if (qInner) qInner.innerHTML = b.body || '';
+        }
       }
-    }, 120);
+    }, 150);
   }
 
   document.getElementById('be-image').addEventListener('input', function() {
@@ -4522,15 +4527,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ── INIT QUILL when blog admin tab opens ── */
-  document.querySelectorAll('.admin-tab[data-tab]').forEach(tab => {
-    tab.addEventListener('click', () => {
-      if (tab.dataset.tab === 'blog') {
-        setTimeout(initBlQuill, 80);
-      }
-    });
-  });
-
   /* ── PATCH PUBLISH: collect Quill HTML + new fields ── */
   const origPublishBtn = document.getElementById('bl-publish-btn');
   if (origPublishBtn) {
@@ -4639,18 +4635,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ── INIT on page load ── */
-  // Quill needs the tab to be visible. We wait for the user to open the blog tab.
-  // For edit modal, init when it opens.
-  const blogEditModal = document.getElementById('blog-edit-modal');
-  if (blogEditModal) {
-    new MutationObserver((mutations) => {
-      mutations.forEach(m => {
-        if (blogEditModal.style.display === 'block') {
-          setTimeout(initBeQuill, 80);
-        }
-      });
-    }).observe(blogEditModal, { attributes: true, attributeFilter: ['style'] });
-  }
+  // initBlQuill fires when the Blog tab is clicked (main tab switcher).
+  // initBeQuill fires directly inside openBlogEditModal when the edit modal opens.
+  // No additional observers needed.
 
 
   /* ══════════════════════════════════════════════════════════════
