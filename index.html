@@ -2558,7 +2558,7 @@ window.addEventListener('load', async () => {
       tab.classList.add('active');
       document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
       if(tab.dataset.tab==='analytics') loadAnalytics();
-      if(tab.dataset.tab==='blog') { renderBlogManage(); switchBlogSubTab('write'); setTimeout(function(){ if(typeof initBlQuill==='function') initBlQuill(); }, 120); }
+      if(tab.dataset.tab==='blog') { renderBlogManage(); switchBlogSubTab('write'); setTimeout(function(){ if(window.blQuill) window.blQuill.update(); }, 80); }
       if(tab.dataset.tab==='manage') renderManage();
     });
   });
@@ -3482,17 +3482,13 @@ window.addEventListener('load', async () => {
   document.getElementById('bl-publish-btn').addEventListener('click', async () => {
     const title   = document.getElementById('bl-title').value.trim();
     const excerpt = document.getElementById('bl-excerpt').value.trim();
-    // Get body from Quill if available, else hidden input fallback
+    // Get body directly from window.blQuill (set by upgrade script)
     let body = '';
-    if (window.Quill) {
-      const qEl = document.getElementById('bl-quill-editor');
-      const qInstance = qEl && qEl.__quill;
-      // Access via global blQuill reference set by upgrade script
-      body = document.getElementById('bl-body-hidden')?.value || '';
-      if (!body && qEl) {
-        const qInner = qEl.querySelector('.ql-editor');
-        body = qInner ? qInner.innerHTML : '';
-      }
+    if (window.blQuill && window.blQuill.root) {
+      body = window.blQuill.root.innerHTML;
+    } else {
+      const qInner = document.getElementById('bl-quill-editor')?.querySelector('.ql-editor');
+      body = qInner ? qInner.innerHTML : '';
     }
     if (!body) body = document.getElementById('bl-body-hidden')?.value || '';
     body = await sanitizeBodyForFirestore(body);
@@ -3668,19 +3664,18 @@ window.addEventListener('load', async () => {
     document.getElementById('be-success').style.display = 'none';
     document.getElementById('blog-edit-modal').style.display = 'block';
     document.body.style.overflow = 'hidden';
-    // Init Quill if not done yet, then load the body content
+    // Load body into Quill — window.beQuill is set by the upgrade script
     setTimeout(() => {
-      if (typeof initBeQuill === 'function') initBeQuill();
-      const qEl = document.getElementById('be-quill-editor');
-      if (qEl) {
-        if (typeof beQuill !== 'undefined' && beQuill && beQuill.root) {
-          beQuill.root.innerHTML = b.body || '';
-        } else {
-          const qInner = qEl.querySelector('.ql-editor');
-          if (qInner) qInner.innerHTML = b.body || '';
-        }
+      const q = window.beQuill;
+      if (q && q.root) {
+        q.root.innerHTML = b.body || '';
+        q.update();
+      } else {
+        // fallback: write directly into the editor div
+        const qInner = document.getElementById('be-quill-editor')?.querySelector('.ql-editor');
+        if (qInner) qInner.innerHTML = b.body || '';
       }
-    }, 150);
+    }, 100);
   }
 
   document.getElementById('be-image').addEventListener('input', function() {
@@ -3711,8 +3706,12 @@ window.addEventListener('load', async () => {
     const beIpList  = document.getElementById('be-ip-list');
     // Get body from Quill editor
     let body = '';
-    const qEl = document.getElementById('be-quill-editor');
-    if (qEl) { const qInner = qEl.querySelector('.ql-editor'); if (qInner) body = qInner.innerHTML; }
+    if (window.beQuill && window.beQuill.root) {
+      body = window.beQuill.root.innerHTML;
+    } else {
+      const qInner = document.getElementById('be-quill-editor')?.querySelector('.ql-editor');
+      if (qInner) body = qInner.innerHTML;
+    }
     body = await sanitizeBodyForFirestore(body);
     const currentBlog = blogs.find(b => b._id === id) || {};
     const title = document.getElementById('be-title').value.trim();
@@ -4482,6 +4481,7 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholder: 'Write your full article here. Use H2 for section headings, bold for key phrases, blockquote for pull-quotes...',
       modules: { toolbar: QUILL_TOOLBAR }
     });
+    window.blQuill = blQuill;
     addInsertProductBtn(blQuill, el.parentElement?.querySelector('.ql-toolbar'));
   }
 
@@ -4496,8 +4496,32 @@ document.addEventListener('DOMContentLoaded', () => {
       placeholder: 'Edit article body...',
       modules: { toolbar: QUILL_TOOLBAR }
     });
+    window.beQuill = beQuill;
     addInsertProductBtn(beQuill, el.parentElement?.querySelector('.ql-toolbar'));
   }
+
+  /* ── INIT BOTH QUILL INSTANCES IMMEDIATELY ──
+     Quill handles display:none containers fine. We init now so the
+     editor is always ready regardless of which tab the user opens first.
+     We also re-expose initBlQuill/initBeQuill on window so the module
+     script (separate scope) can call them.                              */
+  initBlQuill();
+  initBeQuill();
+  window.initBlQuill = initBlQuill;
+  window.initBeQuill = initBeQuill;
+
+  /* ── TAB SWITCH: force Quill to redraw when Blog tab becomes visible ── */
+  document.querySelectorAll('.admin-tab[data-tab]').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      if (tab.dataset.tab === 'blog') {
+        setTimeout(function() {
+          // Re-init if somehow not done, then update() forces correct height
+          initBlQuill();
+          if (blQuill) blQuill.update();
+        }, 80);
+      }
+    });
+  });
 
   /* ── SLUG PREVIEW on title input ── */
   const blTitleInput = document.getElementById('bl-title');
@@ -4533,7 +4557,7 @@ document.addEventListener('DOMContentLoaded', () => {
         hiddenBody.style.display = 'none';
         document.body.appendChild(hiddenBody);
       }
-      hiddenBody.value = blQuill ? blQuill.root.innerHTML : '';
+      hiddenBody.value = blQuill ? blQuill.root.innerHTML : (window.blQuill ? window.blQuill.root.innerHTML : '');
     }, true); // capture phase — fires before main handler
   }
 
