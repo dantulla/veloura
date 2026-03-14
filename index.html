@@ -2017,6 +2017,54 @@ function copyText(text, btnEl) {
 }
 
 /* ════════════════════════════════════════
+   MAILCHIMP EMAIL CAPTURE
+════════════════════════════════════════ */
+var VL_MC = {
+  dc : 'us6',
+  u  : 'dfe8a6fe981e41afe66bc2d5b',
+  id : 'bff4f48dc0'
+};
+
+function vlSubscribeMailchimp(email, callback) {
+  try {
+    var stored = JSON.parse(localStorage.getItem('vl_emails') || '[]');
+    if (!stored.includes(email)) { stored.push(email); localStorage.setItem('vl_emails', JSON.stringify(stored)); }
+  } catch(e) {}
+
+  var cbName = 'vlmc_' + Date.now();
+  var url = 'https://' + VL_MC.dc + '.list-manage.com/subscribe/post-json'
+    + '?u='     + encodeURIComponent(VL_MC.u)
+    + '&id='    + encodeURIComponent(VL_MC.id)
+    + '&EMAIL=' + encodeURIComponent(email)
+    + '&c='     + cbName;
+
+  var timeout;
+  var script = document.createElement('script');
+
+  window[cbName] = function(data) {
+    clearTimeout(timeout);
+    script.parentNode && script.parentNode.removeChild(script);
+    delete window[cbName];
+    if (data && data.result === 'success') {
+      callback(true);
+    } else {
+      var msg = (data && data.msg) ? data.msg.replace(/^[0-9]+ - /, '') : 'Please try again.';
+      if (msg && msg.toLowerCase().includes('already subscribed')) { callback(true); return; }
+      callback(false, msg);
+    }
+  };
+
+  timeout = setTimeout(function() {
+    script.parentNode && script.parentNode.removeChild(script);
+    delete window[cbName];
+    callback(false, 'Request timed out — please try again.');
+  }, 8000);
+
+  script.src = url;
+  document.body.appendChild(script);
+}
+
+/* ════════════════════════════════════════
    MAIN INIT
 ════════════════════════════════════════ */
 window.addEventListener('load', async () => {
@@ -2892,14 +2940,28 @@ window.addEventListener('load', async () => {
 
         emailCard.querySelector('#bec-btn-' + idx).addEventListener('click', () => {
           const input = emailCard.querySelector('#bec-email-' + idx);
+          const btn   = emailCard.querySelector('#bec-btn-' + idx);
           const email = input?.value?.trim();
           if (!email || !email.includes('@')) {
             if (input) { input.style.borderColor='rgba(201,110,110,.6)'; setTimeout(()=>input.style.borderColor='',1500); }
             return;
           }
-          const emails = JSON.parse(localStorage.getItem('vl_emails')||'[]');
-          if (!emails.includes(email)) { emails.push(email); localStorage.setItem('vl_emails', JSON.stringify(emails)); }
-          emailCard.innerHTML = '<div style="text-align:center;padding:20px 0"><div style="font-family:\'Playfair Display\',serif;font-size:1.2rem;color:var(--gold);margin-bottom:8px">You\'re in. ✨</div><div style="font-size:.8rem;color:var(--muted)">Watch your inbox for your first drop.</div></div>';
+          btn.textContent = 'Adding…';
+          btn.disabled = true;
+          vlSubscribeMailchimp(email, (ok, msg) => {
+            if (ok) {
+              emailCard.innerHTML = '<div style="text-align:center;padding:20px 0"><div style="font-family:\'Playfair Display\',serif;font-size:1.2rem;color:var(--gold);margin-bottom:8px">You\'re in. ✨</div><div style="font-size:.8rem;color:var(--muted)">Watch your inbox for your first drop.</div></div>';
+            } else {
+              btn.textContent = 'Join Free →';
+              btn.disabled = false;
+              if (input) {
+                input.style.borderColor = 'rgba(201,110,110,.6)';
+                input.placeholder = msg || 'Something went wrong — try again';
+                input.value = '';
+                setTimeout(() => { input.style.borderColor = ''; input.placeholder = 'Your email address'; }, 3000);
+              }
+            }
+          });
         });
         grid.appendChild(emailCard);
       }
@@ -3968,13 +4030,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (exitEmail) { exitEmail.style.borderColor = 'rgba(201,110,110,.6)'; setTimeout(()=>exitEmail.style.borderColor='',1500); }
         return;
       }
-      // Store email in localStorage (replace with your email service endpoint)
-      const emails = JSON.parse(localStorage.getItem('vl_emails') || '[]');
-      if (!emails.includes(email)) { emails.push(email); localStorage.setItem('vl_emails', JSON.stringify(emails)); }
-      if (exitForm) exitForm.style.display = 'none';
-      if (exitSuccess) exitSuccess.style.display = 'block';
-      if (exitSkip) exitSkip.style.display = 'none';
-      setTimeout(hideExitPopup, 3000);
+      exitSubmit.textContent = 'Adding you…';
+      exitSubmit.disabled = true;
+      vlSubscribeMailchimp(email, (ok, msg) => {
+        exitSubmit.textContent = 'Send Me the List';
+        exitSubmit.disabled = false;
+        if (ok) {
+          if (exitForm)    exitForm.style.display    = 'none';
+          if (exitSuccess) exitSuccess.style.display = 'block';
+          if (exitSkip)    exitSkip.style.display    = 'none';
+          setTimeout(hideExitPopup, 3000);
+        } else {
+          if (exitEmail) {
+            exitEmail.style.borderColor = 'rgba(201,110,110,.6)';
+            exitEmail.placeholder = msg || 'Something went wrong — try again';
+            exitEmail.value = '';
+            setTimeout(() => { exitEmail.style.borderColor = ''; exitEmail.placeholder = 'Your email address'; }, 3000);
+          }
+        }
+      });
     });
   }
 
