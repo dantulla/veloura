@@ -4262,6 +4262,32 @@ document.addEventListener('DOMContentLoaded', () => {
       ['clean']
     ];
 
+    function addInsertBtn(quillInstance, wrapEl) {
+      var toolbar = wrapEl.querySelector('.ql-toolbar');
+      if (!toolbar || toolbar._ipp_wired) return;
+      toolbar._ipp_wired = true;
+
+      var sep = document.createElement('span');
+      sep.className = 'ql-formats';
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.title = 'Insert product image + link at cursor';
+      btn.style.cssText = 'display:inline-flex;align-items:center;gap:5px;width:auto!important;padding:3px 10px!important;background:rgba(201,169,110,.15);border:1px solid rgba(201,169,110,.35)!important;border-radius:3px;color:#c9a96e!important;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;font-family:inherit;cursor:pointer;white-space:nowrap;transition:background .2s';
+      btn.innerHTML = '🛍 Insert Product';
+      btn.onmouseover = function(){ btn.style.background = 'rgba(201,169,110,.28)'; };
+      btn.onmouseout  = function(){ btn.style.background = 'rgba(201,169,110,.15)'; };
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        window._ippTargetQuill = quillInstance;
+        window._ippSavedRange  = quillInstance.getSelection();
+        openInsertProductPopup();
+      });
+
+      sep.appendChild(btn);
+      toolbar.appendChild(sep);
+    }
+
     // ── Publish form editor ──
     var blEl = document.getElementById('bl-quill-editor');
     if (blEl && !blEl._quillReady) {
@@ -4271,6 +4297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         placeholder: 'Write your full article here…',
         modules: { toolbar: TOOLBAR }
       });
+      addInsertBtn(window.blQuill, blEl.parentElement);
     }
 
     // ── Edit modal editor ──
@@ -4282,6 +4309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         placeholder: 'Edit article body…',
         modules: { toolbar: TOOLBAR }
       });
+      addInsertBtn(window.beQuill, beEl.parentElement);
     }
   })();
 
@@ -4365,15 +4393,12 @@ document.addEventListener('DOMContentLoaded', () => {
     pop.addEventListener('click', e => { if (e.target === pop) closeInsertPopup(); });
   })();
 
-  let _ippTargetQuill = null; // which quill instance the popup was opened for
-  let _ippSavedRange = null;  // cursor range saved before popup opened
+  let _ippTargetQuill = null;
+  let _ippSavedRange  = null;
 
-  function openInsertProductPopup(quillInstance) {
-    _ippTargetQuill = quillInstance;
-    // Save cursor position now, before focus leaves the editor
-    _ippSavedRange = quillInstance.getSelection();
+  function openInsertProductPopup() {
     // Clear fields
-    ['ipp-img','ipp-name','ipp-brand','ipp-price','ipp-desc','ipp-url'].forEach(id => {
+    ['ipp-img','ipp-name','ipp-brand','ipp-price','ipp-desc','ipp-url'].forEach(function(id) {
       const el = document.getElementById(id); if (el) el.value = '';
     });
     const btnLabel = document.getElementById('ipp-btn-label');
@@ -4385,15 +4410,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const err = document.getElementById('ipp-err');
     if (err) err.style.display = 'none';
     const pop = document.getElementById('ip-insert-popup');
-    if (pop) { pop.style.display = 'flex'; }
-    setTimeout(() => { const n = document.getElementById('ipp-name'); if (n) n.focus(); }, 80);
+    if (pop) pop.style.display = 'flex';
+    setTimeout(function() { const n = document.getElementById('ipp-name'); if (n) n.focus(); }, 80);
   }
 
   function closeInsertPopup() {
     const pop = document.getElementById('ip-insert-popup');
     if (pop) pop.style.display = 'none';
-    _ippTargetQuill = null;
-    _ippSavedRange = null;
+    window._ippTargetQuill = null;
+    window._ippSavedRange  = null;
   }
 
   function buildInsertProductHTML(imgUrl, name, brand, price, desc, url, btnLabel, style) {
@@ -4440,14 +4465,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const style    = document.getElementById('ipp-style')?.value || 'full';
       const html     = buildInsertProductHTML(imgUrl, name, brand, price, desc, url, btnLabel, style);
 
-      if (_ippTargetQuill) {
-        const range = _ippSavedRange || { index: _ippTargetQuill.getLength() - 1, length: 0 };
-        _ippTargetQuill.clipboard.dangerouslyPasteHTML(range.index, html);
-        // Move cursor after inserted block
-        setTimeout(() => {
-          const newLen = _ippTargetQuill.getLength();
-          _ippTargetQuill.setSelection(Math.min(range.index + 2, newLen - 1));
-          _ippTargetQuill.focus();
+      const q     = window._ippTargetQuill;
+      const range = window._ippSavedRange || (q ? { index: q.getLength() - 1, length: 0 } : null);
+      if (q && range) {
+        q.clipboard.dangerouslyPasteHTML(range.index, html);
+        setTimeout(function() {
+          q.setSelection(Math.min(range.index + 2, q.getLength() - 1));
+          q.focus();
         }, 50);
       }
       closeInsertPopup();
