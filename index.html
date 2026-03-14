@@ -532,12 +532,54 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px}
 .blog-card{background:var(--surface);border:1px solid rgba(201,169,110,.08);border-radius:4px;overflow:hidden;transition:all .4s;cursor:pointer;position:relative}
 .blog-card:hover{border-color:rgba(201,169,110,.3);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.5)}
-.blog-card-img{height:220px;background:linear-gradient(135deg,#1c1510 0%,#241a12 100%);position:relative;overflow:hidden}
+.blog-card-img{height:300px;background:linear-gradient(135deg,#1c1510 0%,#241a12 100%);position:relative;overflow:hidden}
 .blog-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.25,.8,.25,1)}
 .blog-card:hover .blog-card-img img{transform:scale(1.06)}
 .blog-card-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(201,169,110,.05) 0%,rgba(201,169,110,.02) 100%)}
 .blog-card-img-placeholder svg{opacity:.15}
 .blog-cat-badge{position:absolute;top:14px;left:14px;font-size:7px;letter-spacing:.4em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:5px 12px;font-weight:600;border-radius:1px;z-index:2}
+/* ── PINTEREST SAVE BUTTON on blog cards ── */
+.pin-save-btn{position:absolute;top:14px;right:14px;z-index:3;display:flex;align-items:center;gap:6px;background:#e60023;color:#fff;font-size:7px;letter-spacing:.2em;text-transform:uppercase;padding:7px 12px;border-radius:20px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif;opacity:0;transform:translateY(-6px);transition:all .25s;box-shadow:0 4px 14px rgba(230,0,35,.3)}
+.pin-save-btn svg{flex-shrink:0}
+.blog-card:hover .pin-save-btn{opacity:1;transform:translateY(0)}
+/* ── FEATURED ARTICLE HERO ── */
+.featured-article-section{padding:0 60px 0;background:var(--black)}
+.featured-article-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid rgba(201,169,110,.1);overflow:hidden}
+.featured-article-img-wrap{position:relative;overflow:hidden;height:520px;background:linear-gradient(135deg,#1c1510 0%,#1a120e 100%)}
+.featured-article-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .8s ease}
+.featured-article-inner:hover .featured-article-img-wrap img{transform:scale(1.04)}
+.featured-article-img-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(8,8,8,.3) 0%,transparent 60%)}
+.featured-article-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:5rem;opacity:.2}
+.fa-cat-badge{position:absolute;top:20px;left:20px;font-size:7px;letter-spacing:.45em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:6px 14px;font-weight:600;border-radius:1px;z-index:2}
+.fa-pin-btn{position:absolute;top:20px;right:20px;display:flex;align-items:center;gap:6px;background:#e60023;color:#fff;font-size:7px;letter-spacing:.2em;text-transform:uppercase;padding:8px 14px;border-radius:20px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif;box-shadow:0 4px 16px rgba(230,0,35,.35);z-index:2;transition:transform .2s}
+.fa-pin-btn:hover{transform:scale(1.05)}
+.featured-article-body{padding:56px 52px;display:flex;flex-direction:column;justify-content:center;background:var(--surface);border-left:1px solid rgba(201,169,110,.1)}
+.fa-eyebrow{font-size:8px;letter-spacing:.6em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+.fa-eyebrow::before{content:'';display:inline-block;width:28px;height:1px;background:var(--gold)}
+.fa-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,2.8vw,2.4rem);font-weight:400;color:var(--cream);line-height:1.18;margin-bottom:20px}
+.fa-excerpt{font-size:.88rem;color:var(--muted);line-height:1.85;margin-bottom:32px}
+.fa-meta{font-size:.72rem;color:rgba(245,240,232,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:28px;display:flex;align-items:center;gap:14px}
+.fa-meta-sep{width:3px;height:3px;background:rgba(201,169,110,.3);border-radius:50%}
+.fa-read-btn{display:inline-flex;align-items:center;gap:10px;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:14px 32px;text-decoration:none;font-weight:600;transition:all .3s;align-self:flex-start;border-radius:1px}
+.fa-read-btn:hover{background:var(--gold-light);transform:translateX(4px)}
+.fa-read-btn svg{transition:transform .3s}
+.fa-read-btn:hover svg{transform:translateX(4px)}
+/* ── INLINE EMAIL CAPTURE CARD ── */
+.blog-email-card{background:linear-gradient(135deg,var(--charcoal) 0%,rgba(20,18,16,.9) 100%);border:1px solid rgba(201,169,110,.25);border-radius:4px;overflow:hidden;padding:40px 32px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative}
+.blog-email-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.bec-eyebrow{font-size:7px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:block}
+.bec-title{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--cream);line-height:1.2;margin-bottom:10px}
+.bec-sub{font-size:.78rem;color:var(--muted);line-height:1.75;margin-bottom:24px}
+.bec-form{display:flex;flex-direction:column;gap:10px;width:100%}
+.bec-input{background:rgba(8,8,8,.6);border:1px solid rgba(201,169,110,.25);color:var(--cream);font-size:.8rem;padding:12px 16px;font-family:'DM Sans',sans-serif;outline:none;border-radius:2px;transition:border .3s;width:100%}
+.bec-input::placeholder{color:rgba(245,240,232,.25)}
+.bec-input:focus{border-color:var(--gold)}
+.bec-btn{background:var(--gold);color:var(--black);font-size:8px;letter-spacing:.35em;text-transform:uppercase;padding:13px 20px;border:none;cursor:pointer;font-weight:700;font-family:'DM Sans',sans-serif;border-radius:2px;transition:opacity .2s;width:100%;text-align:center}
+.bec-btn:hover{opacity:.85}
+.bec-disclaimer{font-size:.65rem;color:rgba(245,240,232,.2);line-height:1.6;margin-top:8px}
+/* ── FEATURED ARTICLE RESPONSIVE ── */
+@media(max-width:900px){.featured-article-inner{grid-template-columns:1fr}.featured-article-img-wrap{height:280px}.featured-article-body{padding:36px 28px}.featured-article-section{padding:0 24px 0}}
+@media(max-width:768px){.featured-article-section{padding:0 24px 0}}
 .blog-card-body{padding:28px}
 .blog-card-date{font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;display:block}
 .blog-card-title{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--cream);line-height:1.3;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -749,9 +791,13 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 .blog-draft-badge{display:inline-block;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:#c96e6e;border:1px solid rgba(201,110,110,.35);padding:3px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
 .blog-published-badge{display:inline-block;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--green);border:1px solid rgba(110,201,138,.35);padding:3px 8px;border-radius:2px;margin-left:8px;vertical-align:middle}
 
-/* ── READING TIME ── */
-.blog-card-read-time{font-size:.7rem;letter-spacing:.2em;color:rgba(245,240,232,.28);text-transform:uppercase}
-.bm-read-time{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.28)}
+/* ── READING PROGRESS BAR ── */
+#reading-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:15002;width:0%;transition:width .1s linear;pointer-events:none}
+/* ── PINTEREST SAVE IN MODAL ── */
+.bm-pin-bar{display:flex;align-items:center;gap:12px;padding:16px 0;border-top:1px solid rgba(201,169,110,.1);border-bottom:1px solid rgba(201,169,110,.1);margin-bottom:36px}
+.bm-pin-btn{display:flex;align-items:center;gap:8px;background:#e60023;color:#fff;font-size:8px;letter-spacing:.25em;text-transform:uppercase;padding:10px 20px;border-radius:20px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif;transition:transform .2s,box-shadow .2s;box-shadow:0 4px 16px rgba(230,0,35,.25)}
+.bm-pin-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(230,0,35,.4)}
+.bm-pin-label{font-size:.72rem;color:rgba(245,240,232,.3);letter-spacing:.05em}
 
 /* ── SLUG / SEO FIELDS ── */
 .slug-preview{font-size:.72rem;color:rgba(245,240,232,.28);margin-top:6px;letter-spacing:.04em;word-break:break-all}
@@ -792,6 +838,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 <div id="grain"></div>
+<div id="reading-progress"></div>
 
 <!-- ══════════ NAV ══════════ -->
 <nav id="nav">
@@ -801,7 +848,7 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <li><a href="#blog">Blog</a></li>
     <li><a href="#social-proof">Reviews</a></li>
     <li><a href="#about">About</a></li>
-    <li><a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="opacity:.7"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Pinterest</a></li>
+    <li><a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="#e60023" style="opacity:.9"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Pinterest</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:12px">
     <a href="#blog" class="mobile-blog-btn">
@@ -868,6 +915,11 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </div>
 
+<!-- ══════════ FEATURED ARTICLE HERO ══════════ -->
+<div class="featured-article-section" id="featured-article-section" style="padding-top:60px;padding-bottom:60px;display:none">
+  <div class="featured-article-inner" id="featured-article-inner"></div>
+</div>
+
 <!-- ══════════ MARQUEE ══════════ -->
 <div class="marquee-wrap">
   <div class="marquee-track">
@@ -883,6 +935,30 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <div class="marquee-item"><span class="dot"></span>PRIME ELIGIBLE</div>
   </div>
 </div>
+
+<!-- ══════════ BLOG SECTION ══════════ -->
+<section id="blog">
+  <div class="blog-section-header">
+    <div>
+      <span class="section-eyebrow">The Veloura Journal</span>
+      <h2 class="section-title">Beauty <em>Intelligence</em></h2>
+      <div class="gold-line"></div>
+      <p class="section-sub">The routines worth stealing. The products worth the price. The truth the beauty industry won't tell you.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:14px">
+      <a href="#blog" class="view-all-link">All Articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      <a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:#fff;background:#e60023;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif;transition:opacity .2s;box-shadow:0 4px 14px rgba(230,0,35,.25)" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Follow on Pinterest</a>
+    </div>
+  </div>
+  <div class="blog-grid" id="blog-grid">
+    <div class="blog-empty" id="blog-empty" style="display:none">
+      <div class="blog-empty-icon">✍️</div>
+      <div class="blog-empty-title">No Posts Yet</div>
+      <div class="blog-empty-sub">The first piece of beauty intelligence is coming. Check back soon.</div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ══════════ CATEGORY FILTER ══════════ -->
 <div class="category-section">
@@ -968,26 +1044,6 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
   </div>
 </section>
 
-<!-- ══════════ BLOG SECTION ══════════ -->
-<section id="blog">
-  <div class="blog-section-header">
-    <div>
-      <span class="section-eyebrow">The Veloura Journal</span>
-      <h2 class="section-title">Beauty <em>Intelligence</em></h2>
-      <div class="gold-line"></div>
-      <p class="section-sub">Expert guides, honest reviews, and the routines worth stealing.</p>
-    </div>
-    <a href="#blog" class="view-all-link">All Articles <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
-  </div>
-  <div class="blog-grid" id="blog-grid">
-    <div class="blog-empty" id="blog-empty" style="display:none">
-      <div class="blog-empty-icon">✍️</div>
-      <div class="blog-empty-title">No Posts Yet</div>
-      <div class="blog-empty-sub">The first piece of beauty intelligence is coming. Check back soon.</div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ BLOG MODAL ══════════ -->
 <div id="blog-modal">
   <button class="bm-close" id="bm-close">Close ✕</button>
@@ -996,6 +1052,14 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
     <h1 class="bm-title" id="bm-title"></h1>
     <div class="bm-meta" id="bm-meta"></div>
     <div class="bm-read-time" id="bm-read-time" style="margin-top:4px"></div>
+    <!-- Pinterest Save bar — injected by openBlogModal -->
+    <div class="bm-pin-bar" id="bm-pin-bar" style="display:none">
+      <a class="bm-pin-btn" id="bm-pin-btn" href="#" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>
+        Save to Pinterest
+      </a>
+      <span class="bm-pin-label">Save this article — come back to it anytime</span>
+    </div>
     <img class="bm-img" id="bm-img" src="" alt="" style="display:none">
     <div class="bm-body" id="bm-body"></div>
     <div id="bm-ip-section" style="display:none">
@@ -1003,6 +1067,15 @@ footer{background:var(--surface);border-top:1px solid rgba(201,169,110,.1);paddi
       <div id="bm-ip-list"></div>
     </div>
     <div class="bm-ctas" id="bm-ctas"></div>
+    <!-- Pinterest end-of-article save strip -->
+    <div id="bm-pin-end" style="display:none;margin-top:40px;padding:28px 32px;background:rgba(230,0,35,.06);border:1px solid rgba(230,0,35,.2);border-radius:4px;text-align:center">
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);margin-bottom:8px">Found something worth saving?</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:20px;line-height:1.7">Pin this article so you can come back to it — and help other beauty lovers find it too.</div>
+      <a id="bm-pin-end-btn" href="#" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:#e60023;color:#fff;font-size:9px;letter-spacing:.3em;text-transform:uppercase;padding:13px 28px;border-radius:24px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif;box-shadow:0 4px 18px rgba(230,0,35,.3)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>
+        Save This Article to Pinterest
+      </a>
+    </div>
     <div class="bm-related" id="bm-related" style="display:none">
       <span class="bm-related-title">More From Veloura</span>
       <div class="bm-related-grid" id="bm-related-grid"></div>
@@ -2173,6 +2246,7 @@ window.addEventListener('load', async () => {
           <div class="product-overlay"><div class="product-overlay-inner">
             <a href="${amazonUrl}" target="_blank" rel="noopener sponsored" class="product-overlay-text"
                data-pid="${p._id}" data-pname="${safeName}" data-asin="${p.asin||''}">View on Amazon</a>
+            <a href="https://pinterest.com/pin/create/button/?url=${encodeURIComponent((typeof settings!=='undefined'&&settings.siteUrl?settings.siteUrl.replace(/\/$/,''):window.location.origin)+'/#p-'+(p.asin||p._id))}${p.imageUrl?'&media='+encodeURIComponent(p.imageUrl):''}${p.name?'&description='+encodeURIComponent(p.name+' — Shop via Veloura'):''}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;background:#e60023;color:#fff;font-size:7px;letter-spacing:.2em;text-transform:uppercase;padding:8px 16px;border-radius:20px;text-decoration:none;font-weight:700;font-family:'DM Sans',sans-serif" onclick="event.stopPropagation()"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Save Pin</a>
           </div></div>
         </div>
         <div class="product-info">
@@ -2718,7 +2792,7 @@ window.addEventListener('load', async () => {
     const grid  = document.getElementById('blog-grid');
     const empty = document.getElementById('blog-empty');
     if (!grid) return;
-    Array.from(grid.querySelectorAll('.blog-card')).forEach(el => el.remove());
+    Array.from(grid.querySelectorAll('.blog-card,.blog-email-card')).forEach(el => el.remove());
 
     // Expose for related posts
     window.__vl_blogs = blogs;
@@ -2728,11 +2802,102 @@ window.addEventListener('load', async () => {
 
     if (publicBlogs.length === 0) {
       if (empty) empty.style.display = 'block';
+      // Hide featured article hero
+      const fas = document.getElementById('featured-article-section');
+      if (fas) fas.style.display = 'none';
       return;
     }
     if (empty) empty.style.display = 'none';
 
-    publicBlogs.forEach(b => {
+    // ── FEATURED ARTICLE HERO — populate with latest post ──────────────
+    const siteBase = (typeof settings !== 'undefined' && settings.siteUrl)
+      ? settings.siteUrl.replace(/\/$/, '')
+      : window.location.origin;
+    const featuredPost = publicBlogs[0];
+    const fasSection = document.getElementById('featured-article-section');
+    const fasInner   = document.getElementById('featured-article-inner');
+    if (fasSection && fasInner && featuredPost) {
+      const faDate = featuredPost.publishedAt
+        ? new Date(featuredPost.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})
+        : '';
+      const faRt = (() => {
+        const txt = (featuredPost.body||'').replace(/<[^>]+>/g,'');
+        return Math.max(1,Math.round(txt.trim().split(/\s+/).filter(Boolean).length/220)) + ' min read';
+      })();
+      const faPostUrl = siteBase + '/blog/' + (featuredPost.slug || featuredPost._id) + '/';
+      const faPinUrl  = 'https://pinterest.com/pin/create/button/?url='
+        + encodeURIComponent(faPostUrl)
+        + (featuredPost.imageUrl ? '&media=' + encodeURIComponent(featuredPost.imageUrl) : '')
+        + '&description=' + encodeURIComponent((featuredPost.title||'') + ' — Save for later from Veloura');
+      const faImgHTML = featuredPost.imageUrl
+        ? `<img src="${featuredPost.imageUrl}" alt="${featuredPost.title||''}" loading="lazy">`
+        : `<div class="featured-article-img-placeholder">✨</div>`;
+
+      fasInner.innerHTML = `
+        <div class="featured-article-img-wrap">
+          ${featuredPost.category ? `<div class="fa-cat-badge">${featuredPost.category}</div>` : ''}
+          <a class="fa-pin-btn" href="${faPinUrl}" target="_blank" rel="noopener" title="Save to Pinterest" onclick="event.stopPropagation()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>
+            Save
+          </a>
+          <div class="featured-article-img-overlay"></div>
+          ${faImgHTML}
+        </div>
+        <div class="featured-article-body">
+          <span class="fa-eyebrow">Featured Article</span>
+          <h2 class="fa-title">${featuredPost.title||''}</h2>
+          <div class="fa-excerpt">${featuredPost.excerpt||featuredPost.metaDesc||''}</div>
+          <div class="fa-meta">
+            <span>${faDate}</span>
+            ${featuredPost.author ? `<div class="fa-meta-sep"></div><span>By ${featuredPost.author}</span>` : ''}
+            <div class="fa-meta-sep"></div><span>${faRt}</span>
+          </div>
+          <a class="fa-read-btn" id="fa-read-btn" href="#">
+            Read the Guide
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>`;
+
+      fasInner.querySelector('#fa-read-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        openBlogModal(featuredPost);
+      });
+      fasSection.style.display = 'block';
+    }
+
+    // ── RENDER BLOG CARDS ──────────────────────────────────────────────
+    const tag = (typeof settings !== 'undefined' && settings.tag) ? settings.tag : 'rpamazon0db-20';
+    let cardCount = 0;
+
+    publicBlogs.forEach((b, idx) => {
+      // ── Inject inline email capture after 3rd card ──
+      if (cardCount === 3) {
+        const emailCard = document.createElement('div');
+        emailCard.className = 'blog-email-card';
+        emailCard.innerHTML = `
+          <span class="bec-eyebrow">The Veloura Inner Circle</span>
+          <div class="bec-title">Get the drops before<br>everyone else does.</div>
+          <div class="bec-sub">New luxury finds. Fragrance notes. Routines that actually work. Straight to your inbox — never spammy.</div>
+          <div class="bec-form">
+            <input type="email" class="bec-input" id="bec-email-${idx}" placeholder="Your email address">
+            <button class="bec-btn" id="bec-btn-${idx}">Join Free →</button>
+          </div>
+          <div class="bec-disclaimer">No spam. Unsubscribe anytime.</div>`;
+
+        emailCard.querySelector('#bec-btn-' + idx).addEventListener('click', () => {
+          const input = emailCard.querySelector('#bec-email-' + idx);
+          const email = input?.value?.trim();
+          if (!email || !email.includes('@')) {
+            if (input) { input.style.borderColor='rgba(201,110,110,.6)'; setTimeout(()=>input.style.borderColor='',1500); }
+            return;
+          }
+          const emails = JSON.parse(localStorage.getItem('vl_emails')||'[]');
+          if (!emails.includes(email)) { emails.push(email); localStorage.setItem('vl_emails', JSON.stringify(emails)); }
+          emailCard.innerHTML = '<div style="text-align:center;padding:20px 0"><div style="font-family:\'Playfair Display\',serif;font-size:1.2rem;color:var(--gold);margin-bottom:8px">You\'re in. ✨</div><div style="font-size:.8rem;color:var(--muted)">Watch your inbox for your first drop.</div></div>';
+        });
+        grid.appendChild(emailCard);
+      }
+
       const card = document.createElement('div');
       card.className = 'blog-card';
       const dateStr = b.publishedAt ? new Date(b.publishedAt).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '';
@@ -2748,9 +2913,20 @@ window.addEventListener('load', async () => {
         `<a href="${cta.url||'#'}" target="_blank" rel="noopener" class="blog-cta-btn ${cta.style||'primary'}">${cta.label||'Read More'}</a>`
       ).join('');
 
+      // ── Pinterest Save button ──
+      const postUrl = siteBase + '/blog/' + (b.slug || b._id) + '/';
+      const pinUrl  = 'https://pinterest.com/pin/create/button/?url='
+        + encodeURIComponent(postUrl)
+        + (b.imageUrl ? '&media=' + encodeURIComponent(b.imageUrl) : '')
+        + '&description=' + encodeURIComponent((b.title||'') + ' — Save for later from Veloura');
+
       card.innerHTML = `
         <div class="blog-card-img">
           ${b.category ? `<div class="blog-cat-badge">${b.category}</div>` : ''}
+          <a class="pin-save-btn" href="${pinUrl}" target="_blank" rel="noopener" title="Save to Pinterest" onclick="event.stopPropagation()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>
+            Save
+          </a>
           ${imgHTML}
         </div>
         <div class="blog-card-body">
@@ -2770,6 +2946,7 @@ window.addEventListener('load', async () => {
       card.querySelector('.blog-card-title').addEventListener('click', () => openBlogModal(b));
       card.querySelector('.blog-card-img').addEventListener('click', () => openBlogModal(b));
       grid.appendChild(card);
+      cardCount++;
     });
   }
 
@@ -2787,6 +2964,41 @@ window.addEventListener('load', async () => {
     const bmImg = document.getElementById('bm-img');
     if (b.imageUrl) { bmImg.src = b.imageUrl; bmImg.style.display = 'block'; }
     else { bmImg.style.display = 'none'; }
+
+    // ── Pinterest Save Bar ──
+    const siteBase = (typeof settings !== 'undefined' && settings.siteUrl)
+      ? settings.siteUrl.replace(/\/$/, '')
+      : window.location.origin;
+    const postUrl = siteBase + '/blog/' + (b.slug || b._id) + '/';
+    const pinUrl  = 'https://pinterest.com/pin/create/button/?url='
+      + encodeURIComponent(postUrl)
+      + (b.imageUrl ? '&media=' + encodeURIComponent(b.imageUrl) : '')
+      + '&description=' + encodeURIComponent((b.title||'') + ' — Save for later from Veloura');
+    const bmPinBar = document.getElementById('bm-pin-bar');
+    const bmPinBtn = document.getElementById('bm-pin-btn');
+    if (bmPinBar && bmPinBtn) {
+      bmPinBtn.href = pinUrl;
+      bmPinBar.style.display = 'flex';
+    }
+    // ── End-of-article Pinterest CTA ──
+    const bmPinEnd    = document.getElementById('bm-pin-end');
+    const bmPinEndBtn = document.getElementById('bm-pin-end-btn');
+    if (bmPinEnd && bmPinEndBtn) {
+      bmPinEndBtn.href = pinUrl;
+      bmPinEnd.style.display = 'block';
+    }
+
+    // ── Reading Progress Bar ──
+    const progressBar = document.getElementById('reading-progress');
+    function updateProgress() {
+      if (!modal.classList.contains('show')) return;
+      const scrollTop = modal.scrollTop;
+      const docHeight = modal.scrollHeight - modal.clientHeight;
+      const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      if (progressBar) progressBar.style.width = pct + '%';
+    }
+    modal.addEventListener('scroll', updateProgress, { passive: true });
+    if (progressBar) progressBar.style.width = '0%';
 
     // Render body as rich HTML (from Quill) or plain paragraphs (legacy)
     const bodyEl  = document.getElementById('bm-body');
@@ -2871,12 +3083,16 @@ window.addEventListener('load', async () => {
   document.getElementById('bm-close').addEventListener('click', () => {
     document.getElementById('blog-modal').classList.remove('show');
     document.body.style.overflow = 'auto';
+    const pb = document.getElementById('reading-progress');
+    if (pb) pb.style.width = '0%';
     resetMeta(); // resets title, tags, and pushes history back to /
   });
   document.getElementById('blog-modal').addEventListener('click', e => {
     if (e.target === document.getElementById('blog-modal')) {
       document.getElementById('blog-modal').classList.remove('show');
       document.body.style.overflow = 'auto';
+      const pb = document.getElementById('reading-progress');
+      if (pb) pb.style.width = '0%';
       resetMeta(); // resets title, tags, and pushes history back to /
     }
   });
@@ -4287,7 +4503,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var pinUrl = 'https://pinterest.com/pin/create/button/?url='+encodeURIComponent(postUrl)+'&media='+encodeURIComponent(img)+'&description='+encodeURIComponent(post.title||'');
     var twUrl  = 'https://twitter.com/intent/tweet?url='+encodeURIComponent(postUrl)+'&text='+encodeURIComponent(post.title||'');
 
-    return '<!DOCTYPE html>\n<html lang="en" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>'+title+'</title>\n<meta name="robots" content="index, follow, max-image-preview:large">\n<meta name="google-site-verification" content="KRTaPbu8HXrfkKzX7QoP9rIal5s25QCg50VjGxqMeC8">\n<link rel="canonical" href="'+postUrl+'">\n<meta name="description" content="'+desc+'">\n<meta property="og:type" content="article">\n<meta property="og:site_name" content="Veloura Beauty &amp; Fragrance">\n<meta property="og:title" content="'+title+'">\n<meta property="og:description" content="'+desc+'">\n<meta property="og:image" content="'+img+'">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="'+imgAlt+'">\n<meta property="og:url" content="'+postUrl+'">\n<meta property="article:author" content="'+author+'">\n<meta property="article:published_time" content="'+pubISO+'">\n<meta property="article:section" content="'+category+'">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:site" content="@VelouraBeauty">\n<meta name="twitter:title" content="'+title+'">\n<meta name="twitter:description" content="'+desc+'">\n<meta name="twitter:image" content="'+img+'">\n<meta name="twitter:image:alt" content="'+imgAlt+'">\n<meta name="pinterest-rich-pin" content="true">\n<script type="application/ld+json">'+jsonLD+'<\/script>\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-GJ0DHCMK2D"><\/script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-GJ0DHCMK2D");<\/script>\n<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">\n<style>\n*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:#080808;color:#f5f0e8;font-family:\'DM Sans\',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}:root{--gold:#c9a96e;--gold-light:#e8d4a8;--black:#080808;--surface:#141210;--cream:#f5f0e8;--muted:rgba(245,240,232,.45)}a{color:#c9a96e;text-decoration:none}\nnav{position:sticky;top:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,169,110,.12)}.nav-logo{font-family:\'Cinzel\',serif;font-size:1.2rem;font-weight:600;letter-spacing:.35em;color:#f5f0e8;text-decoration:none}.nav-logo span{color:#c9a96e}.nav-back{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.45);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .3s}.nav-back:hover{color:#c9a96e}.nav-cta{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#080808;background:#c9a96e;padding:10px 22px;text-decoration:none;font-weight:500;border-radius:1px}\n.post-hero{background:linear-gradient(170deg,#0d0b09 0%,#080808 60%,#0a0908 100%);padding:80px 60px 60px;border-bottom:1px solid rgba(201,169,110,.1)}.post-hero-inner{max-width:820px;margin:0 auto}.breadcrumb{display:flex;align-items:center;gap:10px;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);margin-bottom:28px;flex-wrap:wrap}.breadcrumb a{color:rgba(245,240,232,.45)}.breadcrumb a:hover{color:#c9a96e}.breadcrumb-sep{color:rgba(201,169,110,.3)}.post-category{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#c9a96e;display:block;margin-bottom:20px}.post-title{font-family:\'Playfair Display\',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:400;line-height:1.1;color:#f5f0e8;margin-bottom:24px}.post-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(245,240,232,.45);letter-spacing:.05em}.post-meta-sep{width:3px;height:3px;background:rgba(201,169,110,.4);border-radius:50%;flex-shrink:0}\n.post-featured-img{width:100%;max-height:480px;object-fit:cover;display:block;border-bottom:1px solid rgba(201,169,110,.1)}.post-layout{max-width:820px;margin:0 auto;padding:60px 60px 100px}.post-excerpt{font-size:1.05rem;color:rgba(245,240,232,.7);line-height:1.85;margin-bottom:40px;padding:24px 28px;border-left:3px solid #c9a96e;background:rgba(201,169,110,.04);border-radius:0 4px 4px 0;font-style:italic}.post-body{font-size:.97rem;color:rgba(245,240,232,.82);line-height:2}.post-body h2{font-family:\'Playfair Display\',serif;font-size:1.6rem;color:#f5f0e8;margin:2.2em 0 .8em;font-weight:400}.post-body h3{font-family:\'Playfair Display\',serif;font-size:1.2rem;color:#c9a96e;margin:1.8em 0 .6em;font-weight:400}.post-body p{margin-bottom:1.4em}.post-body strong{color:#f5f0e8;font-weight:600}.post-body em{color:#e8d4a8}.post-body ul,.post-body ol{padding-left:1.6em;margin-bottom:1.4em}.post-body li{margin-bottom:.5em}.post-body blockquote{border-left:3px solid #c9a96e;padding:16px 20px;color:rgba(245,240,232,.6);font-style:italic;margin:1.8em 0;background:rgba(201,169,110,.04);border-radius:0 4px 4px 0}.post-body img{max-width:100%;border-radius:4px;margin:1.4em 0;border:1px solid rgba(201,169,110,.1)}.post-body a{color:#c9a96e;text-decoration:underline;text-decoration-color:rgba(201,169,110,.3)}\n.products-section{margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,169,110,.12)}.products-label{font-size:8px;letter-spacing:.5em;text-transform:uppercase;color:#c9a96e;margin-bottom:24px;display:block}.ctas-section{margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,169,110,.12);display:flex;flex-wrap:wrap;gap:12px}\n.share-section{margin-top:56px;padding:32px 36px;background:rgba(20,18,16,.6);border:1px solid rgba(201,169,110,.15);border-radius:4px}.share-label{font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:#c9a96e;margin-bottom:16px;display:block}.share-btns{display:flex;gap:12px;flex-wrap:wrap}.share-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;background:#141210;border:1px solid rgba(201,169,110,.2);color:#f5f0e8;font-size:9px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .3s;font-family:\'DM Sans\',sans-serif;cursor:pointer;font-weight:400}.share-btn:hover{border-color:#c9a96e;color:#c9a96e}\n.back-banner{background:#141210;border-top:1px solid rgba(201,169,110,.1);padding:60px;text-align:center}.back-banner-title{font-family:\'Playfair Display\',serif;font-size:1.6rem;color:#f5f0e8;margin-bottom:10px}.back-banner-sub{font-size:.85rem;color:rgba(245,240,232,.45);margin-bottom:28px;line-height:1.7}\nfooter{background:#050505;border-top:1px solid rgba(201,169,110,.08);padding:40px 60px;text-align:center;font-size:.75rem;color:rgba(245,240,232,.45);letter-spacing:.05em}footer a{color:rgba(245,240,232,.45)}footer a:hover{color:#c9a96e}\n#grain{position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E");background-size:200px}\n@media(max-width:768px){nav{padding:16px 24px}.post-hero{padding:60px 24px 40px}.post-layout{padding:40px 24px 80px}.back-banner{padding:40px 24px}footer{padding:32px 24px}}\n@media(max-width:600px){.review-card-top{flex-direction:column!important}.review-pc-grid{grid-template-columns:1fr!important}}\n</style>\n</head>\n<body>\n<div id="grain"></div>\n<nav>\n  <a class="nav-logo" href="'+siteBase+'/">VELO<span>U</span>RA</a>\n  <a class="nav-back" href="'+siteBase+'/#blog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> All Articles</a>\n  <a class="nav-cta" href="'+siteBase+'/#products">Shop Now</a>\n</nav>\n<div class="post-hero">\n  <div class="post-hero-inner">\n    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="'+siteBase+'/">Home</a><span class="breadcrumb-sep">\u203a</span><a href="'+siteBase+'/#blog">Blog</a><span class="breadcrumb-sep">\u203a</span><span>'+(post.title||'')+'</span></nav>\n    <span class="post-category">'+category+'</span>\n    <h1 class="post-title">'+(post.title||'')+'</h1>\n    <div class="post-meta"><span>'+pubDate+'</span>'+(author?'<div class="post-meta-sep"></div><span>By '+author+'</span>':'')+'<div class="post-meta-sep"></div><span>'+readTime+'</span></div>\n  </div>\n</div>\n'+(img?'<img class="post-featured-img" src="'+img+'" alt="'+imgAlt+'" width="1200" height="480">\n':'')+'\n<main class="post-layout">\n'+(post.excerpt?'  <div class="post-excerpt">'+post.excerpt+'</div>\n':'')+'  <article class="post-body">\n    '+bodyFirst+(productsHTMLMid?'\n  <div class="products-section"><span class="products-label">Featured Products</span>'+productsHTMLMid+'</div>\n  ':'')+bodySecond+'\n  </article>\n'+(productsHTMLEnd?'  <div class="products-section"><span class="products-label">More Picks For You</span>'+productsHTMLEnd+'</div>\n':'')+(ctasHTML?'  <div class="ctas-section">'+ctasHTML+'</div>\n':'')+'  <div class="share-section">\n    <span class="share-label">Share This Article</span>\n    <div class="share-btns">\n      <a class="share-btn" href="'+pinUrl+'" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Save to Pinterest</a>\n      <a class="share-btn" href="'+twUrl+'" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>\n      <button class="share-btn" onclick="navigator.clipboard.writeText(\''+postUrl+'\').then(function(){this.textContent=\'\u2713 Copied!\';setTimeout(function(){this.textContent=\'Copy Link\';}.bind(this),2000);}.bind(this))">Copy Link</button>\n    </div>\n  </div>\n</main>\n<div class="back-banner">\n  <div class="back-banner-title">Discover More Curated Finds</div>\n  <div class="back-banner-sub">Hand-picked luxury beauty &amp; fragrance &mdash; every product vetted, every detail obsessed over.</div>\n  <a href="'+siteBase+'/#products" style="display:inline-block;padding:14px 36px;background:#c9a96e;color:#080808;font-family:\'DM Sans\',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;font-weight:600;text-decoration:none;border-radius:1px;margin-right:12px">Shop Collections</a>\n  <a href="'+siteBase+'/#blog" style="display:inline-block;padding:14px 36px;background:transparent;color:#f5f0e8;font-family:\'DM Sans\',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;border:1px solid rgba(245,240,232,.2);text-decoration:none;border-radius:1px">All Articles</a>\n</div>\n<footer>\n  <p style="margin-bottom:12px;font-family:\'Cinzel\',serif;font-size:.9rem;letter-spacing:.3em;color:#f5f0e8">VELO<span style="color:#c9a96e">U</span>RA</p>\n  <p style="margin-bottom:16px">&copy; '+year+' Veloura Beauty &amp; Fragrance. As an Amazon Associate we earn from qualifying purchases.</p>\n  <p><a href="'+siteBase+'/#blog">Blog</a> &nbsp;&middot;&nbsp; <a href="'+siteBase+'/#products">Collections</a> &nbsp;&middot;&nbsp; <a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank">Pinterest</a> &nbsp;&middot;&nbsp; <a href="https://www.instagram.com/VelouraBeautyFragrance" target="_blank">Instagram</a></p>\n</footer>\n<script>if(typeof gtag==="function"){gtag("event","page_view",{page_title:document.title,page_location:window.location.href});}<\/script>\n</body>\n</html>';
+    return '<!DOCTYPE html>\n<html lang="en" prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>'+title+'</title>\n<meta name="robots" content="index, follow, max-image-preview:large">\n<meta name="google-site-verification" content="KRTaPbu8HXrfkKzX7QoP9rIal5s25QCg50VjGxqMeC8">\n<link rel="canonical" href="'+postUrl+'">\n<meta name="description" content="'+desc+'">\n<meta property="og:type" content="article">\n<meta property="og:site_name" content="Veloura Beauty &amp; Fragrance">\n<meta property="og:title" content="'+title+'">\n<meta property="og:description" content="'+desc+'">\n<meta property="og:image" content="'+img+'">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="'+imgAlt+'">\n<meta property="og:url" content="'+postUrl+'">\n<meta property="article:author" content="'+author+'">\n<meta property="article:published_time" content="'+pubISO+'">\n<meta property="article:section" content="'+category+'">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:site" content="@VelouraBeauty">\n<meta name="twitter:title" content="'+title+'">\n<meta name="twitter:description" content="'+desc+'">\n<meta name="twitter:image" content="'+img+'">\n<meta name="twitter:image:alt" content="'+imgAlt+'">\n<meta name="pinterest-rich-pin" content="true">\n<script type="application/ld+json">'+jsonLD+'<\/script>\n<script async src="https://www.googletagmanager.com/gtag/js?id=G-GJ0DHCMK2D"><\/script>\n<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-GJ0DHCMK2D");<\/script>\n<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">\n<style>\n*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{background:#080808;color:#f5f0e8;font-family:\'DM Sans\',sans-serif;font-weight:300;overflow-x:hidden;line-height:1.7}:root{--gold:#c9a96e;--gold-light:#e8d4a8;--black:#080808;--surface:#141210;--cream:#f5f0e8;--muted:rgba(245,240,232,.45)}a{color:#c9a96e;text-decoration:none}\nnav{position:sticky;top:0;z-index:100;padding:20px 60px;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(201,169,110,.12)}.nav-logo{font-family:\'Cinzel\',serif;font-size:1.2rem;font-weight:600;letter-spacing:.35em;color:#f5f0e8;text-decoration:none}.nav-logo span{color:#c9a96e}.nav-back{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(245,240,232,.45);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .3s}.nav-back:hover{color:#c9a96e}.nav-cta{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#080808;background:#c9a96e;padding:10px 22px;text-decoration:none;font-weight:500;border-radius:1px}\n.post-hero{background:linear-gradient(170deg,#0d0b09 0%,#080808 60%,#0a0908 100%);padding:80px 60px 60px;border-bottom:1px solid rgba(201,169,110,.1)}.post-hero-inner{max-width:820px;margin:0 auto}.breadcrumb{display:flex;align-items:center;gap:10px;font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(245,240,232,.45);margin-bottom:28px;flex-wrap:wrap}.breadcrumb a{color:rgba(245,240,232,.45)}.breadcrumb a:hover{color:#c9a96e}.breadcrumb-sep{color:rgba(201,169,110,.3)}.post-category{font-size:9px;letter-spacing:.5em;text-transform:uppercase;color:#c9a96e;display:block;margin-bottom:20px}.post-title{font-family:\'Playfair Display\',serif;font-size:clamp(2rem,5vw,3.4rem);font-weight:400;line-height:1.1;color:#f5f0e8;margin-bottom:24px}.post-meta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;font-size:.78rem;color:rgba(245,240,232,.45);letter-spacing:.05em}.post-meta-sep{width:3px;height:3px;background:rgba(201,169,110,.4);border-radius:50%;flex-shrink:0}\n.post-featured-img{width:100%;max-height:480px;object-fit:cover;display:block;border-bottom:1px solid rgba(201,169,110,.1)}.post-layout{max-width:820px;margin:0 auto;padding:60px 60px 100px}.post-excerpt{font-size:1.05rem;color:rgba(245,240,232,.7);line-height:1.85;margin-bottom:40px;padding:24px 28px;border-left:3px solid #c9a96e;background:rgba(201,169,110,.04);border-radius:0 4px 4px 0;font-style:italic}.post-body{font-size:.97rem;color:rgba(245,240,232,.82);line-height:2}.post-body h2{font-family:\'Playfair Display\',serif;font-size:1.6rem;color:#f5f0e8;margin:2.2em 0 .8em;font-weight:400}.post-body h3{font-family:\'Playfair Display\',serif;font-size:1.2rem;color:#c9a96e;margin:1.8em 0 .6em;font-weight:400}.post-body p{margin-bottom:1.4em}.post-body strong{color:#f5f0e8;font-weight:600}.post-body em{color:#e8d4a8}.post-body ul,.post-body ol{padding-left:1.6em;margin-bottom:1.4em}.post-body li{margin-bottom:.5em}.post-body blockquote{border-left:3px solid #c9a96e;padding:16px 20px;color:rgba(245,240,232,.6);font-style:italic;margin:1.8em 0;background:rgba(201,169,110,.04);border-radius:0 4px 4px 0}.post-body img{max-width:100%;border-radius:4px;margin:1.4em 0;border:1px solid rgba(201,169,110,.1)}.post-body a{color:#c9a96e;text-decoration:underline;text-decoration-color:rgba(201,169,110,.3)}\n.products-section{margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,169,110,.12)}.products-label{font-size:8px;letter-spacing:.5em;text-transform:uppercase;color:#c9a96e;margin-bottom:24px;display:block}.ctas-section{margin-top:48px;padding-top:40px;border-top:1px solid rgba(201,169,110,.12);display:flex;flex-wrap:wrap;gap:12px}\n.share-section{margin-top:56px;padding:32px 36px;background:rgba(20,18,16,.6);border:1px solid rgba(201,169,110,.15);border-radius:4px}.share-label{font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:#c9a96e;margin-bottom:16px;display:block}.share-btns{display:flex;gap:12px;flex-wrap:wrap}.share-btn{display:flex;align-items:center;gap:8px;padding:10px 20px;background:#141210;border:1px solid rgba(201,169,110,.2);color:#f5f0e8;font-size:9px;letter-spacing:.25em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .3s;font-family:\'DM Sans\',sans-serif;cursor:pointer;font-weight:400}.share-btn:hover{border-color:#c9a96e;color:#c9a96e}\n.back-banner{background:#141210;border-top:1px solid rgba(201,169,110,.1);padding:60px;text-align:center}.back-banner-title{font-family:\'Playfair Display\',serif;font-size:1.6rem;color:#f5f0e8;margin-bottom:10px}.back-banner-sub{font-size:.85rem;color:rgba(245,240,232,.45);margin-bottom:28px;line-height:1.7}\nfooter{background:#050505;border-top:1px solid rgba(201,169,110,.08);padding:40px 60px;text-align:center;font-size:.75rem;color:rgba(245,240,232,.45);letter-spacing:.05em}footer a{color:rgba(245,240,232,.45)}footer a:hover{color:#c9a96e}\n#grain{position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E");background-size:200px}\n@media(max-width:768px){nav{padding:16px 24px}.post-hero{padding:60px 24px 40px}.post-layout{padding:40px 24px 80px}.back-banner{padding:40px 24px}footer{padding:32px 24px}}\n@media(max-width:600px){.review-card-top{flex-direction:column!important}.review-pc-grid{grid-template-columns:1fr!important}}\n</style>\n</head>\n<body>\n<div id="grain"></div>\n<nav>\n  <a class="nav-logo" href="'+siteBase+'/">VELO<span>U</span>RA</a>\n  <a class="nav-back" href="'+siteBase+'/#blog"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> All Articles</a>\n  <a class="nav-cta" href="'+siteBase+'/#products">Shop Now</a>\n</nav>\n<div class="post-hero">\n  <div class="post-hero-inner">\n    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="'+siteBase+'/">Home</a><span class="breadcrumb-sep">\u203a</span><a href="'+siteBase+'/#blog">Blog</a><span class="breadcrumb-sep">\u203a</span><span>'+(post.title||'')+'</span></nav>\n    <span class="post-category">'+category+'</span>\n    <h1 class="post-title">'+(post.title||'')+'</h1>\n    <div class="post-meta"><span>'+pubDate+'</span>'+(author?'<div class="post-meta-sep"></div><span>By '+author+'</span>':'')+'<div class="post-meta-sep"></div><span>'+readTime+'</span></div>\n  </div>\n</div>\n'+'<div style="display:flex;align-items:center;gap:14px;padding:18px 60px;background:rgba(10,8,6,.97);border-bottom:1px solid rgba(201,169,110,.08)"><a href="'+pinUrl+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#e60023;color:#fff;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:10px 20px;border-radius:20px;text-decoration:none;font-weight:700;font-family:DM Sans,sans-serif;box-shadow:0 3px 12px rgba(230,0,35,.3)"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Save to Pinterest</a><span style="font-size:.72rem;color:rgba(245,240,232,.3);letter-spacing:.05em">Save this article — read it anytime</span></div>\n'+(img?'<img class="post-featured-img" src="'+img+'" alt="'+imgAlt+'" width="1200" height="480">\n':'')+'\n<main class="post-layout">\n'+(post.excerpt?'  <div class="post-excerpt">'+post.excerpt+'</div>\n':'')+'  <article class="post-body">\n    '+bodyFirst+(productsHTMLMid?'\n  <div class="products-section"><span class="products-label">Featured Products</span>'+productsHTMLMid+'</div>\n  ':'')+bodySecond+'\n  </article>\n'+(productsHTMLEnd?'  <div class="products-section"><span class="products-label">More Picks For You</span>'+productsHTMLEnd+'</div>\n':'')+(ctasHTML?'  <div class="ctas-section">'+ctasHTML+'</div>\n':'')+'  <div style="margin-top:40px;padding:28px 32px;background:linear-gradient(135deg,rgba(20,18,16,.9) 0%,rgba(10,8,6,.9) 100%);border:1px solid rgba(201,169,110,.2);border-radius:4px;text-align:center;position:relative"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent)"></div><p style="font-family:Playfair Display,serif;font-size:1.2rem;color:#f5f0e8;margin-bottom:6px">Loved this article?</p><p style="font-size:.78rem;color:rgba(245,240,232,.45);margin-bottom:20px;line-height:1.7">Save it to your Pinterest board and come back whenever you need it.</p><a href="'+pinUrl+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#e60023;color:#fff;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:12px 28px;border-radius:20px;text-decoration:none;font-weight:700;font-family:DM Sans,sans-serif;box-shadow:0 4px 16px rgba(230,0,35,.3)"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Save to Pinterest</a></div>\n  <div class="share-section">\n    <span class="share-label">Share This Article</span>\n    <div class="share-btns">\n      <a class="share-btn" href="'+pinUrl+'" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0a12 12 0 00-4.37 23.17c-.1-.85-.19-2.15 0-3.08l1.35-5.68s-.35-.68-.35-1.68c0-1.58.91-2.76 2.05-2.76.97 0 1.44.73 1.44 1.6 0 .97-.62 2.42-.94 3.77-.27 1.13.57 2.05 1.69 2.05 2.03 0 3.59-2.14 3.59-5.23 0-2.73-1.96-4.64-4.76-4.64-3.24 0-5.14 2.43-5.14 4.94 0 .98.38 2.03.85 2.6a.36.36 0 01.08.35c-.09.38-.3 1.21-.34 1.38-.05.22-.17.27-.4.16-1.5-.7-2.44-2.89-2.44-4.65 0-3.6 2.61-6.9 7.53-6.9 3.95 0 7.03 2.82 7.03 6.58 0 3.93-2.48 7.09-5.92 7.09-1.16 0-2.25-.6-2.62-1.31l-.71 2.72c-.26.99-.96 2.23-1.43 2.99A12 12 0 1012 0z"/></svg>Save to Pinterest</a>\n      <a class="share-btn" href="'+twUrl+'" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>\n      <button class="share-btn" onclick="navigator.clipboard.writeText(\''+postUrl+'\').then(function(){this.textContent=\'\u2713 Copied!\';setTimeout(function(){this.textContent=\'Copy Link\';}.bind(this),2000);}.bind(this))">Copy Link</button>\n    </div>\n  </div>\n</main>\n<div class="back-banner">\n  <div class="back-banner-title">Discover More Curated Finds</div>\n  <div class="back-banner-sub">Hand-picked luxury beauty &amp; fragrance &mdash; every product vetted, every detail obsessed over.</div>\n  <a href="'+siteBase+'/#products" style="display:inline-block;padding:14px 36px;background:#c9a96e;color:#080808;font-family:\'DM Sans\',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;font-weight:600;text-decoration:none;border-radius:1px;margin-right:12px">Shop Collections</a>\n  <a href="'+siteBase+'/#blog" style="display:inline-block;padding:14px 36px;background:transparent;color:#f5f0e8;font-family:\'DM Sans\',sans-serif;font-size:10px;letter-spacing:.35em;text-transform:uppercase;border:1px solid rgba(245,240,232,.2);text-decoration:none;border-radius:1px">All Articles</a>\n</div>\n<footer>\n  <p style="margin-bottom:12px;font-family:\'Cinzel\',serif;font-size:.9rem;letter-spacing:.3em;color:#f5f0e8">VELO<span style="color:#c9a96e">U</span>RA</p>\n  <p style="margin-bottom:16px">&copy; '+year+' Veloura Beauty &amp; Fragrance. As an Amazon Associate we earn from qualifying purchases.</p>\n  <p><a href="'+siteBase+'/#blog">Blog</a> &nbsp;&middot;&nbsp; <a href="'+siteBase+'/#products">Collections</a> &nbsp;&middot;&nbsp; <a href="https://www.pinterest.com/VelouraBeautyFragrance" target="_blank">Pinterest</a> &nbsp;&middot;&nbsp; <a href="https://www.instagram.com/VelouraBeautyFragrance" target="_blank">Instagram</a></p>\n</footer>\n<script>if(typeof gtag==="function"){gtag("event","page_view",{page_title:document.title,page_location:window.location.href});}<\/script>\n</body>\n</html>';
   };
 
 })();
